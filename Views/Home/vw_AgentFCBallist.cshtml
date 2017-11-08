@@ -1,0 +1,439 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	vw_AgentFCBal_list.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+@if (ew_Empty(vw_AgentFCBal.Export)) {
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "list";
+var CurrentForm = fvw_AgentFCBallist = new ew_Form("fvw_AgentFCBallist", "list");
+fvw_AgentFCBallist.FormKeyCountName = "@vw_AgentFCBal_list.FormKeyCountName";
+
+// Form_CustomValidate event
+fvw_AgentFCBallist.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fvw_AgentFCBallist.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+// Form object for search
+
+var CurrentSearchForm = fvw_AgentFCBallistsrch = new ew_Form("fvw_AgentFCBallistsrch");
+
+// Init search panel as collapsed
+if (fvw_AgentFCBallistsrch) fvw_AgentFCBallistsrch.InitSearchPanel = true;
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+}
+@if (ew_Empty(vw_AgentFCBal.Export)) {
+<div class="ewToolbar">
+@if (ew_Empty(vw_AgentFCBal.Export)) {
+<div style="display: inline-block">
+	@{ Breadcrumb?.Render(); }
+</div>
+}
+@if (vw_AgentFCBal_list.TotalRecs > 0 && vw_AgentFCBal_list.ExportOptions.Visible) {
+	vw_AgentFCBal_list.ExportOptions.Render("body");
+}
+@if (vw_AgentFCBal_list.SearchOptions.Visible) {
+	vw_AgentFCBal_list.SearchOptions.Render("body");
+}
+@if (vw_AgentFCBal_list.FilterOptions.Visible) {
+	vw_AgentFCBal_list.FilterOptions.Render("body");
+}
+@if (ew_Empty(vw_AgentFCBal.Export)) {
+	@Language.SelectionForm()
+}
+<div class="clearfix"></div>
+</div>
+}
+@{
+		if (vw_AgentFCBal_list.TotalRecs <= 0) {
+			vw_AgentFCBal_list.TotalRecs = vw_AgentFCBal_list.SelectRecordCount();
+		}
+		vw_AgentFCBal_list.StartRec = 1;
+		if (vw_AgentFCBal_list.DisplayRecs <= 0 || ew_NotEmpty(vw_AgentFCBal_list.Export) && vw_AgentFCBal_list.ExportAll) { // Display all records
+			vw_AgentFCBal_list.DisplayRecs = vw_AgentFCBal_list.TotalRecs;
+		}
+		if (!(ew_NotEmpty(vw_AgentFCBal_list.Export) && vw_AgentFCBal_list.ExportAll)) {
+			vw_AgentFCBal_list.SetUpStartRec(); // Set up start record position
+		}
+		vw_AgentFCBal_list.Recordset = vw_AgentFCBal_list.LoadRecordset(vw_AgentFCBal_list.StartRec - 1, vw_AgentFCBal_list.DisplayRecs);
+
+		// Set no record found message
+		if (vw_AgentFCBal_list.CurrentAction == "" && vw_AgentFCBal_list.TotalRecs == 0) {
+			if (vw_AgentFCBal_list.SearchWhere == "0=101") {
+				vw_AgentFCBal_list.WarningMessage = Language.Phrase("EnterSearchCriteria");
+			} else {
+				vw_AgentFCBal_list.WarningMessage = Language.Phrase("NoRecord");
+			}
+		}
+	vw_AgentFCBal_list.RenderOtherOptions();
+}
+@{
+if (ew_Empty(vw_AgentFCBal_list.Export) && ew_Empty(vw_AgentFCBal_list.CurrentAction)) { // Begin search form
+<form name="fvw_AgentFCBallistsrch" id="fvw_AgentFCBallistsrch" class="form-inline ewForm" action="@ew_AppPath(ew_CurrentPage())">
+<div id="fvw_AgentFCBallistsrch_SearchPanel" class="ewSearchPanel collapse@(ew_NotEmpty(vw_AgentFCBal_list.SearchWhere) ? " in" : "")">
+<input type="hidden" name="cmd" value="search">
+<div class="ewBasicSearch">
+<div id="xsr_1" class="ewRow">
+	<div class="ewQuickSearch input-group">
+	<input type="text" name="@EW_TABLE_BASIC_SEARCH" id="@EW_TABLE_BASIC_SEARCH" class="form-control" value="@vw_AgentFCBal_list.BasicSearch.SessionKeyword" placeholder="@Language.Phrase("Search")">
+	<input type="hidden" name="@EW_TABLE_BASIC_SEARCH_TYPE" id="@EW_TABLE_BASIC_SEARCH_TYPE" value="@vw_AgentFCBal_list.BasicSearch.SessionType">
+	<div class="input-group-btn">
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype">@Html.Raw(vw_AgentFCBal_list.BasicSearch.TypeNameShort())</span><span class="caret"></span></button>
+		<ul class="dropdown-menu pull-right" role="menu">
+			<li class="@((vw_AgentFCBal_list.BasicSearch.SessionType == "") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this)">@Html.Raw(Language.Phrase("QuickSearchAuto"))</a></li>
+			<li class="@((vw_AgentFCBal_list.BasicSearch.SessionType == "=") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')">@Html.Raw(Language.Phrase("QuickSearchExact"))</a></li>
+			<li class="@((vw_AgentFCBal_list.BasicSearch.SessionType == "AND") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')">@Html.Raw(Language.Phrase("QuickSearchAll"))</a></li>
+			<li class="@((vw_AgentFCBal_list.BasicSearch.SessionType == "OR") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')">@Html.Raw(Language.Phrase("QuickSearchAny"))</a></li>
+		</ul>
+	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">@Html.Raw(Language.Phrase("QuickSearchBtn"))</button>
+	</div>
+	</div>
+</div>
+</div>
+</div>
+</form>
+} @* End search form *@
+}
+@vw_AgentFCBal_list.ShowPageHeader()
+@{ vw_AgentFCBal_list.ShowMessage(); }
+@if (vw_AgentFCBal_list.TotalRecs > 0 || vw_AgentFCBal_list.CurrentAction != "") {
+<div class="panel panel-default ewGrid vw_AgentFCBal">
+@if (ew_Empty(vw_AgentFCBal.Export)) {
+<div class="panel-heading ewGridUpperPanel">
+@if (vw_AgentFCBal_list.CurrentAction != "gridadd" && vw_AgentFCBal_list.CurrentAction != "gridedit") {
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ vw_AgentFCBal_list.Pager = vw_AgentFCBal_list.Pager ?? new cNumericPager(vw_AgentFCBal_list.StartRec, vw_AgentFCBal_list.DisplayRecs, vw_AgentFCBal_list.TotalRecs, vw_AgentFCBal_list.RecRange, vw_AgentFCBal_list.AutoHidePager); }
+@if (vw_AgentFCBal_list.Pager.RecordCount > 0 && vw_AgentFCBal_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (vw_AgentFCBal_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (vw_AgentFCBal_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in vw_AgentFCBal_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(vw_AgentFCBal_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (vw_AgentFCBal_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (vw_AgentFCBal_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(vw_AgentFCBal_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(vw_AgentFCBal_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(vw_AgentFCBal_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (vw_AgentFCBal_list.Pager.RecordCount > 0 && (!vw_AgentFCBal_list.AutoHidePageSizeSelector || vw_AgentFCBal_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(vw_AgentFCBal_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(vw_AgentFCBal_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(vw_AgentFCBal_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(vw_AgentFCBal_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+</form>
+}
+	<div class="ewListOtherOptions">
+	@{ vw_AgentFCBal_list.ForEachOtherOption(kvp => kvp.Value.Render("body")); }
+	</div>
+	<div class="clearfix"></div>
+</div>
+}
+<form name="fvw_AgentFCBallist" id="fvw_AgentFCBallist" class="form-inline ewForm ewListForm" action="@ew_AppPath(ew_CurrentPage())" method="post">
+@if (vw_AgentFCBal_list.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@vw_AgentFCBal_list.Token">
+}
+<div id="gmp_vw_AgentFCBal" class="@((ew_IsResponsiveLayout()) ? "table-responsive ewGridMiddlePanel" : "ewGridMiddlePanel")">
+@if (vw_AgentFCBal_list.TotalRecs > 0) { // Begin If TotalRecs > 0
+<table id="tbl_vw_AgentFCBallist" class="table ewTable">
+@Html.Raw(vw_AgentFCBal_list.TableCustomInnerHtml)
+<thead><!-- Table header -->
+	<tr class="ewTableHeader">
+@{
+
+	// Header row
+	vw_AgentFCBal_list.RowType = EW_ROWTYPE_HEADER;
+
+	// Render list options
+	vw_AgentFCBal_list.RenderListOptions();
+
+	// Render list options (header, left)
+	vw_AgentFCBal_list.ListOptions.Render("header", "left");
+}
+@if (vw_AgentFCBal.AgentId.Visible) { // AgentId.Visible (begin)
+	if (vw_AgentFCBal_list.SortUrl(vw_AgentFCBal.AgentId) == "") {
+		<th data-name="AgentId"><div id="elh_vw_AgentFCBal_AgentId" class="vw_AgentFCBal_AgentId"><div class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.AgentId.FldCaption)</div></div></th>
+	} else {
+		<th data-name="AgentId"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_AgentFCBal.SortUrl(vw_AgentFCBal.AgentId))',1);"><div id="elh_vw_AgentFCBal_AgentId" class="vw_AgentFCBal_AgentId">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.AgentId.FldCaption)@Html.Raw(Language.Phrase("SrchLegend"))</span><span class="ewTableHeaderSort">@if (vw_AgentFCBal.AgentId.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_AgentFCBal.AgentId.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* AgentId.Visible (end) *@
+@if (vw_AgentFCBal.AgentName.Visible) { // AgentName.Visible (begin)
+	if (vw_AgentFCBal_list.SortUrl(vw_AgentFCBal.AgentName) == "") {
+		<th data-name="AgentName"><div id="elh_vw_AgentFCBal_AgentName" class="vw_AgentFCBal_AgentName"><div class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.AgentName.FldCaption)</div></div></th>
+	} else {
+		<th data-name="AgentName"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_AgentFCBal.SortUrl(vw_AgentFCBal.AgentName))',1);"><div id="elh_vw_AgentFCBal_AgentName" class="vw_AgentFCBal_AgentName">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.AgentName.FldCaption)@Html.Raw(Language.Phrase("SrchLegend"))</span><span class="ewTableHeaderSort">@if (vw_AgentFCBal.AgentName.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_AgentFCBal.AgentName.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* AgentName.Visible (end) *@
+@if (vw_AgentFCBal.Balance.Visible) { // Balance.Visible (begin)
+	if (vw_AgentFCBal_list.SortUrl(vw_AgentFCBal.Balance) == "") {
+		<th data-name="Balance"><div id="elh_vw_AgentFCBal_Balance" class="vw_AgentFCBal_Balance"><div class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.Balance.FldCaption)</div></div></th>
+	} else {
+		<th data-name="Balance"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_AgentFCBal.SortUrl(vw_AgentFCBal.Balance))',1);"><div id="elh_vw_AgentFCBal_Balance" class="vw_AgentFCBal_Balance">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.Balance.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_AgentFCBal.Balance.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_AgentFCBal.Balance.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* Balance.Visible (end) *@
+@if (vw_AgentFCBal.CurrCode.Visible) { // CurrCode.Visible (begin)
+	if (vw_AgentFCBal_list.SortUrl(vw_AgentFCBal.CurrCode) == "") {
+		<th data-name="CurrCode"><div id="elh_vw_AgentFCBal_CurrCode" class="vw_AgentFCBal_CurrCode"><div class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.CurrCode.FldCaption)</div></div></th>
+	} else {
+		<th data-name="CurrCode"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_AgentFCBal.SortUrl(vw_AgentFCBal.CurrCode))',1);"><div id="elh_vw_AgentFCBal_CurrCode" class="vw_AgentFCBal_CurrCode">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_AgentFCBal.CurrCode.FldCaption)@Html.Raw(Language.Phrase("SrchLegend"))</span><span class="ewTableHeaderSort">@if (vw_AgentFCBal.CurrCode.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_AgentFCBal.CurrCode.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* CurrCode.Visible (end) *@
+@{
+
+	// Render list options (header, right)
+	vw_AgentFCBal_list.ListOptions.Render("header", "right");
+}
+	</tr>
+</thead>
+<tbody>
+@{ // Begin Code
+if (vw_AgentFCBal_list.ExportAll && ew_NotEmpty(vw_AgentFCBal_list.Export)) {
+	vw_AgentFCBal_list.StopRec = vw_AgentFCBal_list.TotalRecs;
+} else {
+
+	// Set the last record to display
+	if (vw_AgentFCBal_list.TotalRecs > vw_AgentFCBal_list.StartRec + vw_AgentFCBal_list.DisplayRecs - 1) {
+		vw_AgentFCBal_list.StopRec = vw_AgentFCBal_list.StartRec + vw_AgentFCBal_list.DisplayRecs - 1;
+	} else {
+		vw_AgentFCBal_list.StopRec = vw_AgentFCBal_list.TotalRecs;
+	}
+}
+if (vw_AgentFCBal_list.Recordset != null && vw_AgentFCBal_list.Recordset.HasRows) {
+	if (!vw_AgentFCBal_list.Connection.SelectOffset) { // DN
+		for (var i = 1; i <= vw_AgentFCBal_list.StartRec - 1; i++) { // Move to first record
+			if (vw_AgentFCBal_list.Recordset.Read()) {
+				vw_AgentFCBal_list.RecCnt++;
+			}
+		}
+	} else {
+		vw_AgentFCBal_list.RecCnt = vw_AgentFCBal_list.StartRec - 1;
+	}
+} else if (!vw_AgentFCBal_list.AllowAddDeleteRow && vw_AgentFCBal_list.StopRec == 0) {
+	vw_AgentFCBal_list.StopRec = vw_AgentFCBal_list.GridAddRowCount;
+}
+
+// Initialize aggregate
+vw_AgentFCBal_list.RowType = EW_ROWTYPE_AGGREGATEINIT;
+vw_AgentFCBal_list.ResetAttrs();
+vw_AgentFCBal_list.RenderRow();
+
+// Output data rows
+bool Eof = (vw_AgentFCBal_list.Recordset == null); // DN
+while (vw_AgentFCBal_list.RecCnt < vw_AgentFCBal_list.StopRec) { // Begin While
+	if (vw_AgentFCBal_list.CurrentAction != "gridadd" && !Eof) { // DN
+		Eof = !vw_AgentFCBal_list.Recordset.Read();
+	}
+	vw_AgentFCBal_list.RecCnt++;
+	if (vw_AgentFCBal_list.RecCnt >= vw_AgentFCBal_list.StartRec) {
+		vw_AgentFCBal_list.RowCnt++;
+
+		// Set up key count
+		vw_AgentFCBal_list.KeyCount = ew_ConvertToInt(vw_AgentFCBal_list.RowIndex);
+
+		// Init row class and style
+		vw_AgentFCBal_list.ResetAttrs();
+		vw_AgentFCBal_list.CssClass = "";
+		if (vw_AgentFCBal_list.CurrentAction == "gridadd") {
+		} else {
+			vw_AgentFCBal_list.LoadRowValues(vw_AgentFCBal_list.Recordset); // Load row values
+		}
+		vw_AgentFCBal_list.RowType = EW_ROWTYPE_VIEW; // Render view
+
+		// Set up row id / data-rowindex
+		vw_AgentFCBal_list.RowAttrs.Add("data-rowindex", Convert.ToString(vw_AgentFCBal_list.RowCnt));
+		vw_AgentFCBal_list.RowAttrs.Add("id", "r" + Convert.ToString(vw_AgentFCBal_list.RowCnt) + "_vw_AgentFCBal");
+		vw_AgentFCBal_list.RowAttrs.Add("data-rowtype", Convert.ToString(vw_AgentFCBal_list.RowType));
+
+		// Render row
+		vw_AgentFCBal_list.RenderRow();
+
+		// Render list options
+		vw_AgentFCBal_list.RenderListOptions();
+	<tr @Html.Raw(vw_AgentFCBal_list.RowAttributes)>
+	@{
+
+		// Render list options (body, left)
+		vw_AgentFCBal_list.ListOptions.Render("body", "left", vw_AgentFCBal_list.RowCnt);
+	}
+	@if (vw_AgentFCBal.AgentId.Visible) { // AgentId.Visible (begin)
+		<td data-name="AgentId"@Html.Raw(vw_AgentFCBal.AgentId.CellAttributes)>
+<span id="el@(vw_AgentFCBal_list.RowCnt)_vw_AgentFCBal_AgentId" class="vw_AgentFCBal_AgentId">
+<span @Html.Raw(vw_AgentFCBal.AgentId.ViewAttributes)>
+@Html.Raw(vw_AgentFCBal.AgentId.ListViewValue)</span>
+</span>
+<a id="@(vw_AgentFCBal_list.PageObjName + "_row_" + Convert.ToString(vw_AgentFCBal_list.RowCnt))"></a></td>
+	} @* AgentId.Visible (end) *@
+	@if (vw_AgentFCBal.AgentName.Visible) { // AgentName.Visible (begin)
+		<td data-name="AgentName"@Html.Raw(vw_AgentFCBal.AgentName.CellAttributes)>
+<span id="el@(vw_AgentFCBal_list.RowCnt)_vw_AgentFCBal_AgentName" class="vw_AgentFCBal_AgentName">
+<span @Html.Raw(vw_AgentFCBal.AgentName.ViewAttributes)>
+@Html.Raw(vw_AgentFCBal.AgentName.ListViewValue)</span>
+</span>
+</td>
+	} @* AgentName.Visible (end) *@
+	@if (vw_AgentFCBal.Balance.Visible) { // Balance.Visible (begin)
+		<td data-name="Balance"@Html.Raw(vw_AgentFCBal.Balance.CellAttributes)>
+<span id="el@(vw_AgentFCBal_list.RowCnt)_vw_AgentFCBal_Balance" class="vw_AgentFCBal_Balance">
+<span @Html.Raw(vw_AgentFCBal.Balance.ViewAttributes)>
+@Html.Raw(vw_AgentFCBal.Balance.ListViewValue)</span>
+</span>
+</td>
+	} @* Balance.Visible (end) *@
+	@if (vw_AgentFCBal.CurrCode.Visible) { // CurrCode.Visible (begin)
+		<td data-name="CurrCode"@Html.Raw(vw_AgentFCBal.CurrCode.CellAttributes)>
+<span id="el@(vw_AgentFCBal_list.RowCnt)_vw_AgentFCBal_CurrCode" class="vw_AgentFCBal_CurrCode">
+<span @Html.Raw(vw_AgentFCBal.CurrCode.ViewAttributes)>
+@Html.Raw(vw_AgentFCBal.CurrCode.ListViewValue)</span>
+</span>
+</td>
+	} @* CurrCode.Visible (end) *@
+	@{
+
+		// Render list options (body, right)
+		vw_AgentFCBal_list.ListOptions.Render("body", "right", vw_AgentFCBal_list.RowCnt);
+	}
+	</tr>
+	} @* End if *@
+} @* End While *@
+} @* End Code *@
+</tbody>
+</table>
+} @* End If TotalRecs > 0 *@
+@if (ew_Empty(vw_AgentFCBal_list.CurrentAction)) {
+<input type="hidden" name="a_list" id="a_list" value="">
+}
+</div>
+</form>
+@{ vw_AgentFCBal_list.CloseRecordset(); }
+		@if (ew_Empty(vw_AgentFCBal.Export)) {
+		<div class="panel-footer ewGridLowerPanel">
+		@if (vw_AgentFCBal_list.CurrentAction != "gridadd" && vw_AgentFCBal_list.CurrentAction != "gridedit") {
+			<form name="ewPagerForm" class="ewForm form-horizontal ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ vw_AgentFCBal_list.Pager = vw_AgentFCBal_list.Pager ?? new cNumericPager(vw_AgentFCBal_list.StartRec, vw_AgentFCBal_list.DisplayRecs, vw_AgentFCBal_list.TotalRecs, vw_AgentFCBal_list.RecRange, vw_AgentFCBal_list.AutoHidePager); }
+@if (vw_AgentFCBal_list.Pager.RecordCount > 0 && vw_AgentFCBal_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (vw_AgentFCBal_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (vw_AgentFCBal_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in vw_AgentFCBal_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(vw_AgentFCBal_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (vw_AgentFCBal_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (vw_AgentFCBal_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_AgentFCBal_list.PageUrl)start=@vw_AgentFCBal_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(vw_AgentFCBal_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(vw_AgentFCBal_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(vw_AgentFCBal_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (vw_AgentFCBal_list.Pager.RecordCount > 0 && (!vw_AgentFCBal_list.AutoHidePageSizeSelector || vw_AgentFCBal_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(vw_AgentFCBal_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(vw_AgentFCBal_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(vw_AgentFCBal_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(vw_AgentFCBal_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+			</form>
+		}
+		<div class="ewListOtherOptions">
+		@{ vw_AgentFCBal_list.ForEachOtherOption(kvp => kvp.Value.Render("body", "bottom")); }
+		</div>
+		<div class="clearfix"></div>
+		</div>
+		}
+</div>
+}
+@if (vw_AgentFCBal_list.TotalRecs <= 0 && vw_AgentFCBal_list.CurrentAction == "") { // Show other options
+<div class="ewListOtherOptions">
+@{ vw_AgentFCBal_list.ForEachOtherOption(kvp => { kvp.Value.ButtonClass = ""; kvp.Value.Render("body", ""); }); }
+</div>
+<div class="clearfix"></div>
+}
+@if (ew_Empty(vw_AgentFCBal.Export)) {
+<script type="text/javascript">
+fvw_AgentFCBallistsrch.FilterList = @Html.Raw(vw_AgentFCBal_list.GetFilterList());
+fvw_AgentFCBallistsrch.Init();
+fvw_AgentFCBallist.Init();
+</script>
+}
+@vw_AgentFCBal_list.ShowPageFooter()
+@DebugMsg()
+@ElapsedTime(StartTime)
+@if (ew_Empty(vw_AgentFCBal.Export)) {
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+}
+@{ vw_AgentFCBal_list.Page_Terminate(); }

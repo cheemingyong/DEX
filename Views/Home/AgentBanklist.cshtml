@@ -1,0 +1,891 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	AgentBank_list.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+@if (ew_Empty(AgentBank.Export)) {
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "list";
+var CurrentForm = fAgentBanklist = new ew_Form("fAgentBanklist", "list");
+fAgentBanklist.FormKeyCountName = "@AgentBank_list.FormKeyCountName";
+
+// Validate form
+fAgentBanklist.Validate = function() {
+	if (!this.ValidateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
+	if ($fobj.find("#a_confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.FormKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = $fobj.find("#a_list").val() == "gridinsert";
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		var checkrow = (gridinsert) ? !this.EmptyRow(infix) : true;
+		if (checkrow) {
+			addcnt++;
+		elm = this.GetElements("x" + infix + "_currencycode");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBank.currencycode.ReqErrMsg.Replace("%s", AgentBank.currencycode.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_agentid");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBank.agentid.ReqErrMsg.Replace("%s", AgentBank.agentid.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_lastavgcost");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBank.lastavgcost.FldErrMsg))");
+
+		// Fire Form_CustomValidate event
+		if (!this.Form_CustomValidate(fobj))
+			return false;
+		} // End Grid Add checking
+	}
+	if (gridinsert && addcnt == 0) { // No row added
+		ew_Alert(ewLanguage.Phrase("NoAddRecord"));
+		return false;
+	}
+	return true;
+}
+
+// Check empty row
+fAgentBanklist.EmptyRow = function(infix) {
+	var fobj = this.Form;
+	if (ew_ValueChanged(fobj, infix, "currencycode", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "agentid", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "BankId", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "lastavgcost", false)) return false;
+	return true;
+}
+
+// Form_CustomValidate event
+fAgentBanklist.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fAgentBanklist.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fAgentBanklist.Lists["x_currencycode"] = {"LinkField":"x_CurrencyCode","Ajax":true,"AutoFill":false,"DisplayFields":["x_CurrencyCode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Currency"};
+fAgentBanklist.Lists["x_agentid"] = {"LinkField":"x_AgentId","Ajax":true,"AutoFill":false,"DisplayFields":["x_AgentId","x_AgentName","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Agent"};
+
+// Form object for search
+var CurrentSearchForm = fAgentBanklistsrch = new ew_Form("fAgentBanklistsrch");
+
+// Validate function for search
+fAgentBanklistsrch.Validate = function(fobj) {
+	if (!this.ValidateRequired)
+		return true; // Ignore validation
+	fobj = fobj || this.Form;
+	var infix = "";
+
+	// Fire Form_CustomValidate event
+	if (!this.Form_CustomValidate(fobj))
+		return false;
+	return true;
+}
+
+// Form_CustomValidate event
+fAgentBanklistsrch.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fAgentBanklistsrch.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fAgentBanklistsrch.Lists["x_currencycode"] = {"LinkField":"x_CurrencyCode","Ajax":true,"AutoFill":false,"DisplayFields":["x_CurrencyCode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Currency"};
+fAgentBanklistsrch.Lists["x_agentid"] = {"LinkField":"x_AgentId","Ajax":true,"AutoFill":false,"DisplayFields":["x_AgentId","x_AgentName","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Agent"};
+
+// Init search panel as collapsed
+if (fAgentBanklistsrch) fAgentBanklistsrch.InitSearchPanel = true;
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+}
+@if (ew_Empty(AgentBank.Export)) {
+<div class="ewToolbar">
+@if (ew_Empty(AgentBank.Export)) {
+<div style="display: inline-block">
+	@{ Breadcrumb?.Render(); }
+</div>
+}
+@if (AgentBank_list.TotalRecs > 0 && AgentBank_list.ExportOptions.Visible) {
+	AgentBank_list.ExportOptions.Render("body");
+}
+@if (AgentBank_list.SearchOptions.Visible) {
+	AgentBank_list.SearchOptions.Render("body");
+}
+@if (AgentBank_list.FilterOptions.Visible) {
+	AgentBank_list.FilterOptions.Render("body");
+}
+@if (ew_Empty(AgentBank.Export)) {
+	@Language.SelectionForm()
+}
+<div class="clearfix"></div>
+</div>
+}
+@if (ew_Empty(AgentBank.Export) || (EW_EXPORT_MASTER_RECORD && AgentBank.Export == "print")) {
+if (ew_NotEmpty(AgentBank_list.DbMasterFilter) && AgentBank_list.CurrentMasterTable == "Agent") {
+	if (AgentBank_list.MasterRecordExists) {
+		@await Html.PartialAsync("Agentmaster")
+	}
+}
+}
+@{
+	if (AgentBank_list.CurrentAction == "gridadd") {
+		AgentBank_list.CurrentFilter = "0=1";
+		AgentBank_list.StartRec = 1;
+		AgentBank_list.DisplayRecs = AgentBank_list.GridAddRowCount;
+		AgentBank_list.TotalRecs = AgentBank_list.DisplayRecs;
+		AgentBank_list.StopRec = AgentBank_list.DisplayRecs;
+	} else {
+		if (AgentBank_list.TotalRecs <= 0) {
+			AgentBank_list.TotalRecs = AgentBank_list.SelectRecordCount();
+		}
+		AgentBank_list.StartRec = 1;
+		if (AgentBank_list.DisplayRecs <= 0 || ew_NotEmpty(AgentBank_list.Export) && AgentBank_list.ExportAll) { // Display all records
+			AgentBank_list.DisplayRecs = AgentBank_list.TotalRecs;
+		}
+		if (!(ew_NotEmpty(AgentBank_list.Export) && AgentBank_list.ExportAll)) {
+			AgentBank_list.SetUpStartRec(); // Set up start record position
+		}
+		AgentBank_list.Recordset = AgentBank_list.LoadRecordset(AgentBank_list.StartRec - 1, AgentBank_list.DisplayRecs);
+
+		// Set no record found message
+		if (AgentBank_list.CurrentAction == "" && AgentBank_list.TotalRecs == 0) {
+			if (AgentBank_list.SearchWhere == "0=101") {
+				AgentBank_list.WarningMessage = Language.Phrase("EnterSearchCriteria");
+			} else {
+				AgentBank_list.WarningMessage = Language.Phrase("NoRecord");
+			}
+		}
+	}
+	AgentBank_list.RenderOtherOptions();
+}
+@{
+if (ew_Empty(AgentBank_list.Export) && ew_Empty(AgentBank_list.CurrentAction)) { // Begin search form
+<form name="fAgentBanklistsrch" id="fAgentBanklistsrch" class="form-inline ewForm" action="@ew_AppPath(ew_CurrentPage())">
+<div id="fAgentBanklistsrch_SearchPanel" class="ewSearchPanel collapse@(ew_NotEmpty(AgentBank_list.SearchWhere) ? " in" : "")">
+<input type="hidden" name="cmd" value="search">
+<div class="ewBasicSearch">
+@{
+	if (ew_Empty(gsSearchError)) {
+		AgentBank_list.LoadAdvancedSearch(); // Load advanced search
+	}
+
+	// Render for search
+	AgentBank_list.RowType = EW_ROWTYPE_SEARCH;
+
+	// Render row
+	AgentBank_list.ResetAttrs();
+	AgentBank_list.RenderRow();
+}
+<div id="xsr_1" class="ewRow">
+@if (AgentBank.currencycode.Visible) { // currencycode.Visible (begin)
+	<div id="xsc_currencycode" class="ewCell form-group">
+		<label for="x_currencycode" class="ewSearchCaption ewLabel">@Html.Raw(AgentBank.currencycode.FldCaption)</label>
+		<span class="ewSearchOperator">@Html.Raw(Language.Phrase("LIKE"))<input type="hidden" name="z_currencycode" id="z_currencycode" value="LIKE"></span>
+		<span class="ewSearchField">
+<select data-table="AgentBank" data-field="x_currencycode" data-value-separator="@AgentBank.currencycode.DisplayValueSeparatorAttribute"  id="x_currencycode" name="x_currencycode" @Html.Raw(AgentBank.currencycode.EditAttributes)>
+@AgentBank.currencycode.SelectOptionListHtml("x_currencycode")
+</select>
+<input type="hidden" name="s_x_currencycode" id="s_x_currencycode" value="@AgentBank.currencycode.LookupFilterQuery(false, "extbs")">
+</span>
+	</div>
+} @* currencycode.Visible (end) *@
+</div>
+<div id="xsr_2" class="ewRow">
+@if (AgentBank.agentid.Visible) { // agentid.Visible (begin)
+	<div id="xsc_agentid" class="ewCell form-group">
+		<label class="ewSearchCaption ewLabel">@Html.Raw(AgentBank.agentid.FldCaption)</label>
+		<span class="ewSearchOperator">@Html.Raw(Language.Phrase("LIKE"))<input type="hidden" name="z_agentid" id="z_agentid" value="LIKE"></span>
+		<span class="ewSearchField">
+<span id="as_x_agentid" style="white-space: nowrap; z-index: 8970">
+	<input type="text" name="sv_x_agentid" id="sv_x_agentid" value="@Html.Raw(AgentBank.agentid.EditValue)" size="30" placeholder="@AgentBank.agentid.PlaceHolder" data-placeholder="@AgentBank.agentid.PlaceHolder" @Html.Raw(AgentBank.agentid.EditAttributes)>
+</span>
+<span>@{ AgentBank.agentid.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" data-multiple="0" data-lookup="1" data-value-separator="@AgentBank.agentid.DisplayValueSeparatorAttribute"  name="x_agentid" id="x_agentid" value="@AgentBank.agentid.AdvancedSearch.SearchValue" onchange="@AgentBank.agentid.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x_agentid" id="q_x_agentid" value="@AgentBank.agentid.LookupFilterQuery(true, "extbs")">
+<script type="text/javascript">
+fAgentBanklistsrch.CreateAutoSuggest({"id":"x_agentid","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(AgentBank.agentid.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x_agentid',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x_agentid" id="s_x_agentid" value="@AgentBank.agentid.LookupFilterQuery(false, "extbs")">
+</span>
+	</div>
+} @* agentid.Visible (end) *@
+</div>
+<div id="xsr_3" class="ewRow">
+	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">@Html.Raw(Language.Phrase("QuickSearchBtn"))</button>
+</div>
+</div>
+</div>
+</form>
+} @* End search form *@
+}
+@AgentBank_list.ShowPageHeader()
+@{ AgentBank_list.ShowMessage(); }
+@if (AgentBank_list.TotalRecs > 0 || AgentBank_list.CurrentAction != "") {
+<div class="panel panel-default ewGrid AgentBank">
+@if (ew_Empty(AgentBank.Export)) {
+<div class="panel-heading ewGridUpperPanel">
+@if (AgentBank_list.CurrentAction != "gridadd" && AgentBank_list.CurrentAction != "gridedit") {
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ AgentBank_list.Pager = AgentBank_list.Pager ?? new cNumericPager(AgentBank_list.StartRec, AgentBank_list.DisplayRecs, AgentBank_list.TotalRecs, AgentBank_list.RecRange, AgentBank_list.AutoHidePager); }
+@if (AgentBank_list.Pager.RecordCount > 0 && AgentBank_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (AgentBank_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (AgentBank_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in AgentBank_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(AgentBank_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (AgentBank_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (AgentBank_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(AgentBank_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(AgentBank_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(AgentBank_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (AgentBank_list.Pager.RecordCount > 0 && (!AgentBank_list.AutoHidePageSizeSelector || AgentBank_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(AgentBank_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(AgentBank_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(AgentBank_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(AgentBank_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+</form>
+}
+	<div class="ewListOtherOptions">
+	@{ AgentBank_list.ForEachOtherOption(kvp => kvp.Value.Render("body")); }
+	</div>
+	<div class="clearfix"></div>
+</div>
+}
+<form name="fAgentBanklist" id="fAgentBanklist" class="form-inline ewForm ewListForm" action="@ew_AppPath(ew_CurrentPage())" method="post">
+@if (AgentBank_list.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@AgentBank_list.Token">
+}
+@if (AgentBank_list.CurrentMasterTable == "Agent" && AgentBank_list.CurrentAction != "") {
+<input type="hidden" name="@EW_TABLE_SHOW_MASTER" value="Agent">
+<input type="hidden" name="fk_AgentId" value="@AgentBank_list.agentid.SessionValue">
+}
+<div id="gmp_AgentBank" class="@((ew_IsResponsiveLayout()) ? "table-responsive ewGridMiddlePanel" : "ewGridMiddlePanel")">
+@if (AgentBank_list.TotalRecs > 0) { // Begin If TotalRecs > 0
+<table id="tbl_AgentBanklist" class="table ewTable">
+@Html.Raw(AgentBank_list.TableCustomInnerHtml)
+<thead><!-- Table header -->
+	<tr class="ewTableHeader">
+@{
+
+	// Header row
+	AgentBank_list.RowType = EW_ROWTYPE_HEADER;
+
+	// Render list options
+	AgentBank_list.RenderListOptions();
+
+	// Render list options (header, left)
+	AgentBank_list.ListOptions.Render("header", "left");
+}
+@if (AgentBank.id.Visible) { // id.Visible (begin)
+	if (AgentBank_list.SortUrl(AgentBank.id) == "") {
+		<th data-name="id"><div id="elh_AgentBank_id" class="AgentBank_id"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.id.FldCaption)</div></div></th>
+	} else {
+		<th data-name="id"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(AgentBank.SortUrl(AgentBank.id))',1);"><div id="elh_AgentBank_id" class="AgentBank_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.id.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.id.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.id.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* id.Visible (end) *@
+@if (AgentBank.currencycode.Visible) { // currencycode.Visible (begin)
+	if (AgentBank_list.SortUrl(AgentBank.currencycode) == "") {
+		<th data-name="currencycode"><div id="elh_AgentBank_currencycode" class="AgentBank_currencycode"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.currencycode.FldCaption)</div></div></th>
+	} else {
+		<th data-name="currencycode"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(AgentBank.SortUrl(AgentBank.currencycode))',1);"><div id="elh_AgentBank_currencycode" class="AgentBank_currencycode">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.currencycode.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.currencycode.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.currencycode.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* currencycode.Visible (end) *@
+@if (AgentBank.agentid.Visible) { // agentid.Visible (begin)
+	if (AgentBank_list.SortUrl(AgentBank.agentid) == "") {
+		<th data-name="agentid"><div id="elh_AgentBank_agentid" class="AgentBank_agentid"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.agentid.FldCaption)</div></div></th>
+	} else {
+		<th data-name="agentid"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(AgentBank.SortUrl(AgentBank.agentid))',1);"><div id="elh_AgentBank_agentid" class="AgentBank_agentid">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.agentid.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.agentid.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.agentid.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* agentid.Visible (end) *@
+@if (AgentBank.BankId.Visible) { // BankId.Visible (begin)
+	if (AgentBank_list.SortUrl(AgentBank.BankId) == "") {
+		<th data-name="BankId"><div id="elh_AgentBank_BankId" class="AgentBank_BankId"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.BankId.FldCaption)</div></div></th>
+	} else {
+		<th data-name="BankId"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(AgentBank.SortUrl(AgentBank.BankId))',1);"><div id="elh_AgentBank_BankId" class="AgentBank_BankId">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.BankId.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.BankId.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.BankId.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* BankId.Visible (end) *@
+@if (AgentBank.lastavgcost.Visible) { // lastavgcost.Visible (begin)
+	if (AgentBank_list.SortUrl(AgentBank.lastavgcost) == "") {
+		<th data-name="lastavgcost"><div id="elh_AgentBank_lastavgcost" class="AgentBank_lastavgcost"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.lastavgcost.FldCaption)</div></div></th>
+	} else {
+		<th data-name="lastavgcost"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(AgentBank.SortUrl(AgentBank.lastavgcost))',1);"><div id="elh_AgentBank_lastavgcost" class="AgentBank_lastavgcost">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.lastavgcost.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.lastavgcost.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.lastavgcost.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* lastavgcost.Visible (end) *@
+@{
+
+	// Render list options (header, right)
+	AgentBank_list.ListOptions.Render("header", "right");
+}
+	</tr>
+</thead>
+<tbody>
+@{ // Begin Code
+if (AgentBank_list.ExportAll && ew_NotEmpty(AgentBank_list.Export)) {
+	AgentBank_list.StopRec = AgentBank_list.TotalRecs;
+} else {
+
+	// Set the last record to display
+	if (AgentBank_list.TotalRecs > AgentBank_list.StartRec + AgentBank_list.DisplayRecs - 1) {
+		AgentBank_list.StopRec = AgentBank_list.StartRec + AgentBank_list.DisplayRecs - 1;
+	} else {
+		AgentBank_list.StopRec = AgentBank_list.TotalRecs;
+	}
+}
+
+// Restore number of post back records
+if (ObjForm != null) {
+	ObjForm.Index = -1;
+	if (ObjForm.HasValue(AgentBank_list.FormKeyCountName) && (AgentBank_list.CurrentAction == "gridadd" || AgentBank_list.CurrentAction == "gridedit" || AgentBank_list.CurrentAction == "F")) {
+		AgentBank_list.KeyCount = ew_ConvertToInt(ObjForm.GetValue(AgentBank_list.FormKeyCountName));
+		AgentBank_list.StopRec = AgentBank_list.StartRec + AgentBank_list.KeyCount - 1;
+	}
+}
+if (AgentBank_list.Recordset != null && AgentBank_list.Recordset.HasRows) {
+	if (!AgentBank_list.Connection.SelectOffset) { // DN
+		for (var i = 1; i <= AgentBank_list.StartRec - 1; i++) { // Move to first record
+			if (AgentBank_list.Recordset.Read()) {
+				AgentBank_list.RecCnt++;
+			}
+		}
+	} else {
+		AgentBank_list.RecCnt = AgentBank_list.StartRec - 1;
+	}
+} else if (!AgentBank_list.AllowAddDeleteRow && AgentBank_list.StopRec == 0) {
+	AgentBank_list.StopRec = AgentBank_list.GridAddRowCount;
+}
+
+// Initialize aggregate
+AgentBank_list.RowType = EW_ROWTYPE_AGGREGATEINIT;
+AgentBank_list.ResetAttrs();
+AgentBank_list.RenderRow();
+if (AgentBank_list.CurrentAction == "gridadd") {
+	AgentBank_list.RowIndex = 0;
+}
+if (AgentBank_list.CurrentAction == "gridedit") {
+	AgentBank_list.RowIndex = 0;
+}
+
+// Output data rows
+bool Eof = (AgentBank_list.Recordset == null); // DN
+while (AgentBank_list.RecCnt < AgentBank_list.StopRec) { // Begin While
+	if (AgentBank_list.CurrentAction != "gridadd" && !Eof) { // DN
+		Eof = !AgentBank_list.Recordset.Read();
+	}
+	AgentBank_list.RecCnt++;
+	if (AgentBank_list.RecCnt >= AgentBank_list.StartRec) {
+		AgentBank_list.RowCnt++;
+		if (AgentBank_list.CurrentAction == "gridadd" || AgentBank_list.CurrentAction == "gridedit" || AgentBank_list.CurrentAction == "F") {
+			AgentBank_list.RowIndex = ew_ConvertToInt(AgentBank_list.RowIndex) + 1;
+			ObjForm.Index = ew_ConvertToInt(AgentBank_list.RowIndex);
+			if (ObjForm.HasValue(AgentBank_list.FormActionName)) {
+				AgentBank_list.RowAction = ObjForm.GetValue(AgentBank_list.FormActionName);
+			} else if (AgentBank_list.CurrentAction == "gridadd") {
+				AgentBank_list.RowAction = "insert";
+			} else {
+				AgentBank_list.RowAction = "";
+			}
+		}
+
+		// Set up key count
+		AgentBank_list.KeyCount = ew_ConvertToInt(AgentBank_list.RowIndex);
+
+		// Init row class and style
+		AgentBank_list.ResetAttrs();
+		AgentBank_list.CssClass = "";
+		if (AgentBank_list.CurrentAction == "gridadd") {
+			AgentBank_list.LoadDefaultValues(); // Load default values
+		} else {
+			AgentBank_list.LoadRowValues(AgentBank_list.Recordset); // Load row values
+		}
+		AgentBank_list.RowType = EW_ROWTYPE_VIEW; // Render view
+		if (AgentBank_list.CurrentAction == "gridadd") { // Grid add
+			AgentBank_list.RowType = EW_ROWTYPE_ADD; // Render add
+		}
+		if (AgentBank_list.CurrentAction == "gridadd" && AgentBank_list.EventCancelled && !ObjForm.HasValue("k_blankrow")) { // Insert failed
+			AgentBank_list.RestoreCurrentRowFormValues(AgentBank_list.RowIndex); // Restore form values
+		}
+		if (AgentBank_list.CurrentAction == "gridedit") { // Grid edit
+			if (AgentBank_list.EventCancelled) {
+				AgentBank_list.RestoreCurrentRowFormValues(AgentBank_list.RowIndex); // Restore form values
+			}
+			if (AgentBank_list.RowAction == "insert") {
+				AgentBank_list.RowType = EW_ROWTYPE_ADD; // Render add
+			} else {
+				AgentBank_list.RowType = EW_ROWTYPE_EDIT; // Render edit
+			}
+		}
+		if (AgentBank_list.CurrentAction == "gridedit" && (AgentBank_list.RowType == EW_ROWTYPE_EDIT || AgentBank_list.RowType == EW_ROWTYPE_ADD) && AgentBank_list.EventCancelled) { // Update failed
+			AgentBank_list.RestoreCurrentRowFormValues(AgentBank_list.RowIndex); // Restore form values
+		}
+		if (AgentBank_list.RowType == EW_ROWTYPE_EDIT) { // Edit row
+			AgentBank_list.EditRowCnt++;
+		}
+
+		// Set up row id / data-rowindex
+		AgentBank_list.RowAttrs.Add("data-rowindex", Convert.ToString(AgentBank_list.RowCnt));
+		AgentBank_list.RowAttrs.Add("id", "r" + Convert.ToString(AgentBank_list.RowCnt) + "_AgentBank");
+		AgentBank_list.RowAttrs.Add("data-rowtype", Convert.ToString(AgentBank_list.RowType));
+
+		// Render row
+		AgentBank_list.RenderRow();
+
+		// Render list options
+		AgentBank_list.RenderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if (AgentBank_list.RowAction != "delete" && AgentBank_list.RowAction != "insertdelete" && !(AgentBank_list.RowAction == "insert" && AgentBank_list.CurrentAction == "F" && AgentBank_list.EmptyRow())) {
+	<tr @Html.Raw(AgentBank_list.RowAttributes)>
+	@{
+
+		// Render list options (body, left)
+		AgentBank_list.ListOptions.Render("body", "left", AgentBank_list.RowCnt);
+	}
+	@if (AgentBank.id.Visible) { // id.Visible (begin)
+		<td data-name="id"@Html.Raw(AgentBank.id.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* id (begin) *@
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="o@(AgentBank_list.RowIndex)_id" id="o@(AgentBank_list.RowIndex)_id" value="@AgentBank.id.OldValue">
+			 @* id (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* id (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_id" class="form-group AgentBank_id">
+<span @Html.Raw(AgentBank.id.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.id.EditValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="x@(AgentBank_list.RowIndex)_id" id="x@(AgentBank_list.RowIndex)_id" value="@AgentBank.id.CurrentValue">
+			 @* id (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* id (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_id" class="AgentBank_id">
+<span @Html.Raw(AgentBank.id.ViewAttributes)>
+@Html.Raw(AgentBank.id.ListViewValue)</span>
+</span>
+			 @* id (end) *@
+		} @* View (end) *@
+<a id="@(AgentBank_list.PageObjName + "_row_" + Convert.ToString(AgentBank_list.RowCnt))"></a></td>
+	} @* id.Visible (end) *@
+	@if (AgentBank.currencycode.Visible) { // currencycode.Visible (begin)
+		<td data-name="currencycode"@Html.Raw(AgentBank.currencycode.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* currencycode (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_currencycode" class="form-group AgentBank_currencycode">
+<select data-table="AgentBank" data-field="x_currencycode" data-value-separator="@AgentBank.currencycode.DisplayValueSeparatorAttribute"  id="x@(AgentBank_list.RowIndex)_currencycode" name="x@(AgentBank_list.RowIndex)_currencycode" @Html.Raw(AgentBank.currencycode.EditAttributes)>
+@AgentBank.currencycode.SelectOptionListHtml("x@(AgentBank_list.RowIndex)_currencycode")
+</select>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_currencycode" id="s_x@(AgentBank_list.RowIndex)_currencycode" value="@AgentBank.currencycode.LookupFilterQuery()">
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="o@(AgentBank_list.RowIndex)_currencycode" id="o@(AgentBank_list.RowIndex)_currencycode" value="@AgentBank.currencycode.OldValue">
+			 @* currencycode (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* currencycode (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_currencycode" class="form-group AgentBank_currencycode">
+<select data-table="AgentBank" data-field="x_currencycode" data-value-separator="@AgentBank.currencycode.DisplayValueSeparatorAttribute"  id="x@(AgentBank_list.RowIndex)_currencycode" name="x@(AgentBank_list.RowIndex)_currencycode" @Html.Raw(AgentBank.currencycode.EditAttributes)>
+@AgentBank.currencycode.SelectOptionListHtml("x@(AgentBank_list.RowIndex)_currencycode")
+</select>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_currencycode" id="s_x@(AgentBank_list.RowIndex)_currencycode" value="@AgentBank.currencycode.LookupFilterQuery()">
+</span>
+			 @* currencycode (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* currencycode (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_currencycode" class="AgentBank_currencycode">
+<span @Html.Raw(AgentBank.currencycode.ViewAttributes)>
+@Html.Raw(AgentBank.currencycode.ListViewValue)</span>
+</span>
+			 @* currencycode (end) *@
+		} @* View (end) *@
+</td>
+	} @* currencycode.Visible (end) *@
+	@if (AgentBank.agentid.Visible) { // agentid.Visible (begin)
+		<td data-name="agentid"@Html.Raw(AgentBank.agentid.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* agentid (begin) *@
+@if (ew_NotEmpty(AgentBank.agentid.SessionValue)) {
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.agentid.ViewValue)</p></span>
+</span>
+<input type="hidden" id="x@(AgentBank_list.RowIndex)_agentid" name="x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue">
+} else {
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span id="as_x@(AgentBank_list.RowIndex)_agentid" style="white-space: nowrap; z-index:  @Html.Raw(9000 - AgentBank_list.RowCnt * 10)">
+	<input type="text" name="sv_x@(AgentBank_list.RowIndex)_agentid" id="sv_x@(AgentBank_list.RowIndex)_agentid" value="@Html.Raw(AgentBank.agentid.EditValue)" size="30" placeholder="@AgentBank.agentid.PlaceHolder" data-placeholder="@AgentBank.agentid.PlaceHolder" @Html.Raw(AgentBank.agentid.EditAttributes)>
+</span>
+<span>@{ AgentBank.agentid.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" data-multiple="0" data-lookup="1" data-value-separator="@AgentBank.agentid.DisplayValueSeparatorAttribute"  name="x@(AgentBank_list.RowIndex)_agentid" id="x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue" onchange="@AgentBank.agentid.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x@(AgentBank_list.RowIndex)_agentid" id="q_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(true)">
+<script type="text/javascript">
+fAgentBanklist.CreateAutoSuggest({"id":"x@(AgentBank_list.RowIndex)_agentid","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(AgentBank.agentid.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x@(AgentBank_list.RowIndex)_agentid',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_agentid" id="s_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(false)">
+<button type="button" title="@(ew_HtmlTitle(Language.Phrase("AddLink")) + " " + AgentBank.agentid.FldCaption)" onclick="ew_AddOptDialogShow({lnk:this,el:'x@(AgentBank_list.RowIndex)_agentid',url:'@ew_AppPath("Agentaddopt")'});" class="ewAddOptBtn btn btn-default btn-sm" id="aol_x@(AgentBank_list.RowIndex)_agentid"><span class="glyphicon glyphicon-plus ewIcon"></span><span class="hide">@Html.Raw(Language.Phrase("AddLink"))&nbsp;@Html.Raw(AgentBank.agentid.FldCaption)</span></button>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_agentid" id="s_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery()">
+</span>
+}
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="o@(AgentBank_list.RowIndex)_agentid" id="o@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.OldValue">
+			 @* agentid (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* agentid (begin) *@
+@if (ew_NotEmpty(AgentBank.agentid.SessionValue)) {
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.agentid.ViewValue)</p></span>
+</span>
+<input type="hidden" id="x@(AgentBank_list.RowIndex)_agentid" name="x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue">
+} else {
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span id="as_x@(AgentBank_list.RowIndex)_agentid" style="white-space: nowrap; z-index:  @Html.Raw(9000 - AgentBank_list.RowCnt * 10)">
+	<input type="text" name="sv_x@(AgentBank_list.RowIndex)_agentid" id="sv_x@(AgentBank_list.RowIndex)_agentid" value="@Html.Raw(AgentBank.agentid.EditValue)" size="30" placeholder="@AgentBank.agentid.PlaceHolder" data-placeholder="@AgentBank.agentid.PlaceHolder" @Html.Raw(AgentBank.agentid.EditAttributes)>
+</span>
+<span>@{ AgentBank.agentid.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" data-multiple="0" data-lookup="1" data-value-separator="@AgentBank.agentid.DisplayValueSeparatorAttribute"  name="x@(AgentBank_list.RowIndex)_agentid" id="x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue" onchange="@AgentBank.agentid.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x@(AgentBank_list.RowIndex)_agentid" id="q_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(true)">
+<script type="text/javascript">
+fAgentBanklist.CreateAutoSuggest({"id":"x@(AgentBank_list.RowIndex)_agentid","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(AgentBank.agentid.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x@(AgentBank_list.RowIndex)_agentid',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_agentid" id="s_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(false)">
+<button type="button" title="@(ew_HtmlTitle(Language.Phrase("AddLink")) + " " + AgentBank.agentid.FldCaption)" onclick="ew_AddOptDialogShow({lnk:this,el:'x@(AgentBank_list.RowIndex)_agentid',url:'@ew_AppPath("Agentaddopt")'});" class="ewAddOptBtn btn btn-default btn-sm" id="aol_x@(AgentBank_list.RowIndex)_agentid"><span class="glyphicon glyphicon-plus ewIcon"></span><span class="hide">@Html.Raw(Language.Phrase("AddLink"))&nbsp;@Html.Raw(AgentBank.agentid.FldCaption)</span></button>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_agentid" id="s_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery()">
+</span>
+}
+			 @* agentid (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* agentid (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_agentid" class="AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+@Html.Raw(AgentBank.agentid.ListViewValue)</span>
+</span>
+			 @* agentid (end) *@
+		} @* View (end) *@
+</td>
+	} @* agentid.Visible (end) *@
+	@if (AgentBank.BankId.Visible) { // BankId.Visible (begin)
+		<td data-name="BankId"@Html.Raw(AgentBank.BankId.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* BankId (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_BankId" class="form-group AgentBank_BankId">
+<input type="text" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_list.RowIndex)_BankId" id="x@(AgentBank_list.RowIndex)_BankId" size="30" maxlength="200" placeholder="@AgentBank.BankId.PlaceHolder" value="@AgentBank.BankId.EditValue" @Html.Raw(AgentBank.BankId.EditAttributes)>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="o@(AgentBank_list.RowIndex)_BankId" id="o@(AgentBank_list.RowIndex)_BankId" value="@AgentBank.BankId.OldValue">
+			 @* BankId (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* BankId (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_BankId" class="form-group AgentBank_BankId">
+<input type="text" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_list.RowIndex)_BankId" id="x@(AgentBank_list.RowIndex)_BankId" size="30" maxlength="200" placeholder="@AgentBank.BankId.PlaceHolder" value="@AgentBank.BankId.EditValue" @Html.Raw(AgentBank.BankId.EditAttributes)>
+</span>
+			 @* BankId (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* BankId (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_BankId" class="AgentBank_BankId">
+<span @Html.Raw(AgentBank.BankId.ViewAttributes)>
+@Html.Raw(AgentBank.BankId.ListViewValue)</span>
+</span>
+			 @* BankId (end) *@
+		} @* View (end) *@
+</td>
+	} @* BankId.Visible (end) *@
+	@if (AgentBank.lastavgcost.Visible) { // lastavgcost.Visible (begin)
+		<td data-name="lastavgcost"@Html.Raw(AgentBank.lastavgcost.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* lastavgcost (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_lastavgcost" class="form-group AgentBank_lastavgcost">
+<input type="text" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_list.RowIndex)_lastavgcost" id="x@(AgentBank_list.RowIndex)_lastavgcost" size="30" placeholder="@AgentBank.lastavgcost.PlaceHolder" value="@AgentBank.lastavgcost.EditValue" @Html.Raw(AgentBank.lastavgcost.EditAttributes)>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="o@(AgentBank_list.RowIndex)_lastavgcost" id="o@(AgentBank_list.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.OldValue">
+			 @* lastavgcost (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* lastavgcost (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_lastavgcost" class="form-group AgentBank_lastavgcost">
+<input type="text" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_list.RowIndex)_lastavgcost" id="x@(AgentBank_list.RowIndex)_lastavgcost" size="30" placeholder="@AgentBank.lastavgcost.PlaceHolder" value="@AgentBank.lastavgcost.EditValue" @Html.Raw(AgentBank.lastavgcost.EditAttributes)>
+</span>
+			 @* lastavgcost (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* lastavgcost (begin) *@
+<span id="el@(AgentBank_list.RowCnt)_AgentBank_lastavgcost" class="AgentBank_lastavgcost">
+<span @Html.Raw(AgentBank.lastavgcost.ViewAttributes)>
+@Html.Raw(AgentBank.lastavgcost.ListViewValue)</span>
+</span>
+			 @* lastavgcost (end) *@
+		} @* View (end) *@
+</td>
+	} @* lastavgcost.Visible (end) *@
+	@{
+
+		// Render list options (body, right)
+		AgentBank_list.ListOptions.Render("body", "right", AgentBank_list.RowCnt);
+	}
+	</tr>
+		if (AgentBank_list.RowType == EW_ROWTYPE_ADD || AgentBank_list.RowType == EW_ROWTYPE_EDIT) {
+			<script type="text/javascript">
+			fAgentBanklist.UpdateOpts(@AgentBank_list.RowIndex);
+			</script>
+		}
+	} @* End if *@
+	} @* End if *@
+} @* End While *@
+} @* End Code *@
+@if (AgentBank_list.CurrentAction == "gridadd" || AgentBank_list.CurrentAction == "gridedit") {
+	AgentBank_list.RowIndex = "$rowindex$";
+	AgentBank_list.LoadDefaultValues();
+
+	// Set row properties
+	AgentBank_list.ResetAttrs();
+	AgentBank_list.RowAttrs.Add("data-rowindex", Convert.ToString(AgentBank_list.RowIndex));
+	AgentBank_list.RowAttrs.Add("id", "r0_AgentBank");
+	AgentBank_list.RowAttrs.Add("data-rowtype", Convert.ToString(EW_ROWTYPE_ADD));
+	AgentBank_list.RowAttrs.AppendClass("ewTemplate");
+	AgentBank_list.RowType = EW_ROWTYPE_ADD;
+
+	// Render row
+	AgentBank_list.RenderRow();
+
+	// Render list options
+	AgentBank_list.RenderListOptions();
+	AgentBank_list.StartRowCnt = 0;
+	<tr @Html.Raw(AgentBank_list.RowAttributes)>
+@{
+
+	// Render list options (body, left)
+	AgentBank_list.ListOptions.Render("body", "left", AgentBank_list.RowIndex);
+}
+	@if (AgentBank.id.Visible) { // id.Visible (begin)
+		<td data-name="id">
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="o@(AgentBank_list.RowIndex)_id" id="o@(AgentBank_list.RowIndex)_id" value="@AgentBank.id.OldValue">
+</td>
+	} @* id.Visible (end) *@
+	@if (AgentBank.currencycode.Visible) { // currencycode.Visible (begin)
+		<td data-name="currencycode">
+<span id="el$rowindex$_AgentBank_currencycode" class="form-group AgentBank_currencycode">
+<select data-table="AgentBank" data-field="x_currencycode" data-value-separator="@AgentBank.currencycode.DisplayValueSeparatorAttribute"  id="x@(AgentBank_list.RowIndex)_currencycode" name="x@(AgentBank_list.RowIndex)_currencycode" @Html.Raw(AgentBank.currencycode.EditAttributes)>
+@AgentBank.currencycode.SelectOptionListHtml("x@(AgentBank_list.RowIndex)_currencycode")
+</select>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_currencycode" id="s_x@(AgentBank_list.RowIndex)_currencycode" value="@AgentBank.currencycode.LookupFilterQuery()">
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="o@(AgentBank_list.RowIndex)_currencycode" id="o@(AgentBank_list.RowIndex)_currencycode" value="@AgentBank.currencycode.OldValue">
+</td>
+	} @* currencycode.Visible (end) *@
+	@if (AgentBank.agentid.Visible) { // agentid.Visible (begin)
+		<td data-name="agentid">
+@if (ew_NotEmpty(AgentBank.agentid.SessionValue)) {
+<span id="el$rowindex$_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.agentid.ViewValue)</p></span>
+</span>
+<input type="hidden" id="x@(AgentBank_list.RowIndex)_agentid" name="x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue">
+} else {
+<span id="el$rowindex$_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span id="as_x@(AgentBank_list.RowIndex)_agentid" style="white-space: nowrap; z-index:  @Html.Raw(9000 - AgentBank_list.RowCnt * 10)">
+	<input type="text" name="sv_x@(AgentBank_list.RowIndex)_agentid" id="sv_x@(AgentBank_list.RowIndex)_agentid" value="@Html.Raw(AgentBank.agentid.EditValue)" size="30" placeholder="@AgentBank.agentid.PlaceHolder" data-placeholder="@AgentBank.agentid.PlaceHolder" @Html.Raw(AgentBank.agentid.EditAttributes)>
+</span>
+<span>@{ AgentBank.agentid.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" data-multiple="0" data-lookup="1" data-value-separator="@AgentBank.agentid.DisplayValueSeparatorAttribute"  name="x@(AgentBank_list.RowIndex)_agentid" id="x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue" onchange="@AgentBank.agentid.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x@(AgentBank_list.RowIndex)_agentid" id="q_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(true)">
+<script type="text/javascript">
+fAgentBanklist.CreateAutoSuggest({"id":"x@(AgentBank_list.RowIndex)_agentid","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(AgentBank.agentid.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x@(AgentBank_list.RowIndex)_agentid',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_agentid" id="s_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(false)">
+<button type="button" title="@(ew_HtmlTitle(Language.Phrase("AddLink")) + " " + AgentBank.agentid.FldCaption)" onclick="ew_AddOptDialogShow({lnk:this,el:'x@(AgentBank_list.RowIndex)_agentid',url:'@ew_AppPath("Agentaddopt")'});" class="ewAddOptBtn btn btn-default btn-sm" id="aol_x@(AgentBank_list.RowIndex)_agentid"><span class="glyphicon glyphicon-plus ewIcon"></span><span class="hide">@Html.Raw(Language.Phrase("AddLink"))&nbsp;@Html.Raw(AgentBank.agentid.FldCaption)</span></button>
+<input type="hidden" name="s_x@(AgentBank_list.RowIndex)_agentid" id="s_x@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery()">
+</span>
+}
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="o@(AgentBank_list.RowIndex)_agentid" id="o@(AgentBank_list.RowIndex)_agentid" value="@AgentBank.agentid.OldValue">
+</td>
+	} @* agentid.Visible (end) *@
+	@if (AgentBank.BankId.Visible) { // BankId.Visible (begin)
+		<td data-name="BankId">
+<span id="el$rowindex$_AgentBank_BankId" class="form-group AgentBank_BankId">
+<input type="text" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_list.RowIndex)_BankId" id="x@(AgentBank_list.RowIndex)_BankId" size="30" maxlength="200" placeholder="@AgentBank.BankId.PlaceHolder" value="@AgentBank.BankId.EditValue" @Html.Raw(AgentBank.BankId.EditAttributes)>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="o@(AgentBank_list.RowIndex)_BankId" id="o@(AgentBank_list.RowIndex)_BankId" value="@AgentBank.BankId.OldValue">
+</td>
+	} @* BankId.Visible (end) *@
+	@if (AgentBank.lastavgcost.Visible) { // lastavgcost.Visible (begin)
+		<td data-name="lastavgcost">
+<span id="el$rowindex$_AgentBank_lastavgcost" class="form-group AgentBank_lastavgcost">
+<input type="text" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_list.RowIndex)_lastavgcost" id="x@(AgentBank_list.RowIndex)_lastavgcost" size="30" placeholder="@AgentBank.lastavgcost.PlaceHolder" value="@AgentBank.lastavgcost.EditValue" @Html.Raw(AgentBank.lastavgcost.EditAttributes)>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="o@(AgentBank_list.RowIndex)_lastavgcost" id="o@(AgentBank_list.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.OldValue">
+</td>
+	} @* lastavgcost.Visible (end) *@
+@{
+
+	// Render list options (body, right)
+	AgentBank_list.ListOptions.Render("body", "right", AgentBank_list.RowCnt);
+}
+<script type="text/javascript">
+fAgentBanklist.UpdateOpts(@AgentBank_list.RowIndex);
+</script>
+	</tr>
+}
+</tbody>
+</table>
+} @* End If TotalRecs > 0 *@
+@if (AgentBank_list.CurrentAction == "gridadd") {
+<input type="hidden" name="a_list" id="a_list" value="gridinsert">
+<input type="hidden" name="@AgentBank_list.FormKeyCountName" id="@AgentBank_list.FormKeyCountName" value="@AgentBank_list.KeyCount">
+@Html.Raw(AgentBank_list.MultiSelectKey)
+}
+@if (AgentBank_list.CurrentAction == "gridedit") {
+<input type="hidden" name="a_list" id="a_list" value="gridupdate">
+<input type="hidden" name="@AgentBank_list.FormKeyCountName" id="@AgentBank_list.FormKeyCountName" value="@AgentBank_list.KeyCount">
+@Html.Raw(AgentBank_list.MultiSelectKey)
+}
+@if (ew_Empty(AgentBank_list.CurrentAction)) {
+<input type="hidden" name="a_list" id="a_list" value="">
+}
+</div>
+</form>
+@{ AgentBank_list.CloseRecordset(); }
+		@if (ew_Empty(AgentBank.Export)) {
+		<div class="panel-footer ewGridLowerPanel">
+		@if (AgentBank_list.CurrentAction != "gridadd" && AgentBank_list.CurrentAction != "gridedit") {
+			<form name="ewPagerForm" class="ewForm form-horizontal ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ AgentBank_list.Pager = AgentBank_list.Pager ?? new cNumericPager(AgentBank_list.StartRec, AgentBank_list.DisplayRecs, AgentBank_list.TotalRecs, AgentBank_list.RecRange, AgentBank_list.AutoHidePager); }
+@if (AgentBank_list.Pager.RecordCount > 0 && AgentBank_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (AgentBank_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (AgentBank_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in AgentBank_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(AgentBank_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (AgentBank_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (AgentBank_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(AgentBank_list.PageUrl)start=@AgentBank_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(AgentBank_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(AgentBank_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(AgentBank_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (AgentBank_list.Pager.RecordCount > 0 && (!AgentBank_list.AutoHidePageSizeSelector || AgentBank_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(AgentBank_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(AgentBank_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(AgentBank_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(AgentBank_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+			</form>
+		}
+		<div class="ewListOtherOptions">
+		@{ AgentBank_list.ForEachOtherOption(kvp => kvp.Value.Render("body", "bottom")); }
+		</div>
+		<div class="clearfix"></div>
+		</div>
+		}
+</div>
+}
+@if (AgentBank_list.TotalRecs <= 0 && AgentBank_list.CurrentAction == "") { // Show other options
+<div class="ewListOtherOptions">
+@{ AgentBank_list.ForEachOtherOption(kvp => { kvp.Value.ButtonClass = ""; kvp.Value.Render("body", ""); }); }
+</div>
+<div class="clearfix"></div>
+}
+@if (ew_Empty(AgentBank.Export)) {
+<script type="text/javascript">
+fAgentBanklistsrch.FilterList = @Html.Raw(AgentBank_list.GetFilterList());
+fAgentBanklistsrch.Init();
+fAgentBanklist.Init();
+</script>
+}
+@AgentBank_list.ShowPageFooter()
+@DebugMsg()
+@ElapsedTime(StartTime)
+@if (ew_Empty(AgentBank.Export)) {
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+}
+@{ AgentBank_list.Page_Terminate(); }

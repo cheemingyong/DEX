@@ -1,0 +1,15 @@
+@{
+
+	// Generate all menu items
+	RootMenu = new cMenu(EW_MENUBAR_ID);
+}
+@{
+
+	// Generate all menu items
+	RootMenu.IsRoot = true;
+	RootMenu.AddMenuItem(551, "mci_Agent_Management", Language.MenuPhrase("551", "MenuText"), "", -1, "", true, false, true);
+	RootMenu.AddMenuItem(830, "mci_Customer_Cost_Management", Language.MenuPhrase("830", "MenuText"), "", -1, "", true, false, true);
+	RootMenu.AddMenuItem(275, "mci_Supplier_Cost_Management", Language.MenuPhrase("275", "MenuText"), "", -1, "", true, false, true);
+	RootMenu.AddMenuItem(276, "mci_Currency_Management", Language.MenuPhrase("276", "MenuText"), "", -1, "", true, false, true);
+}
+@RootMenu.Render()

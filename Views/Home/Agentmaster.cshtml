@@ -1,0 +1,720 @@
+@{
+
+	// AgentId
+	// AgentName
+	// AgentRiskRating
+	// AgentRiskCredit
+	// Address1
+	// Address2
+	// Address3
+	// Country
+	// ZipCode
+	// Fax
+	// Phone
+	// Mobile
+	// BuzType
+	// ClassType
+	// DefContactPName
+	// DefContactPNric
+	// DefContactPNation
+	// DefContactPOccupation
+	// TermsId
+	// LedgerBal
+	// AvailableBal
+	// _Email
+	// URL
+	// CustType
+	// RemittanceLicNO
+	// MCLicNo
+	// BankYesNo
+	// BankODLimit
+	// BankAcctNO
+	// CreditLimit
+	// ReferBy
+	// AgentImageName
+	// status
+	// CreatedBy
+	// CreatedDate
+	// ModifiedUser
+	// ModifiedDate
+	// PPExpiryDate
+	// TTExpiryDate
+	// MCExpiryDate
+	// Action
+	// Remark
+	// MCType
+	// CustDOB
+	// DefContactDOB
+	// ScanImage
+	// BizNature
+	// DefContactPOB
+	// NewTran
+	// BizRegNo
+	// BizRegDate
+	// BizRegPlace
+	// BizRegExpDate
+	// UnIncorpExec
+	// DefContactAuthorzLetter
+	// Politician
+	// BizPartnerNo
+	// Remark2
+	// BannedListRemark
+
+}
+@if (Agent.Visible) { // Agent_master.Visible (begin)
+<!-- <h4 class="ewMasterCaption">@Html.Raw(Agent.TableCaption)</h4> -->
+<table id="tbl_Agentmaster" class="table table-bordered table-striped ewViewTable">
+@Html.Raw(Agent.TableCustomInnerHtml)
+	<tbody>
+		@if (Agent.AgentId.Visible) { // AgentId.Visible (begin)
+		<tr id="r_AgentId">
+			<td>@Html.Raw(Agent.AgentId.FldCaption)</td>
+			<td @Html.Raw(Agent.AgentId.CellAttributes)>
+<span id="el_Agent_AgentId">
+<span @Html.Raw(Agent.AgentId.ViewAttributes)>
+@Html.Raw(Agent.AgentId.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* AgentId.Visible (end) *@
+		@if (Agent.AgentName.Visible) { // AgentName.Visible (begin)
+		<tr id="r_AgentName">
+			<td>@Html.Raw(Agent.AgentName.FldCaption)</td>
+			<td @Html.Raw(Agent.AgentName.CellAttributes)>
+<span id="el_Agent_AgentName">
+<span @Html.Raw(Agent.AgentName.ViewAttributes)>
+@Html.Raw(Agent.AgentName.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* AgentName.Visible (end) *@
+		@if (Agent.AgentRiskRating.Visible) { // AgentRiskRating.Visible (begin)
+		<tr id="r_AgentRiskRating">
+			<td>@Html.Raw(Agent.AgentRiskRating.FldCaption)</td>
+			<td @Html.Raw(Agent.AgentRiskRating.CellAttributes)>
+<span id="el_Agent_AgentRiskRating">
+<span @Html.Raw(Agent.AgentRiskRating.ViewAttributes)>
+@Html.Raw(Agent.AgentRiskRating.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* AgentRiskRating.Visible (end) *@
+		@if (Agent.AgentRiskCredit.Visible) { // AgentRiskCredit.Visible (begin)
+		<tr id="r_AgentRiskCredit">
+			<td>@Html.Raw(Agent.AgentRiskCredit.FldCaption)</td>
+			<td @Html.Raw(Agent.AgentRiskCredit.CellAttributes)>
+<span id="el_Agent_AgentRiskCredit">
+<span @Html.Raw(Agent.AgentRiskCredit.ViewAttributes)>
+@Html.Raw(Agent.AgentRiskCredit.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* AgentRiskCredit.Visible (end) *@
+		@if (Agent.Address1.Visible) { // Address1.Visible (begin)
+		<tr id="r_Address1">
+			<td>@Html.Raw(Agent.Address1.FldCaption)</td>
+			<td @Html.Raw(Agent.Address1.CellAttributes)>
+<span id="el_Agent_Address1">
+<span @Html.Raw(Agent.Address1.ViewAttributes)>
+@Html.Raw(Agent.Address1.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Address1.Visible (end) *@
+		@if (Agent.Address2.Visible) { // Address2.Visible (begin)
+		<tr id="r_Address2">
+			<td>@Html.Raw(Agent.Address2.FldCaption)</td>
+			<td @Html.Raw(Agent.Address2.CellAttributes)>
+<span id="el_Agent_Address2">
+<span @Html.Raw(Agent.Address2.ViewAttributes)>
+@Html.Raw(Agent.Address2.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Address2.Visible (end) *@
+		@if (Agent.Address3.Visible) { // Address3.Visible (begin)
+		<tr id="r_Address3">
+			<td>@Html.Raw(Agent.Address3.FldCaption)</td>
+			<td @Html.Raw(Agent.Address3.CellAttributes)>
+<span id="el_Agent_Address3">
+<span @Html.Raw(Agent.Address3.ViewAttributes)>
+@Html.Raw(Agent.Address3.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Address3.Visible (end) *@
+		@if (Agent.Country.Visible) { // Country.Visible (begin)
+		<tr id="r_Country">
+			<td>@Html.Raw(Agent.Country.FldCaption)</td>
+			<td @Html.Raw(Agent.Country.CellAttributes)>
+<span id="el_Agent_Country">
+<span @Html.Raw(Agent.Country.ViewAttributes)>
+@Html.Raw(Agent.Country.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Country.Visible (end) *@
+		@if (Agent.ZipCode.Visible) { // ZipCode.Visible (begin)
+		<tr id="r_ZipCode">
+			<td>@Html.Raw(Agent.ZipCode.FldCaption)</td>
+			<td @Html.Raw(Agent.ZipCode.CellAttributes)>
+<span id="el_Agent_ZipCode">
+<span @Html.Raw(Agent.ZipCode.ViewAttributes)>
+@Html.Raw(Agent.ZipCode.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* ZipCode.Visible (end) *@
+		@if (Agent.Fax.Visible) { // Fax.Visible (begin)
+		<tr id="r_Fax">
+			<td>@Html.Raw(Agent.Fax.FldCaption)</td>
+			<td @Html.Raw(Agent.Fax.CellAttributes)>
+<span id="el_Agent_Fax">
+<span @Html.Raw(Agent.Fax.ViewAttributes)>
+@Html.Raw(Agent.Fax.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Fax.Visible (end) *@
+		@if (Agent.Phone.Visible) { // Phone.Visible (begin)
+		<tr id="r_Phone">
+			<td>@Html.Raw(Agent.Phone.FldCaption)</td>
+			<td @Html.Raw(Agent.Phone.CellAttributes)>
+<span id="el_Agent_Phone">
+<span @Html.Raw(Agent.Phone.ViewAttributes)>
+@Html.Raw(Agent.Phone.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Phone.Visible (end) *@
+		@if (Agent.Mobile.Visible) { // Mobile.Visible (begin)
+		<tr id="r_Mobile">
+			<td>@Html.Raw(Agent.Mobile.FldCaption)</td>
+			<td @Html.Raw(Agent.Mobile.CellAttributes)>
+<span id="el_Agent_Mobile">
+<span @Html.Raw(Agent.Mobile.ViewAttributes)>
+@Html.Raw(Agent.Mobile.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Mobile.Visible (end) *@
+		@if (Agent.BuzType.Visible) { // BuzType.Visible (begin)
+		<tr id="r_BuzType">
+			<td>@Html.Raw(Agent.BuzType.FldCaption)</td>
+			<td @Html.Raw(Agent.BuzType.CellAttributes)>
+<span id="el_Agent_BuzType">
+<span @Html.Raw(Agent.BuzType.ViewAttributes)>
+@Html.Raw(Agent.BuzType.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BuzType.Visible (end) *@
+		@if (Agent.ClassType.Visible) { // ClassType.Visible (begin)
+		<tr id="r_ClassType">
+			<td>@Html.Raw(Agent.ClassType.FldCaption)</td>
+			<td @Html.Raw(Agent.ClassType.CellAttributes)>
+<span id="el_Agent_ClassType">
+<span @Html.Raw(Agent.ClassType.ViewAttributes)>
+@Html.Raw(Agent.ClassType.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* ClassType.Visible (end) *@
+		@if (Agent.DefContactPName.Visible) { // DefContactPName.Visible (begin)
+		<tr id="r_DefContactPName">
+			<td>@Html.Raw(Agent.DefContactPName.FldCaption)</td>
+			<td @Html.Raw(Agent.DefContactPName.CellAttributes)>
+<span id="el_Agent_DefContactPName">
+<span @Html.Raw(Agent.DefContactPName.ViewAttributes)>
+@Html.Raw(Agent.DefContactPName.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* DefContactPName.Visible (end) *@
+		@if (Agent.DefContactPNric.Visible) { // DefContactPNric.Visible (begin)
+		<tr id="r_DefContactPNric">
+			<td>@Html.Raw(Agent.DefContactPNric.FldCaption)</td>
+			<td @Html.Raw(Agent.DefContactPNric.CellAttributes)>
+<span id="el_Agent_DefContactPNric">
+<span @Html.Raw(Agent.DefContactPNric.ViewAttributes)>
+@Html.Raw(Agent.DefContactPNric.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* DefContactPNric.Visible (end) *@
+		@if (Agent.DefContactPNation.Visible) { // DefContactPNation.Visible (begin)
+		<tr id="r_DefContactPNation">
+			<td>@Html.Raw(Agent.DefContactPNation.FldCaption)</td>
+			<td @Html.Raw(Agent.DefContactPNation.CellAttributes)>
+<span id="el_Agent_DefContactPNation">
+<span @Html.Raw(Agent.DefContactPNation.ViewAttributes)>
+@Html.Raw(Agent.DefContactPNation.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* DefContactPNation.Visible (end) *@
+		@if (Agent.DefContactPOccupation.Visible) { // DefContactPOccupation.Visible (begin)
+		<tr id="r_DefContactPOccupation">
+			<td>@Html.Raw(Agent.DefContactPOccupation.FldCaption)</td>
+			<td @Html.Raw(Agent.DefContactPOccupation.CellAttributes)>
+<span id="el_Agent_DefContactPOccupation">
+<span @Html.Raw(Agent.DefContactPOccupation.ViewAttributes)>
+@Html.Raw(Agent.DefContactPOccupation.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* DefContactPOccupation.Visible (end) *@
+		@if (Agent.TermsId.Visible) { // TermsId.Visible (begin)
+		<tr id="r_TermsId">
+			<td>@Html.Raw(Agent.TermsId.FldCaption)</td>
+			<td @Html.Raw(Agent.TermsId.CellAttributes)>
+<span id="el_Agent_TermsId">
+<span @Html.Raw(Agent.TermsId.ViewAttributes)>
+@Html.Raw(Agent.TermsId.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* TermsId.Visible (end) *@
+		@if (Agent.LedgerBal.Visible) { // LedgerBal.Visible (begin)
+		<tr id="r_LedgerBal">
+			<td>@Html.Raw(Agent.LedgerBal.FldCaption)</td>
+			<td @Html.Raw(Agent.LedgerBal.CellAttributes)>
+<span id="el_Agent_LedgerBal">
+<span @Html.Raw(Agent.LedgerBal.ViewAttributes)>
+@Html.Raw(Agent.LedgerBal.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* LedgerBal.Visible (end) *@
+		@if (Agent.AvailableBal.Visible) { // AvailableBal.Visible (begin)
+		<tr id="r_AvailableBal">
+			<td>@Html.Raw(Agent.AvailableBal.FldCaption)</td>
+			<td @Html.Raw(Agent.AvailableBal.CellAttributes)>
+<span id="el_Agent_AvailableBal">
+<span @Html.Raw(Agent.AvailableBal.ViewAttributes)>
+@Html.Raw(Agent.AvailableBal.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* AvailableBal.Visible (end) *@
+		@if (Agent._Email.Visible) { // _Email.Visible (begin)
+		<tr id="r__Email">
+			<td>@Html.Raw(Agent._Email.FldCaption)</td>
+			<td @Html.Raw(Agent._Email.CellAttributes)>
+<span id="el_Agent__Email">
+<span @Html.Raw(Agent._Email.ViewAttributes)>
+@Html.Raw(Agent._Email.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* _Email.Visible (end) *@
+		@if (Agent.URL.Visible) { // URL.Visible (begin)
+		<tr id="r_URL">
+			<td>@Html.Raw(Agent.URL.FldCaption)</td>
+			<td @Html.Raw(Agent.URL.CellAttributes)>
+<span id="el_Agent_URL">
+<span @Html.Raw(Agent.URL.ViewAttributes)>
+@Html.Raw(Agent.URL.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* URL.Visible (end) *@
+		@if (Agent.CustType.Visible) { // CustType.Visible (begin)
+		<tr id="r_CustType">
+			<td>@Html.Raw(Agent.CustType.FldCaption)</td>
+			<td @Html.Raw(Agent.CustType.CellAttributes)>
+<span id="el_Agent_CustType">
+<span @Html.Raw(Agent.CustType.ViewAttributes)>
+@Html.Raw(Agent.CustType.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* CustType.Visible (end) *@
+		@if (Agent.RemittanceLicNO.Visible) { // RemittanceLicNO.Visible (begin)
+		<tr id="r_RemittanceLicNO">
+			<td>@Html.Raw(Agent.RemittanceLicNO.FldCaption)</td>
+			<td @Html.Raw(Agent.RemittanceLicNO.CellAttributes)>
+<span id="el_Agent_RemittanceLicNO">
+<span @Html.Raw(Agent.RemittanceLicNO.ViewAttributes)>
+@Html.Raw(Agent.RemittanceLicNO.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* RemittanceLicNO.Visible (end) *@
+		@if (Agent.MCLicNo.Visible) { // MCLicNo.Visible (begin)
+		<tr id="r_MCLicNo">
+			<td>@Html.Raw(Agent.MCLicNo.FldCaption)</td>
+			<td @Html.Raw(Agent.MCLicNo.CellAttributes)>
+<span id="el_Agent_MCLicNo">
+<span @Html.Raw(Agent.MCLicNo.ViewAttributes)>
+@Html.Raw(Agent.MCLicNo.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* MCLicNo.Visible (end) *@
+		@if (Agent.BankYesNo.Visible) { // BankYesNo.Visible (begin)
+		<tr id="r_BankYesNo">
+			<td>@Html.Raw(Agent.BankYesNo.FldCaption)</td>
+			<td @Html.Raw(Agent.BankYesNo.CellAttributes)>
+<span id="el_Agent_BankYesNo">
+<span @Html.Raw(Agent.BankYesNo.ViewAttributes)>
+<input type="checkbox" value="@Agent.BankYesNo.ListViewValue" disabled checked="@ew_ConvertToBool(Agent.BankYesNo.CurrentValue)"></span>
+</span>
+</td>
+		</tr>
+		} @* BankYesNo.Visible (end) *@
+		@if (Agent.BankODLimit.Visible) { // BankODLimit.Visible (begin)
+		<tr id="r_BankODLimit">
+			<td>@Html.Raw(Agent.BankODLimit.FldCaption)</td>
+			<td @Html.Raw(Agent.BankODLimit.CellAttributes)>
+<span id="el_Agent_BankODLimit">
+<span @Html.Raw(Agent.BankODLimit.ViewAttributes)>
+@Html.Raw(Agent.BankODLimit.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BankODLimit.Visible (end) *@
+		@if (Agent.BankAcctNO.Visible) { // BankAcctNO.Visible (begin)
+		<tr id="r_BankAcctNO">
+			<td>@Html.Raw(Agent.BankAcctNO.FldCaption)</td>
+			<td @Html.Raw(Agent.BankAcctNO.CellAttributes)>
+<span id="el_Agent_BankAcctNO">
+<span @Html.Raw(Agent.BankAcctNO.ViewAttributes)>
+@Html.Raw(Agent.BankAcctNO.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BankAcctNO.Visible (end) *@
+		@if (Agent.CreditLimit.Visible) { // CreditLimit.Visible (begin)
+		<tr id="r_CreditLimit">
+			<td>@Html.Raw(Agent.CreditLimit.FldCaption)</td>
+			<td @Html.Raw(Agent.CreditLimit.CellAttributes)>
+<span id="el_Agent_CreditLimit">
+<span @Html.Raw(Agent.CreditLimit.ViewAttributes)>
+@Html.Raw(Agent.CreditLimit.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* CreditLimit.Visible (end) *@
+		@if (Agent.ReferBy.Visible) { // ReferBy.Visible (begin)
+		<tr id="r_ReferBy">
+			<td>@Html.Raw(Agent.ReferBy.FldCaption)</td>
+			<td @Html.Raw(Agent.ReferBy.CellAttributes)>
+<span id="el_Agent_ReferBy">
+<span @Html.Raw(Agent.ReferBy.ViewAttributes)>
+@Html.Raw(Agent.ReferBy.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* ReferBy.Visible (end) *@
+		@if (Agent.AgentImageName.Visible) { // AgentImageName.Visible (begin)
+		<tr id="r_AgentImageName">
+			<td>@Html.Raw(Agent.AgentImageName.FldCaption)</td>
+			<td @Html.Raw(Agent.AgentImageName.CellAttributes)>
+<span id="el_Agent_AgentImageName">
+<span @Html.Raw(Agent.AgentImageName.ViewAttributes)>
+@Html.Raw(Agent.AgentImageName.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* AgentImageName.Visible (end) *@
+		@if (Agent.status.Visible) { // status.Visible (begin)
+		<tr id="r_status">
+			<td>@Html.Raw(Agent.status.FldCaption)</td>
+			<td @Html.Raw(Agent.status.CellAttributes)>
+<span id="el_Agent_status">
+<span @Html.Raw(Agent.status.ViewAttributes)>
+@Html.Raw(Agent.status.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* status.Visible (end) *@
+		@if (Agent.CreatedBy.Visible) { // CreatedBy.Visible (begin)
+		<tr id="r_CreatedBy">
+			<td>@Html.Raw(Agent.CreatedBy.FldCaption)</td>
+			<td @Html.Raw(Agent.CreatedBy.CellAttributes)>
+<span id="el_Agent_CreatedBy">
+<span @Html.Raw(Agent.CreatedBy.ViewAttributes)>
+@Html.Raw(Agent.CreatedBy.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* CreatedBy.Visible (end) *@
+		@if (Agent.CreatedDate.Visible) { // CreatedDate.Visible (begin)
+		<tr id="r_CreatedDate">
+			<td>@Html.Raw(Agent.CreatedDate.FldCaption)</td>
+			<td @Html.Raw(Agent.CreatedDate.CellAttributes)>
+<span id="el_Agent_CreatedDate">
+<span @Html.Raw(Agent.CreatedDate.ViewAttributes)>
+@Html.Raw(Agent.CreatedDate.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* CreatedDate.Visible (end) *@
+		@if (Agent.ModifiedUser.Visible) { // ModifiedUser.Visible (begin)
+		<tr id="r_ModifiedUser">
+			<td>@Html.Raw(Agent.ModifiedUser.FldCaption)</td>
+			<td @Html.Raw(Agent.ModifiedUser.CellAttributes)>
+<span id="el_Agent_ModifiedUser">
+<span @Html.Raw(Agent.ModifiedUser.ViewAttributes)>
+@Html.Raw(Agent.ModifiedUser.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* ModifiedUser.Visible (end) *@
+		@if (Agent.ModifiedDate.Visible) { // ModifiedDate.Visible (begin)
+		<tr id="r_ModifiedDate">
+			<td>@Html.Raw(Agent.ModifiedDate.FldCaption)</td>
+			<td @Html.Raw(Agent.ModifiedDate.CellAttributes)>
+<span id="el_Agent_ModifiedDate">
+<span @Html.Raw(Agent.ModifiedDate.ViewAttributes)>
+@Html.Raw(Agent.ModifiedDate.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* ModifiedDate.Visible (end) *@
+		@if (Agent.PPExpiryDate.Visible) { // PPExpiryDate.Visible (begin)
+		<tr id="r_PPExpiryDate">
+			<td>@Html.Raw(Agent.PPExpiryDate.FldCaption)</td>
+			<td @Html.Raw(Agent.PPExpiryDate.CellAttributes)>
+<span id="el_Agent_PPExpiryDate">
+<span @Html.Raw(Agent.PPExpiryDate.ViewAttributes)>
+@Html.Raw(Agent.PPExpiryDate.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* PPExpiryDate.Visible (end) *@
+		@if (Agent.TTExpiryDate.Visible) { // TTExpiryDate.Visible (begin)
+		<tr id="r_TTExpiryDate">
+			<td>@Html.Raw(Agent.TTExpiryDate.FldCaption)</td>
+			<td @Html.Raw(Agent.TTExpiryDate.CellAttributes)>
+<span id="el_Agent_TTExpiryDate">
+<span @Html.Raw(Agent.TTExpiryDate.ViewAttributes)>
+@Html.Raw(Agent.TTExpiryDate.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* TTExpiryDate.Visible (end) *@
+		@if (Agent.MCExpiryDate.Visible) { // MCExpiryDate.Visible (begin)
+		<tr id="r_MCExpiryDate">
+			<td>@Html.Raw(Agent.MCExpiryDate.FldCaption)</td>
+			<td @Html.Raw(Agent.MCExpiryDate.CellAttributes)>
+<span id="el_Agent_MCExpiryDate">
+<span @Html.Raw(Agent.MCExpiryDate.ViewAttributes)>
+@Html.Raw(Agent.MCExpiryDate.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* MCExpiryDate.Visible (end) *@
+		@if (Agent.Action.Visible) { // Action.Visible (begin)
+		<tr id="r_Action">
+			<td>@Html.Raw(Agent.Action.FldCaption)</td>
+			<td @Html.Raw(Agent.Action.CellAttributes)>
+<span id="el_Agent_Action">
+<span @Html.Raw(Agent.Action.ViewAttributes)>
+@Html.Raw(Agent.Action.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Action.Visible (end) *@
+		@if (Agent.Remark.Visible) { // Remark.Visible (begin)
+		<tr id="r_Remark">
+			<td>@Html.Raw(Agent.Remark.FldCaption)</td>
+			<td @Html.Raw(Agent.Remark.CellAttributes)>
+<span id="el_Agent_Remark">
+<span @Html.Raw(Agent.Remark.ViewAttributes)>
+@Html.Raw(Agent.Remark.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Remark.Visible (end) *@
+		@if (Agent.MCType.Visible) { // MCType.Visible (begin)
+		<tr id="r_MCType">
+			<td>@Html.Raw(Agent.MCType.FldCaption)</td>
+			<td @Html.Raw(Agent.MCType.CellAttributes)>
+<span id="el_Agent_MCType">
+<span @Html.Raw(Agent.MCType.ViewAttributes)>
+@Html.Raw(Agent.MCType.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* MCType.Visible (end) *@
+		@if (Agent.CustDOB.Visible) { // CustDOB.Visible (begin)
+		<tr id="r_CustDOB">
+			<td>@Html.Raw(Agent.CustDOB.FldCaption)</td>
+			<td @Html.Raw(Agent.CustDOB.CellAttributes)>
+<span id="el_Agent_CustDOB">
+<span @Html.Raw(Agent.CustDOB.ViewAttributes)>
+@Html.Raw(Agent.CustDOB.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* CustDOB.Visible (end) *@
+		@if (Agent.DefContactDOB.Visible) { // DefContactDOB.Visible (begin)
+		<tr id="r_DefContactDOB">
+			<td>@Html.Raw(Agent.DefContactDOB.FldCaption)</td>
+			<td @Html.Raw(Agent.DefContactDOB.CellAttributes)>
+<span id="el_Agent_DefContactDOB">
+<span @Html.Raw(Agent.DefContactDOB.ViewAttributes)>
+@Html.Raw(Agent.DefContactDOB.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* DefContactDOB.Visible (end) *@
+		@if (Agent.ScanImage.Visible) { // ScanImage.Visible (begin)
+		<tr id="r_ScanImage">
+			<td>@Html.Raw(Agent.ScanImage.FldCaption)</td>
+			<td @Html.Raw(Agent.ScanImage.CellAttributes)>
+<span id="el_Agent_ScanImage">
+<span @Html.Raw(Agent.ScanImage.ViewAttributes)>
+@Html.Raw(Agent.ScanImage.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* ScanImage.Visible (end) *@
+		@if (Agent.BizNature.Visible) { // BizNature.Visible (begin)
+		<tr id="r_BizNature">
+			<td>@Html.Raw(Agent.BizNature.FldCaption)</td>
+			<td @Html.Raw(Agent.BizNature.CellAttributes)>
+<span id="el_Agent_BizNature">
+<span @Html.Raw(Agent.BizNature.ViewAttributes)>
+@Html.Raw(Agent.BizNature.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BizNature.Visible (end) *@
+		@if (Agent.DefContactPOB.Visible) { // DefContactPOB.Visible (begin)
+		<tr id="r_DefContactPOB">
+			<td>@Html.Raw(Agent.DefContactPOB.FldCaption)</td>
+			<td @Html.Raw(Agent.DefContactPOB.CellAttributes)>
+<span id="el_Agent_DefContactPOB">
+<span @Html.Raw(Agent.DefContactPOB.ViewAttributes)>
+@Html.Raw(Agent.DefContactPOB.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* DefContactPOB.Visible (end) *@
+		@if (Agent.NewTran.Visible) { // NewTran.Visible (begin)
+		<tr id="r_NewTran">
+			<td>@Html.Raw(Agent.NewTran.FldCaption)</td>
+			<td @Html.Raw(Agent.NewTran.CellAttributes)>
+<span id="el_Agent_NewTran">
+<span @Html.Raw(Agent.NewTran.ViewAttributes)>
+@Html.Raw(Agent.NewTran.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* NewTran.Visible (end) *@
+		@if (Agent.BizRegNo.Visible) { // BizRegNo.Visible (begin)
+		<tr id="r_BizRegNo">
+			<td>@Html.Raw(Agent.BizRegNo.FldCaption)</td>
+			<td @Html.Raw(Agent.BizRegNo.CellAttributes)>
+<span id="el_Agent_BizRegNo">
+<span @Html.Raw(Agent.BizRegNo.ViewAttributes)>
+@Html.Raw(Agent.BizRegNo.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BizRegNo.Visible (end) *@
+		@if (Agent.BizRegDate.Visible) { // BizRegDate.Visible (begin)
+		<tr id="r_BizRegDate">
+			<td>@Html.Raw(Agent.BizRegDate.FldCaption)</td>
+			<td @Html.Raw(Agent.BizRegDate.CellAttributes)>
+<span id="el_Agent_BizRegDate">
+<span @Html.Raw(Agent.BizRegDate.ViewAttributes)>
+@Html.Raw(Agent.BizRegDate.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BizRegDate.Visible (end) *@
+		@if (Agent.BizRegPlace.Visible) { // BizRegPlace.Visible (begin)
+		<tr id="r_BizRegPlace">
+			<td>@Html.Raw(Agent.BizRegPlace.FldCaption)</td>
+			<td @Html.Raw(Agent.BizRegPlace.CellAttributes)>
+<span id="el_Agent_BizRegPlace">
+<span @Html.Raw(Agent.BizRegPlace.ViewAttributes)>
+@Html.Raw(Agent.BizRegPlace.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BizRegPlace.Visible (end) *@
+		@if (Agent.BizRegExpDate.Visible) { // BizRegExpDate.Visible (begin)
+		<tr id="r_BizRegExpDate">
+			<td>@Html.Raw(Agent.BizRegExpDate.FldCaption)</td>
+			<td @Html.Raw(Agent.BizRegExpDate.CellAttributes)>
+<span id="el_Agent_BizRegExpDate">
+<span @Html.Raw(Agent.BizRegExpDate.ViewAttributes)>
+@Html.Raw(Agent.BizRegExpDate.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BizRegExpDate.Visible (end) *@
+		@if (Agent.UnIncorpExec.Visible) { // UnIncorpExec.Visible (begin)
+		<tr id="r_UnIncorpExec">
+			<td>@Html.Raw(Agent.UnIncorpExec.FldCaption)</td>
+			<td @Html.Raw(Agent.UnIncorpExec.CellAttributes)>
+<span id="el_Agent_UnIncorpExec">
+<span @Html.Raw(Agent.UnIncorpExec.ViewAttributes)>
+@Html.Raw(Agent.UnIncorpExec.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* UnIncorpExec.Visible (end) *@
+		@if (Agent.DefContactAuthorzLetter.Visible) { // DefContactAuthorzLetter.Visible (begin)
+		<tr id="r_DefContactAuthorzLetter">
+			<td>@Html.Raw(Agent.DefContactAuthorzLetter.FldCaption)</td>
+			<td @Html.Raw(Agent.DefContactAuthorzLetter.CellAttributes)>
+<span id="el_Agent_DefContactAuthorzLetter">
+<span @Html.Raw(Agent.DefContactAuthorzLetter.ViewAttributes)>
+@Html.Raw(Agent.DefContactAuthorzLetter.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* DefContactAuthorzLetter.Visible (end) *@
+		@if (Agent.Politician.Visible) { // Politician.Visible (begin)
+		<tr id="r_Politician">
+			<td>@Html.Raw(Agent.Politician.FldCaption)</td>
+			<td @Html.Raw(Agent.Politician.CellAttributes)>
+<span id="el_Agent_Politician">
+<span @Html.Raw(Agent.Politician.ViewAttributes)>
+@Html.Raw(Agent.Politician.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Politician.Visible (end) *@
+		@if (Agent.BizPartnerNo.Visible) { // BizPartnerNo.Visible (begin)
+		<tr id="r_BizPartnerNo">
+			<td>@Html.Raw(Agent.BizPartnerNo.FldCaption)</td>
+			<td @Html.Raw(Agent.BizPartnerNo.CellAttributes)>
+<span id="el_Agent_BizPartnerNo">
+<span @Html.Raw(Agent.BizPartnerNo.ViewAttributes)>
+@Html.Raw(Agent.BizPartnerNo.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BizPartnerNo.Visible (end) *@
+		@if (Agent.Remark2.Visible) { // Remark2.Visible (begin)
+		<tr id="r_Remark2">
+			<td>@Html.Raw(Agent.Remark2.FldCaption)</td>
+			<td @Html.Raw(Agent.Remark2.CellAttributes)>
+<span id="el_Agent_Remark2">
+<span @Html.Raw(Agent.Remark2.ViewAttributes)>
+@Html.Raw(Agent.Remark2.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* Remark2.Visible (end) *@
+		@if (Agent.BannedListRemark.Visible) { // BannedListRemark.Visible (begin)
+		<tr id="r_BannedListRemark">
+			<td>@Html.Raw(Agent.BannedListRemark.FldCaption)</td>
+			<td @Html.Raw(Agent.BannedListRemark.CellAttributes)>
+<span id="el_Agent_BannedListRemark">
+<span @Html.Raw(Agent.BannedListRemark.ViewAttributes)>
+@Html.Raw(Agent.BannedListRemark.ListViewValue)</span>
+</span>
+</td>
+		</tr>
+		} @* BannedListRemark.Visible (end) *@
+	</tbody>
+</table>
+} @* Agent_master.Visible (end) *@

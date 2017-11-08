@@ -1,0 +1,312 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	CurrencyRule_delete.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "delete";
+var CurrentForm = fCurrencyRuledelete = new ew_Form("fCurrencyRuledelete", "delete");
+
+// Form_CustomValidate event
+fCurrencyRuledelete.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fCurrencyRuledelete.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fCurrencyRuledelete.Lists["x_RuleType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuledelete.Lists["x_RuleType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.RuleType.Options()));
+fCurrencyRuledelete.Lists["x_AgentId"] = {"LinkField":"x_AgentId","Ajax":true,"AutoFill":false,"DisplayFields":["x_AgentName","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Agent"};
+fCurrencyRuledelete.Lists["x_CurrencyCode"] = {"LinkField":"x_CurrencyCode","Ajax":true,"AutoFill":false,"DisplayFields":["x_CurrencyCode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Currency"};
+fCurrencyRuledelete.Lists["x_TransactionType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuledelete.Lists["x_TransactionType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionType.Options()));
+fCurrencyRuledelete.Lists["x_TransactionTypeCondition"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuledelete.Lists["x_TransactionTypeCondition"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionTypeCondition.Options()));
+fCurrencyRuledelete.Lists["x_TransactionPeriodType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuledelete.Lists["x_TransactionPeriodType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionPeriodType.Options()));
+fCurrencyRuledelete.Lists["x_TransactionPeriodCondition"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuledelete.Lists["x_TransactionPeriodCondition"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionPeriodCondition.Options()));
+
+// Form object for search
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+<div class="ewToolbar">
+@if (ew_Empty(CurrencyRule.Export)) {
+<div style="display: inline-block">
+	@{ Breadcrumb?.Render(); }
+</div>
+}
+@if (ew_Empty(CurrencyRule.Export)) {
+	@Language.SelectionForm()
+}
+	<div class="clearfix"></div>
+</div>
+@CurrencyRule_delete.ShowPageHeader()
+@{ CurrencyRule_delete.ShowMessage(); }
+<form name="fCurrencyRuledelete" id="fCurrencyRuledelete" class="form-inline ewForm ewDeleteForm" action="@ew_AppPath(ew_CurrentPage())" method="post">
+<br>
+@if (CurrencyRule_delete.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@CurrencyRule_delete.Token">
+}
+<input type="hidden" name="a_delete" id="a_delete" value="D">
+@foreach (string key in CurrencyRule_delete.RecKeys) {
+ <input type="hidden" name="key_m" value="@key">
+}
+<div class="ewGrid">
+<div class="@((ew_IsResponsiveLayout()) ? "table-responsive" : "ewGridMiddlePanel")">
+<table class="table ewTable">
+@Html.Raw(CurrencyRule_delete.TableCustomInnerHtml)
+	<thead>
+	<tr class="ewTableHeader">
+@if (CurrencyRule.id.Visible) { // id (begin)
+		<th><span id="elh_CurrencyRule_id" class="CurrencyRule_id">@Html.Raw(CurrencyRule.id.FldCaption)</span></th>
+} @* id.Visible (end) *@
+@if (CurrencyRule.RuleType.Visible) { // RuleType (begin)
+		<th><span id="elh_CurrencyRule_RuleType" class="CurrencyRule_RuleType">@Html.Raw(CurrencyRule.RuleType.FldCaption)</span></th>
+} @* RuleType.Visible (end) *@
+@if (CurrencyRule.AgentId.Visible) { // AgentId (begin)
+		<th><span id="elh_CurrencyRule_AgentId" class="CurrencyRule_AgentId">@Html.Raw(CurrencyRule.AgentId.FldCaption)</span></th>
+} @* AgentId.Visible (end) *@
+@if (CurrencyRule.CurrencyCode.Visible) { // CurrencyCode (begin)
+		<th><span id="elh_CurrencyRule_CurrencyCode" class="CurrencyRule_CurrencyCode">@Html.Raw(CurrencyRule.CurrencyCode.FldCaption)</span></th>
+} @* CurrencyCode.Visible (end) *@
+@if (CurrencyRule.TransactionType.Visible) { // TransactionType (begin)
+		<th><span id="elh_CurrencyRule_TransactionType" class="CurrencyRule_TransactionType">@Html.Raw(CurrencyRule.TransactionType.FldCaption)</span></th>
+} @* TransactionType.Visible (end) *@
+@if (CurrencyRule.TransactionTypeCondition.Visible) { // TransactionTypeCondition (begin)
+		<th><span id="elh_CurrencyRule_TransactionTypeCondition" class="CurrencyRule_TransactionTypeCondition">@Html.Raw(CurrencyRule.TransactionTypeCondition.FldCaption)</span></th>
+} @* TransactionTypeCondition.Visible (end) *@
+@if (CurrencyRule.SingleTransactionBuyAmount.Visible) { // SingleTransactionBuyAmount (begin)
+		<th><span id="elh_CurrencyRule_SingleTransactionBuyAmount" class="CurrencyRule_SingleTransactionBuyAmount">@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.FldCaption)</span></th>
+} @* SingleTransactionBuyAmount.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodType.Visible) { // TransactionPeriodType (begin)
+		<th><span id="elh_CurrencyRule_TransactionPeriodType" class="CurrencyRule_TransactionPeriodType">@Html.Raw(CurrencyRule.TransactionPeriodType.FldCaption)</span></th>
+} @* TransactionPeriodType.Visible (end) *@
+@if (CurrencyRule.PeriodStart.Visible) { // PeriodStart (begin)
+		<th><span id="elh_CurrencyRule_PeriodStart" class="CurrencyRule_PeriodStart">@Html.Raw(CurrencyRule.PeriodStart.FldCaption)</span></th>
+} @* PeriodStart.Visible (end) *@
+@if (CurrencyRule.PeriodEnd.Visible) { // PeriodEnd (begin)
+		<th><span id="elh_CurrencyRule_PeriodEnd" class="CurrencyRule_PeriodEnd">@Html.Raw(CurrencyRule.PeriodEnd.FldCaption)</span></th>
+} @* PeriodEnd.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodCondition.Visible) { // TransactionPeriodCondition (begin)
+		<th><span id="elh_CurrencyRule_TransactionPeriodCondition" class="CurrencyRule_TransactionPeriodCondition">@Html.Raw(CurrencyRule.TransactionPeriodCondition.FldCaption)</span></th>
+} @* TransactionPeriodCondition.Visible (end) *@
+@if (CurrencyRule.PeriodBuyAmount.Visible) { // PeriodBuyAmount (begin)
+		<th><span id="elh_CurrencyRule_PeriodBuyAmount" class="CurrencyRule_PeriodBuyAmount">@Html.Raw(CurrencyRule.PeriodBuyAmount.FldCaption)</span></th>
+} @* PeriodBuyAmount.Visible (end) *@
+@if (CurrencyRule.NoOfTransactions.Visible) { // NoOfTransactions (begin)
+		<th><span id="elh_CurrencyRule_NoOfTransactions" class="CurrencyRule_NoOfTransactions">@Html.Raw(CurrencyRule.NoOfTransactions.FldCaption)</span></th>
+} @* NoOfTransactions.Visible (end) *@
+@if (CurrencyRule.FeeCost.Visible) { // FeeCost (begin)
+		<th><span id="elh_CurrencyRule_FeeCost" class="CurrencyRule_FeeCost">@Html.Raw(CurrencyRule.FeeCost.FldCaption)</span></th>
+} @* FeeCost.Visible (end) *@
+@if (CurrencyRule.CreatedDate.Visible) { // CreatedDate (begin)
+		<th><span id="elh_CurrencyRule_CreatedDate" class="CurrencyRule_CreatedDate">@Html.Raw(CurrencyRule.CreatedDate.FldCaption)</span></th>
+} @* CreatedDate.Visible (end) *@
+@if (CurrencyRule.CreatedBy.Visible) { // CreatedBy (begin)
+		<th><span id="elh_CurrencyRule_CreatedBy" class="CurrencyRule_CreatedBy">@Html.Raw(CurrencyRule.CreatedBy.FldCaption)</span></th>
+} @* CreatedBy.Visible (end) *@
+	</tr>
+	</thead>
+	<tbody>
+@{
+CurrencyRule_delete.RecCnt = 0;
+}
+@while (CurrencyRule_delete.Recordset != null && CurrencyRule_delete.Recordset.Read()) { // DN
+	CurrencyRule_delete.RecCnt++;
+	CurrencyRule_delete.RowCnt++;
+
+	// Set row properties
+	CurrencyRule_delete.ResetAttrs();
+	CurrencyRule_delete.RowType = EW_ROWTYPE_VIEW; // View
+
+	// Get the field contents
+	CurrencyRule_delete.LoadRowValues(CurrencyRule_delete.Recordset);
+
+	// Render row
+	CurrencyRule_delete.RenderRow();
+	<tr @Html.Raw(CurrencyRule_delete.RowAttributes)>
+@if (CurrencyRule.id.Visible) { // id (begin)
+		<td @Html.Raw(CurrencyRule.id.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_id" class="CurrencyRule_id">
+<span @Html.Raw(CurrencyRule.id.ViewAttributes)>
+@Html.Raw(CurrencyRule.id.ListViewValue)</span>
+</span>
+</td>
+} @* id.Visible (end) *@
+@if (CurrencyRule.RuleType.Visible) { // RuleType (begin)
+		<td @Html.Raw(CurrencyRule.RuleType.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_RuleType" class="CurrencyRule_RuleType">
+<span @Html.Raw(CurrencyRule.RuleType.ViewAttributes)>
+@Html.Raw(CurrencyRule.RuleType.ListViewValue)</span>
+</span>
+</td>
+} @* RuleType.Visible (end) *@
+@if (CurrencyRule.AgentId.Visible) { // AgentId (begin)
+		<td @Html.Raw(CurrencyRule.AgentId.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_AgentId" class="CurrencyRule_AgentId">
+<span @Html.Raw(CurrencyRule.AgentId.ViewAttributes)>
+@Html.Raw(CurrencyRule.AgentId.ListViewValue)</span>
+</span>
+</td>
+} @* AgentId.Visible (end) *@
+@if (CurrencyRule.CurrencyCode.Visible) { // CurrencyCode (begin)
+		<td @Html.Raw(CurrencyRule.CurrencyCode.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_CurrencyCode" class="CurrencyRule_CurrencyCode">
+<span @Html.Raw(CurrencyRule.CurrencyCode.ViewAttributes)>
+@Html.Raw(CurrencyRule.CurrencyCode.ListViewValue)</span>
+</span>
+</td>
+} @* CurrencyCode.Visible (end) *@
+@if (CurrencyRule.TransactionType.Visible) { // TransactionType (begin)
+		<td @Html.Raw(CurrencyRule.TransactionType.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_TransactionType" class="CurrencyRule_TransactionType">
+<span @Html.Raw(CurrencyRule.TransactionType.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionType.ListViewValue)</span>
+</span>
+</td>
+} @* TransactionType.Visible (end) *@
+@if (CurrencyRule.TransactionTypeCondition.Visible) { // TransactionTypeCondition (begin)
+		<td @Html.Raw(CurrencyRule.TransactionTypeCondition.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_TransactionTypeCondition" class="CurrencyRule_TransactionTypeCondition">
+<span @Html.Raw(CurrencyRule.TransactionTypeCondition.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionTypeCondition.ListViewValue)</span>
+</span>
+</td>
+} @* TransactionTypeCondition.Visible (end) *@
+@if (CurrencyRule.SingleTransactionBuyAmount.Visible) { // SingleTransactionBuyAmount (begin)
+		<td @Html.Raw(CurrencyRule.SingleTransactionBuyAmount.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_SingleTransactionBuyAmount" class="CurrencyRule_SingleTransactionBuyAmount">
+<span @Html.Raw(CurrencyRule.SingleTransactionBuyAmount.ViewAttributes)>
+@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.ListViewValue)</span>
+</span>
+</td>
+} @* SingleTransactionBuyAmount.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodType.Visible) { // TransactionPeriodType (begin)
+		<td @Html.Raw(CurrencyRule.TransactionPeriodType.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_TransactionPeriodType" class="CurrencyRule_TransactionPeriodType">
+<span @Html.Raw(CurrencyRule.TransactionPeriodType.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionPeriodType.ListViewValue)</span>
+</span>
+</td>
+} @* TransactionPeriodType.Visible (end) *@
+@if (CurrencyRule.PeriodStart.Visible) { // PeriodStart (begin)
+		<td @Html.Raw(CurrencyRule.PeriodStart.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_PeriodStart" class="CurrencyRule_PeriodStart">
+<span @Html.Raw(CurrencyRule.PeriodStart.ViewAttributes)>
+@Html.Raw(CurrencyRule.PeriodStart.ListViewValue)</span>
+</span>
+</td>
+} @* PeriodStart.Visible (end) *@
+@if (CurrencyRule.PeriodEnd.Visible) { // PeriodEnd (begin)
+		<td @Html.Raw(CurrencyRule.PeriodEnd.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_PeriodEnd" class="CurrencyRule_PeriodEnd">
+<span @Html.Raw(CurrencyRule.PeriodEnd.ViewAttributes)>
+@Html.Raw(CurrencyRule.PeriodEnd.ListViewValue)</span>
+</span>
+</td>
+} @* PeriodEnd.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodCondition.Visible) { // TransactionPeriodCondition (begin)
+		<td @Html.Raw(CurrencyRule.TransactionPeriodCondition.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_TransactionPeriodCondition" class="CurrencyRule_TransactionPeriodCondition">
+<span @Html.Raw(CurrencyRule.TransactionPeriodCondition.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionPeriodCondition.ListViewValue)</span>
+</span>
+</td>
+} @* TransactionPeriodCondition.Visible (end) *@
+@if (CurrencyRule.PeriodBuyAmount.Visible) { // PeriodBuyAmount (begin)
+		<td @Html.Raw(CurrencyRule.PeriodBuyAmount.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_PeriodBuyAmount" class="CurrencyRule_PeriodBuyAmount">
+<span @Html.Raw(CurrencyRule.PeriodBuyAmount.ViewAttributes)>
+@Html.Raw(CurrencyRule.PeriodBuyAmount.ListViewValue)</span>
+</span>
+</td>
+} @* PeriodBuyAmount.Visible (end) *@
+@if (CurrencyRule.NoOfTransactions.Visible) { // NoOfTransactions (begin)
+		<td @Html.Raw(CurrencyRule.NoOfTransactions.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_NoOfTransactions" class="CurrencyRule_NoOfTransactions">
+<span @Html.Raw(CurrencyRule.NoOfTransactions.ViewAttributes)>
+@Html.Raw(CurrencyRule.NoOfTransactions.ListViewValue)</span>
+</span>
+</td>
+} @* NoOfTransactions.Visible (end) *@
+@if (CurrencyRule.FeeCost.Visible) { // FeeCost (begin)
+		<td @Html.Raw(CurrencyRule.FeeCost.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_FeeCost" class="CurrencyRule_FeeCost">
+<span @Html.Raw(CurrencyRule.FeeCost.ViewAttributes)>
+@Html.Raw(CurrencyRule.FeeCost.ListViewValue)</span>
+</span>
+</td>
+} @* FeeCost.Visible (end) *@
+@if (CurrencyRule.CreatedDate.Visible) { // CreatedDate (begin)
+		<td @Html.Raw(CurrencyRule.CreatedDate.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_CreatedDate" class="CurrencyRule_CreatedDate">
+<span @Html.Raw(CurrencyRule.CreatedDate.ViewAttributes)>
+@Html.Raw(CurrencyRule.CreatedDate.ListViewValue)</span>
+</span>
+</td>
+} @* CreatedDate.Visible (end) *@
+@if (CurrencyRule.CreatedBy.Visible) { // CreatedBy (begin)
+		<td @Html.Raw(CurrencyRule.CreatedBy.CellAttributes)>
+<span id="el@(CurrencyRule_delete.RowCnt)_CurrencyRule_CreatedBy" class="CurrencyRule_CreatedBy">
+<span @Html.Raw(CurrencyRule.CreatedBy.ViewAttributes)>
+@Html.Raw(CurrencyRule.CreatedBy.ListViewValue)</span>
+</span>
+</td>
+} @* CreatedBy.Visible (end) *@
+	</tr>
+}
+@{ CurrencyRule_delete.CloseRecordset(); }
+</tbody>
+</table>
+</div>
+</div>
+<div>
+<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit">@Html.Raw(Language.Phrase("DeleteBtn"))</button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="@ew_AppPath(CurrencyRule_delete.ReturnUrl)">@Language.Phrase("CancelBtn")</button>
+</div>
+</form>
+<script type="text/javascript">
+fCurrencyRuledelete.Init();
+</script>
+@CurrencyRule_delete.ShowPageFooter()
+@DebugMsg()
+@ElapsedTime(StartTime)
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+@{ CurrencyRule_delete.Page_Terminate(); }

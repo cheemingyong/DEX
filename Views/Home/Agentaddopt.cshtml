@@ -1,0 +1,696 @@
+@{
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	Agent_addopt.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "addopt";
+var CurrentForm = fAgentaddopt = new ew_Form("fAgentaddopt", "addopt");
+
+// Validate form
+fAgentaddopt.Validate = function() {
+	if (!this.ValidateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
+	if ($fobj.find("#a_confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.FormKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = $fobj.find("#a_list").val() == "gridinsert";
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		elm = this.GetElements("x" + infix + "_AgentId");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.AgentId.ReqErrMsg.Replace("%s", Agent.AgentId.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_AgentName");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.AgentName.ReqErrMsg.Replace("%s", Agent.AgentName.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_AgentRiskCredit");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.AgentRiskCredit.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_Address1");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.Address1.ReqErrMsg.Replace("%s", Agent.Address1.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Country");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.Country.ReqErrMsg.Replace("%s", Agent.Country.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_ZipCode");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.ZipCode.ReqErrMsg.Replace("%s", Agent.ZipCode.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Fax");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.Fax.ReqErrMsg.Replace("%s", Agent.Fax.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Phone");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.Phone.ReqErrMsg.Replace("%s", Agent.Phone.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Mobile");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.Mobile.ReqErrMsg.Replace("%s", Agent.Mobile.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_BuzType");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.BuzType.ReqErrMsg.Replace("%s", Agent.BuzType.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_ClassType");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.ClassType.ReqErrMsg.Replace("%s", Agent.ClassType.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_DefContactPName");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.DefContactPName.ReqErrMsg.Replace("%s", Agent.DefContactPName.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_DefContactPNric");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.DefContactPNric.ReqErrMsg.Replace("%s", Agent.DefContactPNric.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_LedgerBal");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.LedgerBal.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_AvailableBal");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.AvailableBal.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_RemittanceLicNO");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.RemittanceLicNO.ReqErrMsg.Replace("%s", Agent.RemittanceLicNO.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_MCLicNo");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.MCLicNo.ReqErrMsg.Replace("%s", Agent.MCLicNo.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_BankODLimit");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.BankODLimit.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_CreditLimit");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.CreditLimit.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_ReferBy");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.ReferBy.ReqErrMsg.Replace("%s", Agent.ReferBy.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_status");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.status.ReqErrMsg.Replace("%s", Agent.status.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_CreatedBy");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.CreatedBy.ReqErrMsg.Replace("%s", Agent.CreatedBy.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_CreatedDate");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.CreatedDate.ReqErrMsg.Replace("%s", Agent.CreatedDate.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_CreatedDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.CreatedDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_ModifiedDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.ModifiedDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_PPExpiryDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.PPExpiryDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_TTExpiryDate");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.TTExpiryDate.ReqErrMsg.Replace("%s", Agent.TTExpiryDate.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_TTExpiryDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.TTExpiryDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_MCExpiryDate");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.MCExpiryDate.ReqErrMsg.Replace("%s", Agent.MCExpiryDate.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_MCExpiryDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.MCExpiryDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_CustDOB");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.CustDOB.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_DefContactDOB");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.DefContactDOB.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_BizRegDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.BizRegDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_BizRegExpDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.BizRegExpDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_UnIncorpExec");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.UnIncorpExec.ReqErrMsg.Replace("%s", Agent.UnIncorpExec.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_UnIncorpExec");
+		if (elm && !ew_CheckInteger(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.UnIncorpExec.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_DefContactAuthorzLetter");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.DefContactAuthorzLetter.ReqErrMsg.Replace("%s", Agent.DefContactAuthorzLetter.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_DefContactAuthorzLetter");
+		if (elm && !ew_CheckInteger(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.DefContactAuthorzLetter.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_Politician");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.Politician.ReqErrMsg.Replace("%s", Agent.Politician.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Politician");
+		if (elm && !ew_CheckInteger(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.Politician.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_BizPartnerNo");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.BizPartnerNo.ReqErrMsg.Replace("%s", Agent.BizPartnerNo.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_BizPartnerNo");
+		if (elm && !ew_CheckInteger(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(Agent.BizPartnerNo.FldErrMsg))");
+
+		// Fire Form_CustomValidate event
+		if (!this.Form_CustomValidate(fobj))
+			return false;
+	}
+	return true;
+}
+
+// Form_CustomValidate event
+fAgentaddopt.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fAgentaddopt.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fAgentaddopt.Lists["x_AgentRiskRating"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fAgentaddopt.Lists["x_AgentRiskRating"].Options = @Html.Raw(ew_ArrayToJson(Agent.AgentRiskRating.Options()));
+fAgentaddopt.Lists["x_Country"] = {"LinkField":"x_varCountryCode","Ajax":true,"AutoFill":false,"DisplayFields":["x_varCountryCode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"tblStdCountry"};
+fAgentaddopt.Lists["x_BankYesNo"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fAgentaddopt.Lists["x_BankYesNo"].Options = @Html.Raw(ew_ArrayToJson(Agent.BankYesNo.Options()));
+
+// Form object for search
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+@{ Agent_addopt.ShowMessage(); }
+<form name="fAgentaddopt" id="fAgentaddopt" class="ewForm form-horizontal" action="@ew_AppPath("Agentaddopt")" method="post">
+@if (Agent_addopt.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@Agent_addopt.Token">
+}
+<input type="hidden" name="a_addopt" id="a_addopt" value="A">
+@if (Agent.AgentId.Visible) { // AgentId
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_AgentId">@Html.Raw(Agent.AgentId.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_AgentId" name="x_AgentId" id="x_AgentId" size="30" maxlength="20" placeholder="@Agent.AgentId.PlaceHolder" value="@Agent.AgentId.EditValue" @Html.Raw(Agent.AgentId.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.AgentName.Visible) { // AgentName
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_AgentName">@Html.Raw(Agent.AgentName.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_AgentName" name="x_AgentName" id="x_AgentName" size="30" maxlength="70" placeholder="@Agent.AgentName.PlaceHolder" value="@Agent.AgentName.EditValue" @Html.Raw(Agent.AgentName.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.AgentRiskRating.Visible) { // AgentRiskRating
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_AgentRiskRating">@Html.Raw(Agent.AgentRiskRating.FldCaption)</label>
+		<div class="col-sm-9">
+<select data-table="Agent" data-field="x_AgentRiskRating" data-value-separator="@Agent.AgentRiskRating.DisplayValueSeparatorAttribute"  id="x_AgentRiskRating" name="x_AgentRiskRating" @Html.Raw(Agent.AgentRiskRating.EditAttributes)>
+@Agent.AgentRiskRating.SelectOptionListHtml("x_AgentRiskRating")
+</select>
+</div>
+	</div>
+}
+@if (Agent.AgentRiskCredit.Visible) { // AgentRiskCredit
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_AgentRiskCredit">@Html.Raw(Agent.AgentRiskCredit.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_AgentRiskCredit" name="x_AgentRiskCredit" id="x_AgentRiskCredit" size="30" placeholder="@Agent.AgentRiskCredit.PlaceHolder" value="@Agent.AgentRiskCredit.EditValue" @Html.Raw(Agent.AgentRiskCredit.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Address1.Visible) { // Address1
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Address1">@Html.Raw(Agent.Address1.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Address1" name="x_Address1" id="x_Address1" size="30" maxlength="100" placeholder="@Agent.Address1.PlaceHolder" value="@Agent.Address1.EditValue" @Html.Raw(Agent.Address1.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Address2.Visible) { // Address2
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Address2">@Html.Raw(Agent.Address2.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Address2" name="x_Address2" id="x_Address2" size="30" maxlength="100" placeholder="@Agent.Address2.PlaceHolder" value="@Agent.Address2.EditValue" @Html.Raw(Agent.Address2.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Address3.Visible) { // Address3
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Address3">@Html.Raw(Agent.Address3.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Address3" name="x_Address3" id="x_Address3" size="30" maxlength="100" placeholder="@Agent.Address3.PlaceHolder" value="@Agent.Address3.EditValue" @Html.Raw(Agent.Address3.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Country.Visible) { // Country
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Country">@Html.Raw(Agent.Country.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<select data-table="Agent" data-field="x_Country" data-value-separator="@Agent.Country.DisplayValueSeparatorAttribute"  id="x_Country" name="x_Country" @Html.Raw(Agent.Country.EditAttributes)>
+@Agent.Country.SelectOptionListHtml("x_Country")
+</select>
+<input type="hidden" name="s_x_Country" id="s_x_Country" value="@Agent.Country.LookupFilterQuery()">
+</div>
+	</div>
+}
+@if (Agent.ZipCode.Visible) { // ZipCode
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_ZipCode">@Html.Raw(Agent.ZipCode.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_ZipCode" name="x_ZipCode" id="x_ZipCode" size="30" maxlength="20" placeholder="@Agent.ZipCode.PlaceHolder" value="@Agent.ZipCode.EditValue" @Html.Raw(Agent.ZipCode.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Fax.Visible) { // Fax
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Fax">@Html.Raw(Agent.Fax.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Fax" name="x_Fax" id="x_Fax" size="30" maxlength="20" placeholder="@Agent.Fax.PlaceHolder" value="@Agent.Fax.EditValue" @Html.Raw(Agent.Fax.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Phone.Visible) { // Phone
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Phone">@Html.Raw(Agent.Phone.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Phone" name="x_Phone" id="x_Phone" size="30" maxlength="20" placeholder="@Agent.Phone.PlaceHolder" value="@Agent.Phone.EditValue" @Html.Raw(Agent.Phone.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Mobile.Visible) { // Mobile
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Mobile">@Html.Raw(Agent.Mobile.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Mobile" name="x_Mobile" id="x_Mobile" size="30" maxlength="20" placeholder="@Agent.Mobile.PlaceHolder" value="@Agent.Mobile.EditValue" @Html.Raw(Agent.Mobile.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BuzType.Visible) { // BuzType
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BuzType">@Html.Raw(Agent.BuzType.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BuzType" name="x_BuzType" id="x_BuzType" size="30" maxlength="50" placeholder="@Agent.BuzType.PlaceHolder" value="@Agent.BuzType.EditValue" @Html.Raw(Agent.BuzType.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.ClassType.Visible) { // ClassType
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_ClassType">@Html.Raw(Agent.ClassType.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_ClassType" name="x_ClassType" id="x_ClassType" size="30" maxlength="50" placeholder="@Agent.ClassType.PlaceHolder" value="@Agent.ClassType.EditValue" @Html.Raw(Agent.ClassType.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.DefContactPName.Visible) { // DefContactPName
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_DefContactPName">@Html.Raw(Agent.DefContactPName.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_DefContactPName" name="x_DefContactPName" id="x_DefContactPName" size="30" maxlength="50" placeholder="@Agent.DefContactPName.PlaceHolder" value="@Agent.DefContactPName.EditValue" @Html.Raw(Agent.DefContactPName.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.DefContactPNric.Visible) { // DefContactPNric
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_DefContactPNric">@Html.Raw(Agent.DefContactPNric.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_DefContactPNric" name="x_DefContactPNric" id="x_DefContactPNric" size="30" maxlength="30" placeholder="@Agent.DefContactPNric.PlaceHolder" value="@Agent.DefContactPNric.EditValue" @Html.Raw(Agent.DefContactPNric.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.DefContactPNation.Visible) { // DefContactPNation
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_DefContactPNation">@Html.Raw(Agent.DefContactPNation.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_DefContactPNation" name="x_DefContactPNation" id="x_DefContactPNation" size="30" maxlength="50" placeholder="@Agent.DefContactPNation.PlaceHolder" value="@Agent.DefContactPNation.EditValue" @Html.Raw(Agent.DefContactPNation.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.DefContactPOccupation.Visible) { // DefContactPOccupation
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_DefContactPOccupation">@Html.Raw(Agent.DefContactPOccupation.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_DefContactPOccupation" name="x_DefContactPOccupation" id="x_DefContactPOccupation" size="30" maxlength="50" placeholder="@Agent.DefContactPOccupation.PlaceHolder" value="@Agent.DefContactPOccupation.EditValue" @Html.Raw(Agent.DefContactPOccupation.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.TermsId.Visible) { // TermsId
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_TermsId">@Html.Raw(Agent.TermsId.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_TermsId" name="x_TermsId" id="x_TermsId" size="30" maxlength="20" placeholder="@Agent.TermsId.PlaceHolder" value="@Agent.TermsId.EditValue" @Html.Raw(Agent.TermsId.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.LedgerBal.Visible) { // LedgerBal
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_LedgerBal">@Html.Raw(Agent.LedgerBal.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_LedgerBal" name="x_LedgerBal" id="x_LedgerBal" size="30" placeholder="@Agent.LedgerBal.PlaceHolder" value="@Agent.LedgerBal.EditValue" @Html.Raw(Agent.LedgerBal.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.AvailableBal.Visible) { // AvailableBal
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_AvailableBal">@Html.Raw(Agent.AvailableBal.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_AvailableBal" name="x_AvailableBal" id="x_AvailableBal" size="30" placeholder="@Agent.AvailableBal.PlaceHolder" value="@Agent.AvailableBal.EditValue" @Html.Raw(Agent.AvailableBal.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent._Email.Visible) { // Email
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x__Email">@Html.Raw(Agent._Email.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x__Email" name="x__Email" id="x__Email" size="30" maxlength="50" placeholder="@Agent._Email.PlaceHolder" value="@Agent._Email.EditValue" @Html.Raw(Agent._Email.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.URL.Visible) { // URL
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_URL">@Html.Raw(Agent.URL.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_URL" name="x_URL" id="x_URL" size="30" maxlength="50" placeholder="@Agent.URL.PlaceHolder" value="@Agent.URL.EditValue" @Html.Raw(Agent.URL.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.CustType.Visible) { // CustType
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_CustType">@Html.Raw(Agent.CustType.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_CustType" name="x_CustType" id="x_CustType" size="30" maxlength="20" placeholder="@Agent.CustType.PlaceHolder" value="@Agent.CustType.EditValue" @Html.Raw(Agent.CustType.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.RemittanceLicNO.Visible) { // RemittanceLicNO
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_RemittanceLicNO">@Html.Raw(Agent.RemittanceLicNO.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_RemittanceLicNO" name="x_RemittanceLicNO" id="x_RemittanceLicNO" size="30" maxlength="20" placeholder="@Agent.RemittanceLicNO.PlaceHolder" value="@Agent.RemittanceLicNO.EditValue" @Html.Raw(Agent.RemittanceLicNO.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.MCLicNo.Visible) { // MCLicNo
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_MCLicNo">@Html.Raw(Agent.MCLicNo.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_MCLicNo" name="x_MCLicNo" id="x_MCLicNo" size="30" maxlength="20" placeholder="@Agent.MCLicNo.PlaceHolder" value="@Agent.MCLicNo.EditValue" @Html.Raw(Agent.MCLicNo.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BankYesNo.Visible) { // BankYesNo
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel">@Html.Raw(Agent.BankYesNo.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="checkbox" data-table="Agent" data-field="x_BankYesNo" name="x_BankYesNo" id="x_BankYesNo" value="1" checked="@ew_ConvertToBool(Agent.BankYesNo.CurrentValue)" @Html.Raw(Agent.BankYesNo.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BankODLimit.Visible) { // BankODLimit
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BankODLimit">@Html.Raw(Agent.BankODLimit.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BankODLimit" name="x_BankODLimit" id="x_BankODLimit" size="30" placeholder="@Agent.BankODLimit.PlaceHolder" value="@Agent.BankODLimit.EditValue" @Html.Raw(Agent.BankODLimit.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BankAcctNO.Visible) { // BankAcctNO
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BankAcctNO">@Html.Raw(Agent.BankAcctNO.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BankAcctNO" name="x_BankAcctNO" id="x_BankAcctNO" size="30" maxlength="50" placeholder="@Agent.BankAcctNO.PlaceHolder" value="@Agent.BankAcctNO.EditValue" @Html.Raw(Agent.BankAcctNO.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.CreditLimit.Visible) { // CreditLimit
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_CreditLimit">@Html.Raw(Agent.CreditLimit.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_CreditLimit" name="x_CreditLimit" id="x_CreditLimit" size="30" placeholder="@Agent.CreditLimit.PlaceHolder" value="@Agent.CreditLimit.EditValue" @Html.Raw(Agent.CreditLimit.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.ReferBy.Visible) { // ReferBy
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_ReferBy">@Html.Raw(Agent.ReferBy.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_ReferBy" name="x_ReferBy" id="x_ReferBy" size="30" maxlength="50" placeholder="@Agent.ReferBy.PlaceHolder" value="@Agent.ReferBy.EditValue" @Html.Raw(Agent.ReferBy.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.AgentImageName.Visible) { // AgentImageName
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_AgentImageName">@Html.Raw(Agent.AgentImageName.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_AgentImageName" name="x_AgentImageName" id="x_AgentImageName" size="30" maxlength="50" placeholder="@Agent.AgentImageName.PlaceHolder" value="@Agent.AgentImageName.EditValue" @Html.Raw(Agent.AgentImageName.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.status.Visible) { // status
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_status">@Html.Raw(Agent.status.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_status" name="x_status" id="x_status" size="30" maxlength="20" placeholder="@Agent.status.PlaceHolder" value="@Agent.status.EditValue" @Html.Raw(Agent.status.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.CreatedBy.Visible) { // CreatedBy
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_CreatedBy">@Html.Raw(Agent.CreatedBy.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_CreatedBy" name="x_CreatedBy" id="x_CreatedBy" size="30" maxlength="50" placeholder="@Agent.CreatedBy.PlaceHolder" value="@Agent.CreatedBy.EditValue" @Html.Raw(Agent.CreatedBy.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.CreatedDate.Visible) { // CreatedDate
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_CreatedDate">@Html.Raw(Agent.CreatedDate.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_CreatedDate" name="x_CreatedDate" id="x_CreatedDate" placeholder="@Agent.CreatedDate.PlaceHolder" value="@Agent.CreatedDate.EditValue" @Html.Raw(Agent.CreatedDate.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.ModifiedUser.Visible) { // ModifiedUser
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_ModifiedUser">@Html.Raw(Agent.ModifiedUser.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_ModifiedUser" name="x_ModifiedUser" id="x_ModifiedUser" size="30" maxlength="20" placeholder="@Agent.ModifiedUser.PlaceHolder" value="@Agent.ModifiedUser.EditValue" @Html.Raw(Agent.ModifiedUser.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.ModifiedDate.Visible) { // ModifiedDate
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_ModifiedDate">@Html.Raw(Agent.ModifiedDate.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_ModifiedDate" name="x_ModifiedDate" id="x_ModifiedDate" placeholder="@Agent.ModifiedDate.PlaceHolder" value="@Agent.ModifiedDate.EditValue" @Html.Raw(Agent.ModifiedDate.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.PPExpiryDate.Visible) { // PPExpiryDate
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_PPExpiryDate">@Html.Raw(Agent.PPExpiryDate.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_PPExpiryDate" name="x_PPExpiryDate" id="x_PPExpiryDate" placeholder="@Agent.PPExpiryDate.PlaceHolder" value="@Agent.PPExpiryDate.EditValue" @Html.Raw(Agent.PPExpiryDate.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.TTExpiryDate.Visible) { // TTExpiryDate
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_TTExpiryDate">@Html.Raw(Agent.TTExpiryDate.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_TTExpiryDate" name="x_TTExpiryDate" id="x_TTExpiryDate" placeholder="@Agent.TTExpiryDate.PlaceHolder" value="@Agent.TTExpiryDate.EditValue" @Html.Raw(Agent.TTExpiryDate.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.MCExpiryDate.Visible) { // MCExpiryDate
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_MCExpiryDate">@Html.Raw(Agent.MCExpiryDate.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_MCExpiryDate" name="x_MCExpiryDate" id="x_MCExpiryDate" placeholder="@Agent.MCExpiryDate.PlaceHolder" value="@Agent.MCExpiryDate.EditValue" @Html.Raw(Agent.MCExpiryDate.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Action.Visible) { // Action
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Action">@Html.Raw(Agent.Action.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Action" name="x_Action" id="x_Action" size="30" maxlength="20" placeholder="@Agent.Action.PlaceHolder" value="@Agent.Action.EditValue" @Html.Raw(Agent.Action.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Remark.Visible) { // Remark
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Remark">@Html.Raw(Agent.Remark.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Remark" name="x_Remark" id="x_Remark" size="30" maxlength="100" placeholder="@Agent.Remark.PlaceHolder" value="@Agent.Remark.EditValue" @Html.Raw(Agent.Remark.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.MCType.Visible) { // MCType
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_MCType">@Html.Raw(Agent.MCType.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_MCType" name="x_MCType" id="x_MCType" size="30" maxlength="12" placeholder="@Agent.MCType.PlaceHolder" value="@Agent.MCType.EditValue" @Html.Raw(Agent.MCType.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.CustDOB.Visible) { // CustDOB
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_CustDOB">@Html.Raw(Agent.CustDOB.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_CustDOB" name="x_CustDOB" id="x_CustDOB" placeholder="@Agent.CustDOB.PlaceHolder" value="@Agent.CustDOB.EditValue" @Html.Raw(Agent.CustDOB.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.DefContactDOB.Visible) { // DefContactDOB
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_DefContactDOB">@Html.Raw(Agent.DefContactDOB.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_DefContactDOB" name="x_DefContactDOB" id="x_DefContactDOB" placeholder="@Agent.DefContactDOB.PlaceHolder" value="@Agent.DefContactDOB.EditValue" @Html.Raw(Agent.DefContactDOB.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.ScanImage.Visible) { // ScanImage
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_ScanImage">@Html.Raw(Agent.ScanImage.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_ScanImage" name="x_ScanImage" id="x_ScanImage" size="30" maxlength="5" placeholder="@Agent.ScanImage.PlaceHolder" value="@Agent.ScanImage.EditValue" @Html.Raw(Agent.ScanImage.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BizNature.Visible) { // BizNature
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BizNature">@Html.Raw(Agent.BizNature.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BizNature" name="x_BizNature" id="x_BizNature" size="30" maxlength="255" placeholder="@Agent.BizNature.PlaceHolder" value="@Agent.BizNature.EditValue" @Html.Raw(Agent.BizNature.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.DefContactPOB.Visible) { // DefContactPOB
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_DefContactPOB">@Html.Raw(Agent.DefContactPOB.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_DefContactPOB" name="x_DefContactPOB" id="x_DefContactPOB" size="30" maxlength="50" placeholder="@Agent.DefContactPOB.PlaceHolder" value="@Agent.DefContactPOB.EditValue" @Html.Raw(Agent.DefContactPOB.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.NewTran.Visible) { // NewTran
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_NewTran">@Html.Raw(Agent.NewTran.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_NewTran" name="x_NewTran" id="x_NewTran" size="30" maxlength="1" placeholder="@Agent.NewTran.PlaceHolder" value="@Agent.NewTran.EditValue" @Html.Raw(Agent.NewTran.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BizRegNo.Visible) { // BizRegNo
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BizRegNo">@Html.Raw(Agent.BizRegNo.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BizRegNo" name="x_BizRegNo" id="x_BizRegNo" size="30" maxlength="30" placeholder="@Agent.BizRegNo.PlaceHolder" value="@Agent.BizRegNo.EditValue" @Html.Raw(Agent.BizRegNo.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BizRegDate.Visible) { // BizRegDate
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BizRegDate">@Html.Raw(Agent.BizRegDate.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BizRegDate" name="x_BizRegDate" id="x_BizRegDate" placeholder="@Agent.BizRegDate.PlaceHolder" value="@Agent.BizRegDate.EditValue" @Html.Raw(Agent.BizRegDate.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BizRegPlace.Visible) { // BizRegPlace
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BizRegPlace">@Html.Raw(Agent.BizRegPlace.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BizRegPlace" name="x_BizRegPlace" id="x_BizRegPlace" size="30" maxlength="50" placeholder="@Agent.BizRegPlace.PlaceHolder" value="@Agent.BizRegPlace.EditValue" @Html.Raw(Agent.BizRegPlace.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BizRegExpDate.Visible) { // BizRegExpDate
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BizRegExpDate">@Html.Raw(Agent.BizRegExpDate.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BizRegExpDate" name="x_BizRegExpDate" id="x_BizRegExpDate" placeholder="@Agent.BizRegExpDate.PlaceHolder" value="@Agent.BizRegExpDate.EditValue" @Html.Raw(Agent.BizRegExpDate.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.UnIncorpExec.Visible) { // UnIncorpExec
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_UnIncorpExec">@Html.Raw(Agent.UnIncorpExec.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_UnIncorpExec" name="x_UnIncorpExec" id="x_UnIncorpExec" size="30" placeholder="@Agent.UnIncorpExec.PlaceHolder" value="@Agent.UnIncorpExec.EditValue" @Html.Raw(Agent.UnIncorpExec.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.DefContactAuthorzLetter.Visible) { // DefContactAuthorzLetter
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_DefContactAuthorzLetter">@Html.Raw(Agent.DefContactAuthorzLetter.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_DefContactAuthorzLetter" name="x_DefContactAuthorzLetter" id="x_DefContactAuthorzLetter" size="30" placeholder="@Agent.DefContactAuthorzLetter.PlaceHolder" value="@Agent.DefContactAuthorzLetter.EditValue" @Html.Raw(Agent.DefContactAuthorzLetter.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Politician.Visible) { // Politician
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Politician">@Html.Raw(Agent.Politician.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Politician" name="x_Politician" id="x_Politician" size="30" placeholder="@Agent.Politician.PlaceHolder" value="@Agent.Politician.EditValue" @Html.Raw(Agent.Politician.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BizPartnerNo.Visible) { // BizPartnerNo
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BizPartnerNo">@Html.Raw(Agent.BizPartnerNo.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BizPartnerNo" name="x_BizPartnerNo" id="x_BizPartnerNo" size="30" placeholder="@Agent.BizPartnerNo.PlaceHolder" value="@Agent.BizPartnerNo.EditValue" @Html.Raw(Agent.BizPartnerNo.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.Remark2.Visible) { // Remark2
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_Remark2">@Html.Raw(Agent.Remark2.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_Remark2" name="x_Remark2" id="x_Remark2" size="30" maxlength="100" placeholder="@Agent.Remark2.PlaceHolder" value="@Agent.Remark2.EditValue" @Html.Raw(Agent.Remark2.EditAttributes)>
+</div>
+	</div>
+}
+@if (Agent.BannedListRemark.Visible) { // BannedListRemark
+	<div class="form-group">
+		<label class="col-sm-3 control-label ewLabel" for="x_BannedListRemark">@Html.Raw(Agent.BannedListRemark.FldCaption)</label>
+		<div class="col-sm-9">
+<input type="text" data-table="Agent" data-field="x_BannedListRemark" name="x_BannedListRemark" id="x_BannedListRemark" size="30" maxlength="150" placeholder="@Agent.BannedListRemark.PlaceHolder" value="@Agent.BannedListRemark.EditValue" @Html.Raw(Agent.BannedListRemark.EditAttributes)>
+</div>
+	</div>
+}
+</form>
+<script type="text/javascript">
+fAgentaddopt.Init();
+</script>
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+@{ Agent_addopt.Page_Terminate(); }

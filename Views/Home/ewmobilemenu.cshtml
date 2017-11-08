@@ -1,0 +1,26 @@
+@{
+	RootMenu = new cMenu("MobileMenu");
+	RootMenu.MenuBarClassName = "";
+	RootMenu.MenuClassName = "nav navbar-nav";
+	RootMenu.SubMenuClassName = "dropdown-menu";
+	RootMenu.SubMenuDropdownImage = "";
+	RootMenu.SubMenuDropdownIconClassName = "icon-arrow-down";
+	RootMenu.MenuDividerClassName = "divider";
+	RootMenu.MenuItemClassName = "dropdown";
+	RootMenu.SubMenuItemClassName = "dropdown";
+	RootMenu.MenuActiveItemClassName = "active";
+	RootMenu.SubMenuActiveItemClassName = "active";
+	RootMenu.MenuRootGroupTitleAsSubMenu = true;
+	RootMenu.MenuLinkDropdownClass = "ewDropdown";
+	RootMenu.MenuLinkClassName = "icon-arrow-right";
+}
+@{
+
+	// Generate all menu items
+	RootMenu.IsRoot = true;
+	RootMenu.AddMenuItem(551, "mmci_Agent_Management", Language.MenuPhrase("551", "MenuText"), "", -1, "", true, false, true);
+	RootMenu.AddMenuItem(830, "mmci_Customer_Cost_Management", Language.MenuPhrase("830", "MenuText"), "", -1, "", true, false, true);
+	RootMenu.AddMenuItem(275, "mmci_Supplier_Cost_Management", Language.MenuPhrase("275", "MenuText"), "", -1, "", true, false, true);
+	RootMenu.AddMenuItem(276, "mmci_Currency_Management", Language.MenuPhrase("276", "MenuText"), "", -1, "", true, false, true);
+}
+@RootMenu.Render()

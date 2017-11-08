@@ -1,0 +1,968 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	vw_CurrencyMC_list.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+@if (ew_Empty(vw_CurrencyMC.Export)) {
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "list";
+var CurrentForm = fvw_CurrencyMClist = new ew_Form("fvw_CurrencyMClist", "list");
+fvw_CurrencyMClist.FormKeyCountName = "@vw_CurrencyMC_list.FormKeyCountName";
+
+// Validate form
+fvw_CurrencyMClist.Validate = function() {
+	if (!this.ValidateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
+	if ($fobj.find("#a_confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.FormKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = $fobj.find("#a_list").val() == "gridinsert";
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		var checkrow = (gridinsert) ? !this.EmptyRow(infix) : true;
+		if (checkrow) {
+			addcnt++;
+		elm = this.GetElements("x" + infix + "_CurrencyCode");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(vw_CurrencyMC.CurrencyCode.ReqErrMsg.Replace("%s", vw_CurrencyMC.CurrencyCode.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_MCBuyRate");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(vw_CurrencyMC.MCBuyRate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_MCBuyMinBid");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(vw_CurrencyMC.MCBuyMinBid.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_MCBuyMaxBid");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(vw_CurrencyMC.MCBuyMaxBid.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_MCSellRate");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(vw_CurrencyMC.MCSellRate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_MCSellMinBid");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(vw_CurrencyMC.MCSellMinBid.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_MCSellMaxBid");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(vw_CurrencyMC.MCSellMaxBid.FldErrMsg))");
+
+		// Fire Form_CustomValidate event
+		if (!this.Form_CustomValidate(fobj))
+			return false;
+		} // End Grid Add checking
+	}
+	if (gridinsert && addcnt == 0) { // No row added
+		ew_Alert(ewLanguage.Phrase("NoAddRecord"));
+		return false;
+	}
+	return true;
+}
+
+// Check empty row
+fvw_CurrencyMClist.EmptyRow = function(infix) {
+	var fobj = this.Form;
+	if (ew_ValueChanged(fobj, infix, "CurrencyCode", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCBuyRate", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCBuyRateType", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCBuyMinBid", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCBuyMaxBid", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCSellRate", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCSellRateType", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCSellMinBid", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "MCSellMaxBid", false)) return false;
+	return true;
+}
+
+// Form_CustomValidate event
+fvw_CurrencyMClist.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fvw_CurrencyMClist.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fvw_CurrencyMClist.Lists["x_MCBuyRateType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fvw_CurrencyMClist.Lists["x_MCBuyRateType"].Options = @Html.Raw(ew_ArrayToJson(vw_CurrencyMC.MCBuyRateType.Options()));
+fvw_CurrencyMClist.Lists["x_MCSellRateType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fvw_CurrencyMClist.Lists["x_MCSellRateType"].Options = @Html.Raw(ew_ArrayToJson(vw_CurrencyMC.MCSellRateType.Options()));
+
+// Form object for search
+var CurrentSearchForm = fvw_CurrencyMClistsrch = new ew_Form("fvw_CurrencyMClistsrch");
+
+// Init search panel as collapsed
+if (fvw_CurrencyMClistsrch) fvw_CurrencyMClistsrch.InitSearchPanel = true;
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+}
+@if (ew_Empty(vw_CurrencyMC.Export)) {
+<div class="ewToolbar">
+@if (ew_Empty(vw_CurrencyMC.Export)) {
+<div style="display: inline-block">
+	@{ Breadcrumb?.Render(); }
+</div>
+}
+@if (vw_CurrencyMC_list.TotalRecs > 0 && vw_CurrencyMC_list.ExportOptions.Visible) {
+	vw_CurrencyMC_list.ExportOptions.Render("body");
+}
+@if (vw_CurrencyMC_list.SearchOptions.Visible) {
+	vw_CurrencyMC_list.SearchOptions.Render("body");
+}
+@if (vw_CurrencyMC_list.FilterOptions.Visible) {
+	vw_CurrencyMC_list.FilterOptions.Render("body");
+}
+@if (ew_Empty(vw_CurrencyMC.Export)) {
+	@Language.SelectionForm()
+}
+<div class="clearfix"></div>
+</div>
+}
+@{
+	if (vw_CurrencyMC_list.CurrentAction == "gridadd") {
+		vw_CurrencyMC_list.CurrentFilter = "0=1";
+		vw_CurrencyMC_list.StartRec = 1;
+		vw_CurrencyMC_list.DisplayRecs = vw_CurrencyMC_list.GridAddRowCount;
+		vw_CurrencyMC_list.TotalRecs = vw_CurrencyMC_list.DisplayRecs;
+		vw_CurrencyMC_list.StopRec = vw_CurrencyMC_list.DisplayRecs;
+	} else {
+		if (vw_CurrencyMC_list.TotalRecs <= 0) {
+			vw_CurrencyMC_list.TotalRecs = vw_CurrencyMC_list.SelectRecordCount();
+		}
+		vw_CurrencyMC_list.StartRec = 1;
+		if (vw_CurrencyMC_list.DisplayRecs <= 0 || ew_NotEmpty(vw_CurrencyMC_list.Export) && vw_CurrencyMC_list.ExportAll) { // Display all records
+			vw_CurrencyMC_list.DisplayRecs = vw_CurrencyMC_list.TotalRecs;
+		}
+		if (!(ew_NotEmpty(vw_CurrencyMC_list.Export) && vw_CurrencyMC_list.ExportAll)) {
+			vw_CurrencyMC_list.SetUpStartRec(); // Set up start record position
+		}
+		vw_CurrencyMC_list.Recordset = vw_CurrencyMC_list.LoadRecordset(vw_CurrencyMC_list.StartRec - 1, vw_CurrencyMC_list.DisplayRecs);
+
+		// Set no record found message
+		if (vw_CurrencyMC_list.CurrentAction == "" && vw_CurrencyMC_list.TotalRecs == 0) {
+			if (vw_CurrencyMC_list.SearchWhere == "0=101") {
+				vw_CurrencyMC_list.WarningMessage = Language.Phrase("EnterSearchCriteria");
+			} else {
+				vw_CurrencyMC_list.WarningMessage = Language.Phrase("NoRecord");
+			}
+		}
+	}
+	vw_CurrencyMC_list.RenderOtherOptions();
+}
+@{
+if (ew_Empty(vw_CurrencyMC_list.Export) && ew_Empty(vw_CurrencyMC_list.CurrentAction)) { // Begin search form
+<form name="fvw_CurrencyMClistsrch" id="fvw_CurrencyMClistsrch" class="form-inline ewForm" action="@ew_AppPath(ew_CurrentPage())">
+<div id="fvw_CurrencyMClistsrch_SearchPanel" class="ewSearchPanel collapse@(ew_NotEmpty(vw_CurrencyMC_list.SearchWhere) ? " in" : "")">
+<input type="hidden" name="cmd" value="search">
+<div class="ewBasicSearch">
+<div id="xsr_1" class="ewRow">
+	<div class="ewQuickSearch input-group">
+	<input type="text" name="@EW_TABLE_BASIC_SEARCH" id="@EW_TABLE_BASIC_SEARCH" class="form-control" value="@vw_CurrencyMC_list.BasicSearch.SessionKeyword" placeholder="@Language.Phrase("Search")">
+	<input type="hidden" name="@EW_TABLE_BASIC_SEARCH_TYPE" id="@EW_TABLE_BASIC_SEARCH_TYPE" value="@vw_CurrencyMC_list.BasicSearch.SessionType">
+	<div class="input-group-btn">
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype">@Html.Raw(vw_CurrencyMC_list.BasicSearch.TypeNameShort())</span><span class="caret"></span></button>
+		<ul class="dropdown-menu pull-right" role="menu">
+			<li class="@((vw_CurrencyMC_list.BasicSearch.SessionType == "") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this)">@Html.Raw(Language.Phrase("QuickSearchAuto"))</a></li>
+			<li class="@((vw_CurrencyMC_list.BasicSearch.SessionType == "=") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')">@Html.Raw(Language.Phrase("QuickSearchExact"))</a></li>
+			<li class="@((vw_CurrencyMC_list.BasicSearch.SessionType == "AND") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')">@Html.Raw(Language.Phrase("QuickSearchAll"))</a></li>
+			<li class="@((vw_CurrencyMC_list.BasicSearch.SessionType == "OR") ? "active" : null)"><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')">@Html.Raw(Language.Phrase("QuickSearchAny"))</a></li>
+		</ul>
+	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit">@Html.Raw(Language.Phrase("QuickSearchBtn"))</button>
+	</div>
+	</div>
+</div>
+</div>
+</div>
+</form>
+} @* End search form *@
+}
+@vw_CurrencyMC_list.ShowPageHeader()
+@{ vw_CurrencyMC_list.ShowMessage(); }
+@if (vw_CurrencyMC_list.TotalRecs > 0 || vw_CurrencyMC_list.CurrentAction != "") {
+<div class="panel panel-default ewGrid vw_CurrencyMC">
+@if (ew_Empty(vw_CurrencyMC.Export)) {
+<div class="panel-heading ewGridUpperPanel">
+@if (vw_CurrencyMC_list.CurrentAction != "gridadd" && vw_CurrencyMC_list.CurrentAction != "gridedit") {
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ vw_CurrencyMC_list.Pager = vw_CurrencyMC_list.Pager ?? new cNumericPager(vw_CurrencyMC_list.StartRec, vw_CurrencyMC_list.DisplayRecs, vw_CurrencyMC_list.TotalRecs, vw_CurrencyMC_list.RecRange, vw_CurrencyMC_list.AutoHidePager); }
+@if (vw_CurrencyMC_list.Pager.RecordCount > 0 && vw_CurrencyMC_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (vw_CurrencyMC_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (vw_CurrencyMC_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in vw_CurrencyMC_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(vw_CurrencyMC_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (vw_CurrencyMC_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (vw_CurrencyMC_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(vw_CurrencyMC_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(vw_CurrencyMC_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(vw_CurrencyMC_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (vw_CurrencyMC_list.Pager.RecordCount > 0 && (!vw_CurrencyMC_list.AutoHidePageSizeSelector || vw_CurrencyMC_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(vw_CurrencyMC_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(vw_CurrencyMC_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(vw_CurrencyMC_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(vw_CurrencyMC_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+</form>
+}
+	<div class="ewListOtherOptions">
+	@{ vw_CurrencyMC_list.ForEachOtherOption(kvp => kvp.Value.Render("body")); }
+	</div>
+	<div class="clearfix"></div>
+</div>
+}
+<form name="fvw_CurrencyMClist" id="fvw_CurrencyMClist" class="form-inline ewForm ewListForm" action="@ew_AppPath(ew_CurrentPage())" method="post">
+@if (vw_CurrencyMC_list.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@vw_CurrencyMC_list.Token">
+}
+<div id="gmp_vw_CurrencyMC" class="@((ew_IsResponsiveLayout()) ? "table-responsive ewGridMiddlePanel" : "ewGridMiddlePanel")">
+@if (vw_CurrencyMC_list.TotalRecs > 0) { // Begin If TotalRecs > 0
+<table id="tbl_vw_CurrencyMClist" class="table ewTable">
+@Html.Raw(vw_CurrencyMC_list.TableCustomInnerHtml)
+<thead><!-- Table header -->
+	<tr class="ewTableHeader">
+@{
+
+	// Header row
+	vw_CurrencyMC_list.RowType = EW_ROWTYPE_HEADER;
+
+	// Render list options
+	vw_CurrencyMC_list.RenderListOptions();
+
+	// Render list options (header, left)
+	vw_CurrencyMC_list.ListOptions.Render("header", "left");
+}
+@if (vw_CurrencyMC.CurrencyCode.Visible) { // CurrencyCode.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.CurrencyCode) == "") {
+		<th data-name="CurrencyCode"><div id="elh_vw_CurrencyMC_CurrencyCode" class="vw_CurrencyMC_CurrencyCode"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.CurrencyCode.FldCaption)</div></div></th>
+	} else {
+		<th data-name="CurrencyCode"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.CurrencyCode))',1);"><div id="elh_vw_CurrencyMC_CurrencyCode" class="vw_CurrencyMC_CurrencyCode">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.CurrencyCode.FldCaption)@Html.Raw(Language.Phrase("SrchLegend"))</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.CurrencyCode.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.CurrencyCode.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* CurrencyCode.Visible (end) *@
+@if (vw_CurrencyMC.MCBuyRate.Visible) { // MCBuyRate.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCBuyRate) == "") {
+		<th data-name="MCBuyRate"><div id="elh_vw_CurrencyMC_MCBuyRate" class="vw_CurrencyMC_MCBuyRate"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyRate.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCBuyRate"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCBuyRate))',1);"><div id="elh_vw_CurrencyMC_MCBuyRate" class="vw_CurrencyMC_MCBuyRate">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyRate.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCBuyRate.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCBuyRate.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCBuyRate.Visible (end) *@
+@if (vw_CurrencyMC.MCBuyRateType.Visible) { // MCBuyRateType.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCBuyRateType) == "") {
+		<th data-name="MCBuyRateType"><div id="elh_vw_CurrencyMC_MCBuyRateType" class="vw_CurrencyMC_MCBuyRateType"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyRateType.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCBuyRateType"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCBuyRateType))',1);"><div id="elh_vw_CurrencyMC_MCBuyRateType" class="vw_CurrencyMC_MCBuyRateType">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyRateType.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCBuyRateType.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCBuyRateType.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCBuyRateType.Visible (end) *@
+@if (vw_CurrencyMC.MCBuyMinBid.Visible) { // MCBuyMinBid.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCBuyMinBid) == "") {
+		<th data-name="MCBuyMinBid"><div id="elh_vw_CurrencyMC_MCBuyMinBid" class="vw_CurrencyMC_MCBuyMinBid"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyMinBid.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCBuyMinBid"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCBuyMinBid))',1);"><div id="elh_vw_CurrencyMC_MCBuyMinBid" class="vw_CurrencyMC_MCBuyMinBid">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyMinBid.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCBuyMinBid.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCBuyMinBid.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCBuyMinBid.Visible (end) *@
+@if (vw_CurrencyMC.MCBuyMaxBid.Visible) { // MCBuyMaxBid.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCBuyMaxBid) == "") {
+		<th data-name="MCBuyMaxBid"><div id="elh_vw_CurrencyMC_MCBuyMaxBid" class="vw_CurrencyMC_MCBuyMaxBid"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyMaxBid.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCBuyMaxBid"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCBuyMaxBid))',1);"><div id="elh_vw_CurrencyMC_MCBuyMaxBid" class="vw_CurrencyMC_MCBuyMaxBid">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCBuyMaxBid.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCBuyMaxBid.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCBuyMaxBid.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCBuyMaxBid.Visible (end) *@
+@if (vw_CurrencyMC.MCSellRate.Visible) { // MCSellRate.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCSellRate) == "") {
+		<th data-name="MCSellRate"><div id="elh_vw_CurrencyMC_MCSellRate" class="vw_CurrencyMC_MCSellRate"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellRate.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCSellRate"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCSellRate))',1);"><div id="elh_vw_CurrencyMC_MCSellRate" class="vw_CurrencyMC_MCSellRate">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellRate.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCSellRate.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCSellRate.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCSellRate.Visible (end) *@
+@if (vw_CurrencyMC.MCSellRateType.Visible) { // MCSellRateType.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCSellRateType) == "") {
+		<th data-name="MCSellRateType"><div id="elh_vw_CurrencyMC_MCSellRateType" class="vw_CurrencyMC_MCSellRateType"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellRateType.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCSellRateType"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCSellRateType))',1);"><div id="elh_vw_CurrencyMC_MCSellRateType" class="vw_CurrencyMC_MCSellRateType">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellRateType.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCSellRateType.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCSellRateType.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCSellRateType.Visible (end) *@
+@if (vw_CurrencyMC.MCSellMinBid.Visible) { // MCSellMinBid.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCSellMinBid) == "") {
+		<th data-name="MCSellMinBid"><div id="elh_vw_CurrencyMC_MCSellMinBid" class="vw_CurrencyMC_MCSellMinBid"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellMinBid.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCSellMinBid"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCSellMinBid))',1);"><div id="elh_vw_CurrencyMC_MCSellMinBid" class="vw_CurrencyMC_MCSellMinBid">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellMinBid.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCSellMinBid.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCSellMinBid.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCSellMinBid.Visible (end) *@
+@if (vw_CurrencyMC.MCSellMaxBid.Visible) { // MCSellMaxBid.Visible (begin)
+	if (vw_CurrencyMC_list.SortUrl(vw_CurrencyMC.MCSellMaxBid) == "") {
+		<th data-name="MCSellMaxBid"><div id="elh_vw_CurrencyMC_MCSellMaxBid" class="vw_CurrencyMC_MCSellMaxBid"><div class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellMaxBid.FldCaption)</div></div></th>
+	} else {
+		<th data-name="MCSellMaxBid"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(vw_CurrencyMC.SortUrl(vw_CurrencyMC.MCSellMaxBid))',1);"><div id="elh_vw_CurrencyMC_MCSellMaxBid" class="vw_CurrencyMC_MCSellMaxBid">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(vw_CurrencyMC.MCSellMaxBid.FldCaption)</span><span class="ewTableHeaderSort">@if (vw_CurrencyMC.MCSellMaxBid.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (vw_CurrencyMC.MCSellMaxBid.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* MCSellMaxBid.Visible (end) *@
+@{
+
+	// Render list options (header, right)
+	vw_CurrencyMC_list.ListOptions.Render("header", "right");
+}
+	</tr>
+</thead>
+<tbody>
+@{ // Begin Code
+if (vw_CurrencyMC_list.ExportAll && ew_NotEmpty(vw_CurrencyMC_list.Export)) {
+	vw_CurrencyMC_list.StopRec = vw_CurrencyMC_list.TotalRecs;
+} else {
+
+	// Set the last record to display
+	if (vw_CurrencyMC_list.TotalRecs > vw_CurrencyMC_list.StartRec + vw_CurrencyMC_list.DisplayRecs - 1) {
+		vw_CurrencyMC_list.StopRec = vw_CurrencyMC_list.StartRec + vw_CurrencyMC_list.DisplayRecs - 1;
+	} else {
+		vw_CurrencyMC_list.StopRec = vw_CurrencyMC_list.TotalRecs;
+	}
+}
+
+// Restore number of post back records
+if (ObjForm != null) {
+	ObjForm.Index = -1;
+	if (ObjForm.HasValue(vw_CurrencyMC_list.FormKeyCountName) && (vw_CurrencyMC_list.CurrentAction == "gridadd" || vw_CurrencyMC_list.CurrentAction == "gridedit" || vw_CurrencyMC_list.CurrentAction == "F")) {
+		vw_CurrencyMC_list.KeyCount = ew_ConvertToInt(ObjForm.GetValue(vw_CurrencyMC_list.FormKeyCountName));
+		vw_CurrencyMC_list.StopRec = vw_CurrencyMC_list.StartRec + vw_CurrencyMC_list.KeyCount - 1;
+	}
+}
+if (vw_CurrencyMC_list.Recordset != null && vw_CurrencyMC_list.Recordset.HasRows) {
+	if (!vw_CurrencyMC_list.Connection.SelectOffset) { // DN
+		for (var i = 1; i <= vw_CurrencyMC_list.StartRec - 1; i++) { // Move to first record
+			if (vw_CurrencyMC_list.Recordset.Read()) {
+				vw_CurrencyMC_list.RecCnt++;
+			}
+		}
+	} else {
+		vw_CurrencyMC_list.RecCnt = vw_CurrencyMC_list.StartRec - 1;
+	}
+} else if (!vw_CurrencyMC_list.AllowAddDeleteRow && vw_CurrencyMC_list.StopRec == 0) {
+	vw_CurrencyMC_list.StopRec = vw_CurrencyMC_list.GridAddRowCount;
+}
+
+// Initialize aggregate
+vw_CurrencyMC_list.RowType = EW_ROWTYPE_AGGREGATEINIT;
+vw_CurrencyMC_list.ResetAttrs();
+vw_CurrencyMC_list.RenderRow();
+if (vw_CurrencyMC_list.CurrentAction == "gridadd") {
+	vw_CurrencyMC_list.RowIndex = 0;
+}
+if (vw_CurrencyMC_list.CurrentAction == "gridedit") {
+	vw_CurrencyMC_list.RowIndex = 0;
+}
+
+// Output data rows
+bool Eof = (vw_CurrencyMC_list.Recordset == null); // DN
+while (vw_CurrencyMC_list.RecCnt < vw_CurrencyMC_list.StopRec) { // Begin While
+	if (vw_CurrencyMC_list.CurrentAction != "gridadd" && !Eof) { // DN
+		Eof = !vw_CurrencyMC_list.Recordset.Read();
+	}
+	vw_CurrencyMC_list.RecCnt++;
+	if (vw_CurrencyMC_list.RecCnt >= vw_CurrencyMC_list.StartRec) {
+		vw_CurrencyMC_list.RowCnt++;
+		if (vw_CurrencyMC_list.CurrentAction == "gridadd" || vw_CurrencyMC_list.CurrentAction == "gridedit" || vw_CurrencyMC_list.CurrentAction == "F") {
+			vw_CurrencyMC_list.RowIndex = ew_ConvertToInt(vw_CurrencyMC_list.RowIndex) + 1;
+			ObjForm.Index = ew_ConvertToInt(vw_CurrencyMC_list.RowIndex);
+			if (ObjForm.HasValue(vw_CurrencyMC_list.FormActionName)) {
+				vw_CurrencyMC_list.RowAction = ObjForm.GetValue(vw_CurrencyMC_list.FormActionName);
+			} else if (vw_CurrencyMC_list.CurrentAction == "gridadd") {
+				vw_CurrencyMC_list.RowAction = "insert";
+			} else {
+				vw_CurrencyMC_list.RowAction = "";
+			}
+		}
+
+		// Set up key count
+		vw_CurrencyMC_list.KeyCount = ew_ConvertToInt(vw_CurrencyMC_list.RowIndex);
+
+		// Init row class and style
+		vw_CurrencyMC_list.ResetAttrs();
+		vw_CurrencyMC_list.CssClass = "";
+		if (vw_CurrencyMC_list.CurrentAction == "gridadd") {
+			vw_CurrencyMC_list.LoadDefaultValues(); // Load default values
+		} else {
+			vw_CurrencyMC_list.LoadRowValues(vw_CurrencyMC_list.Recordset); // Load row values
+		}
+		vw_CurrencyMC_list.RowType = EW_ROWTYPE_VIEW; // Render view
+		if (vw_CurrencyMC_list.CurrentAction == "gridadd") { // Grid add
+			vw_CurrencyMC_list.RowType = EW_ROWTYPE_ADD; // Render add
+		}
+		if (vw_CurrencyMC_list.CurrentAction == "gridadd" && vw_CurrencyMC_list.EventCancelled && !ObjForm.HasValue("k_blankrow")) { // Insert failed
+			vw_CurrencyMC_list.RestoreCurrentRowFormValues(vw_CurrencyMC_list.RowIndex); // Restore form values
+		}
+		if (vw_CurrencyMC_list.CurrentAction == "gridedit") { // Grid edit
+			if (vw_CurrencyMC_list.EventCancelled) {
+				vw_CurrencyMC_list.RestoreCurrentRowFormValues(vw_CurrencyMC_list.RowIndex); // Restore form values
+			}
+			if (vw_CurrencyMC_list.RowAction == "insert") {
+				vw_CurrencyMC_list.RowType = EW_ROWTYPE_ADD; // Render add
+			} else {
+				vw_CurrencyMC_list.RowType = EW_ROWTYPE_EDIT; // Render edit
+			}
+		}
+		if (vw_CurrencyMC_list.CurrentAction == "gridedit" && (vw_CurrencyMC_list.RowType == EW_ROWTYPE_EDIT || vw_CurrencyMC_list.RowType == EW_ROWTYPE_ADD) && vw_CurrencyMC_list.EventCancelled) { // Update failed
+			vw_CurrencyMC_list.RestoreCurrentRowFormValues(vw_CurrencyMC_list.RowIndex); // Restore form values
+		}
+		if (vw_CurrencyMC_list.RowType == EW_ROWTYPE_EDIT) { // Edit row
+			vw_CurrencyMC_list.EditRowCnt++;
+		}
+
+		// Set up row id / data-rowindex
+		vw_CurrencyMC_list.RowAttrs.Add("data-rowindex", Convert.ToString(vw_CurrencyMC_list.RowCnt));
+		vw_CurrencyMC_list.RowAttrs.Add("id", "r" + Convert.ToString(vw_CurrencyMC_list.RowCnt) + "_vw_CurrencyMC");
+		vw_CurrencyMC_list.RowAttrs.Add("data-rowtype", Convert.ToString(vw_CurrencyMC_list.RowType));
+
+		// Render row
+		vw_CurrencyMC_list.RenderRow();
+
+		// Render list options
+		vw_CurrencyMC_list.RenderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if (vw_CurrencyMC_list.RowAction != "delete" && vw_CurrencyMC_list.RowAction != "insertdelete" && !(vw_CurrencyMC_list.RowAction == "insert" && vw_CurrencyMC_list.CurrentAction == "F" && vw_CurrencyMC_list.EmptyRow())) {
+	<tr @Html.Raw(vw_CurrencyMC_list.RowAttributes)>
+	@{
+
+		// Render list options (body, left)
+		vw_CurrencyMC_list.ListOptions.Render("body", "left", vw_CurrencyMC_list.RowCnt);
+	}
+	@if (vw_CurrencyMC.CurrencyCode.Visible) { // CurrencyCode.Visible (begin)
+		<td data-name="CurrencyCode"@Html.Raw(vw_CurrencyMC.CurrencyCode.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* CurrencyCode (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_CurrencyCode" class="form-group vw_CurrencyMC_CurrencyCode">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_CurrencyCode" name="x@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" id="x@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" size="30" maxlength="20" placeholder="@vw_CurrencyMC.CurrencyCode.PlaceHolder" value="@vw_CurrencyMC.CurrencyCode.EditValue" @Html.Raw(vw_CurrencyMC.CurrencyCode.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_CurrencyCode" name="o@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" id="o@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" value="@vw_CurrencyMC.CurrencyCode.OldValue">
+			 @* CurrencyCode (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* CurrencyCode (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_CurrencyCode" class="form-group vw_CurrencyMC_CurrencyCode">
+<span @Html.Raw(vw_CurrencyMC.CurrencyCode.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(vw_CurrencyMC.CurrencyCode.EditValue)</p></span>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_CurrencyCode" name="x@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" id="x@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" value="@vw_CurrencyMC.CurrencyCode.CurrentValue">
+			 @* CurrencyCode (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* CurrencyCode (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_CurrencyCode" class="vw_CurrencyMC_CurrencyCode">
+<span @Html.Raw(vw_CurrencyMC.CurrencyCode.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.CurrencyCode.ListViewValue)</span>
+</span>
+			 @* CurrencyCode (end) *@
+		} @* View (end) *@
+<a id="@(vw_CurrencyMC_list.PageObjName + "_row_" + Convert.ToString(vw_CurrencyMC_list.RowCnt))"></a></td>
+	} @* CurrencyCode.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyRate.Visible) { // MCBuyRate.Visible (begin)
+		<td data-name="MCBuyRate"@Html.Raw(vw_CurrencyMC.MCBuyRate.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCBuyRate (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyRate" class="form-group vw_CurrencyMC_MCBuyRate">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyRate" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" size="20" placeholder="@vw_CurrencyMC.MCBuyRate.PlaceHolder" value="@vw_CurrencyMC.MCBuyRate.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyRate.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyRate" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" value="@vw_CurrencyMC.MCBuyRate.OldValue">
+			 @* MCBuyRate (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCBuyRate (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyRate" class="form-group vw_CurrencyMC_MCBuyRate">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyRate" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" size="20" placeholder="@vw_CurrencyMC.MCBuyRate.PlaceHolder" value="@vw_CurrencyMC.MCBuyRate.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyRate.EditAttributes)>
+</span>
+			 @* MCBuyRate (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCBuyRate (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyRate" class="vw_CurrencyMC_MCBuyRate">
+<span @Html.Raw(vw_CurrencyMC.MCBuyRate.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCBuyRate.ListViewValue)</span>
+</span>
+			 @* MCBuyRate (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCBuyRate.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyRateType.Visible) { // MCBuyRateType.Visible (begin)
+		<td data-name="MCBuyRateType"@Html.Raw(vw_CurrencyMC.MCBuyRateType.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCBuyRateType (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyRateType" class="form-group vw_CurrencyMC_MCBuyRateType">
+<div id="tp_x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" class="ewTemplate"><input type="radio" data-table="vw_CurrencyMC" data-field="x_MCBuyRateType" data-value-separator="@vw_CurrencyMC.MCBuyRateType.DisplayValueSeparatorAttribute" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" value="{value}"@Html.Raw(vw_CurrencyMC.MCBuyRateType.EditAttributes)></div>
+<div id="dsl_x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@vw_CurrencyMC.MCBuyRateType.RadioButtonListHtml(false, "x" + vw_CurrencyMC_list.RowIndex + "_MCBuyRateType")
+</div></div>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyRateType" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" value="@vw_CurrencyMC.MCBuyRateType.OldValue">
+			 @* MCBuyRateType (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCBuyRateType (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyRateType" class="form-group vw_CurrencyMC_MCBuyRateType">
+<div id="tp_x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" class="ewTemplate"><input type="radio" data-table="vw_CurrencyMC" data-field="x_MCBuyRateType" data-value-separator="@vw_CurrencyMC.MCBuyRateType.DisplayValueSeparatorAttribute" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" value="{value}"@Html.Raw(vw_CurrencyMC.MCBuyRateType.EditAttributes)></div>
+<div id="dsl_x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@vw_CurrencyMC.MCBuyRateType.RadioButtonListHtml(false, "x" + vw_CurrencyMC_list.RowIndex + "_MCBuyRateType")
+</div></div>
+</span>
+			 @* MCBuyRateType (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCBuyRateType (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyRateType" class="vw_CurrencyMC_MCBuyRateType">
+<span @Html.Raw(vw_CurrencyMC.MCBuyRateType.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCBuyRateType.ListViewValue)</span>
+</span>
+			 @* MCBuyRateType (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCBuyRateType.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyMinBid.Visible) { // MCBuyMinBid.Visible (begin)
+		<td data-name="MCBuyMinBid"@Html.Raw(vw_CurrencyMC.MCBuyMinBid.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCBuyMinBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyMinBid" class="form-group vw_CurrencyMC_MCBuyMinBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyMinBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" size="30" placeholder="@vw_CurrencyMC.MCBuyMinBid.PlaceHolder" value="@vw_CurrencyMC.MCBuyMinBid.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyMinBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyMinBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" value="@vw_CurrencyMC.MCBuyMinBid.OldValue">
+			 @* MCBuyMinBid (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCBuyMinBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyMinBid" class="form-group vw_CurrencyMC_MCBuyMinBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyMinBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" size="30" placeholder="@vw_CurrencyMC.MCBuyMinBid.PlaceHolder" value="@vw_CurrencyMC.MCBuyMinBid.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyMinBid.EditAttributes)>
+</span>
+			 @* MCBuyMinBid (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCBuyMinBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyMinBid" class="vw_CurrencyMC_MCBuyMinBid">
+<span @Html.Raw(vw_CurrencyMC.MCBuyMinBid.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCBuyMinBid.ListViewValue)</span>
+</span>
+			 @* MCBuyMinBid (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCBuyMinBid.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyMaxBid.Visible) { // MCBuyMaxBid.Visible (begin)
+		<td data-name="MCBuyMaxBid"@Html.Raw(vw_CurrencyMC.MCBuyMaxBid.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCBuyMaxBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyMaxBid" class="form-group vw_CurrencyMC_MCBuyMaxBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyMaxBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" size="30" placeholder="@vw_CurrencyMC.MCBuyMaxBid.PlaceHolder" value="@vw_CurrencyMC.MCBuyMaxBid.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyMaxBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyMaxBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" value="@vw_CurrencyMC.MCBuyMaxBid.OldValue">
+			 @* MCBuyMaxBid (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCBuyMaxBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyMaxBid" class="form-group vw_CurrencyMC_MCBuyMaxBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyMaxBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" size="30" placeholder="@vw_CurrencyMC.MCBuyMaxBid.PlaceHolder" value="@vw_CurrencyMC.MCBuyMaxBid.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyMaxBid.EditAttributes)>
+</span>
+			 @* MCBuyMaxBid (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCBuyMaxBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCBuyMaxBid" class="vw_CurrencyMC_MCBuyMaxBid">
+<span @Html.Raw(vw_CurrencyMC.MCBuyMaxBid.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCBuyMaxBid.ListViewValue)</span>
+</span>
+			 @* MCBuyMaxBid (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCBuyMaxBid.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellRate.Visible) { // MCSellRate.Visible (begin)
+		<td data-name="MCSellRate"@Html.Raw(vw_CurrencyMC.MCSellRate.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCSellRate (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellRate" class="form-group vw_CurrencyMC_MCSellRate">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellRate" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellRate" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellRate" size="20" placeholder="@vw_CurrencyMC.MCSellRate.PlaceHolder" value="@vw_CurrencyMC.MCSellRate.EditValue" @Html.Raw(vw_CurrencyMC.MCSellRate.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellRate" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellRate" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellRate" value="@vw_CurrencyMC.MCSellRate.OldValue">
+			 @* MCSellRate (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCSellRate (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellRate" class="form-group vw_CurrencyMC_MCSellRate">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellRate" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellRate" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellRate" size="20" placeholder="@vw_CurrencyMC.MCSellRate.PlaceHolder" value="@vw_CurrencyMC.MCSellRate.EditValue" @Html.Raw(vw_CurrencyMC.MCSellRate.EditAttributes)>
+</span>
+			 @* MCSellRate (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCSellRate (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellRate" class="vw_CurrencyMC_MCSellRate">
+<span @Html.Raw(vw_CurrencyMC.MCSellRate.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCSellRate.ListViewValue)</span>
+</span>
+			 @* MCSellRate (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCSellRate.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellRateType.Visible) { // MCSellRateType.Visible (begin)
+		<td data-name="MCSellRateType"@Html.Raw(vw_CurrencyMC.MCSellRateType.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCSellRateType (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellRateType" class="form-group vw_CurrencyMC_MCSellRateType">
+<div id="tp_x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" class="ewTemplate"><input type="radio" data-table="vw_CurrencyMC" data-field="x_MCSellRateType" data-value-separator="@vw_CurrencyMC.MCSellRateType.DisplayValueSeparatorAttribute" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" value="{value}"@Html.Raw(vw_CurrencyMC.MCSellRateType.EditAttributes)></div>
+<div id="dsl_x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@vw_CurrencyMC.MCSellRateType.RadioButtonListHtml(false, "x" + vw_CurrencyMC_list.RowIndex + "_MCSellRateType")
+</div></div>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellRateType" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" value="@vw_CurrencyMC.MCSellRateType.OldValue">
+			 @* MCSellRateType (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCSellRateType (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellRateType" class="form-group vw_CurrencyMC_MCSellRateType">
+<div id="tp_x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" class="ewTemplate"><input type="radio" data-table="vw_CurrencyMC" data-field="x_MCSellRateType" data-value-separator="@vw_CurrencyMC.MCSellRateType.DisplayValueSeparatorAttribute" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" value="{value}"@Html.Raw(vw_CurrencyMC.MCSellRateType.EditAttributes)></div>
+<div id="dsl_x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@vw_CurrencyMC.MCSellRateType.RadioButtonListHtml(false, "x" + vw_CurrencyMC_list.RowIndex + "_MCSellRateType")
+</div></div>
+</span>
+			 @* MCSellRateType (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCSellRateType (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellRateType" class="vw_CurrencyMC_MCSellRateType">
+<span @Html.Raw(vw_CurrencyMC.MCSellRateType.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCSellRateType.ListViewValue)</span>
+</span>
+			 @* MCSellRateType (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCSellRateType.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellMinBid.Visible) { // MCSellMinBid.Visible (begin)
+		<td data-name="MCSellMinBid"@Html.Raw(vw_CurrencyMC.MCSellMinBid.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCSellMinBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellMinBid" class="form-group vw_CurrencyMC_MCSellMinBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellMinBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" size="30" placeholder="@vw_CurrencyMC.MCSellMinBid.PlaceHolder" value="@vw_CurrencyMC.MCSellMinBid.EditValue" @Html.Raw(vw_CurrencyMC.MCSellMinBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellMinBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" value="@vw_CurrencyMC.MCSellMinBid.OldValue">
+			 @* MCSellMinBid (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCSellMinBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellMinBid" class="form-group vw_CurrencyMC_MCSellMinBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellMinBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" size="30" placeholder="@vw_CurrencyMC.MCSellMinBid.PlaceHolder" value="@vw_CurrencyMC.MCSellMinBid.EditValue" @Html.Raw(vw_CurrencyMC.MCSellMinBid.EditAttributes)>
+</span>
+			 @* MCSellMinBid (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCSellMinBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellMinBid" class="vw_CurrencyMC_MCSellMinBid">
+<span @Html.Raw(vw_CurrencyMC.MCSellMinBid.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCSellMinBid.ListViewValue)</span>
+</span>
+			 @* MCSellMinBid (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCSellMinBid.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellMaxBid.Visible) { // MCSellMaxBid.Visible (begin)
+		<td data-name="MCSellMaxBid"@Html.Raw(vw_CurrencyMC.MCSellMaxBid.CellAttributes)>
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* MCSellMaxBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellMaxBid" class="form-group vw_CurrencyMC_MCSellMaxBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellMaxBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" size="30" placeholder="@vw_CurrencyMC.MCSellMaxBid.PlaceHolder" value="@vw_CurrencyMC.MCSellMaxBid.EditValue" @Html.Raw(vw_CurrencyMC.MCSellMaxBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellMaxBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" value="@vw_CurrencyMC.MCSellMaxBid.OldValue">
+			 @* MCSellMaxBid (end) *@
+		} @* Add (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* MCSellMaxBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellMaxBid" class="form-group vw_CurrencyMC_MCSellMaxBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellMaxBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" size="30" placeholder="@vw_CurrencyMC.MCSellMaxBid.PlaceHolder" value="@vw_CurrencyMC.MCSellMaxBid.EditValue" @Html.Raw(vw_CurrencyMC.MCSellMaxBid.EditAttributes)>
+</span>
+			 @* MCSellMaxBid (end) *@
+		} @* Edit (end) *@
+		@if (vw_CurrencyMC.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* MCSellMaxBid (begin) *@
+<span id="el@(vw_CurrencyMC_list.RowCnt)_vw_CurrencyMC_MCSellMaxBid" class="vw_CurrencyMC_MCSellMaxBid">
+<span @Html.Raw(vw_CurrencyMC.MCSellMaxBid.ViewAttributes)>
+@Html.Raw(vw_CurrencyMC.MCSellMaxBid.ListViewValue)</span>
+</span>
+			 @* MCSellMaxBid (end) *@
+		} @* View (end) *@
+</td>
+	} @* MCSellMaxBid.Visible (end) *@
+	@{
+
+		// Render list options (body, right)
+		vw_CurrencyMC_list.ListOptions.Render("body", "right", vw_CurrencyMC_list.RowCnt);
+	}
+	</tr>
+		if (vw_CurrencyMC_list.RowType == EW_ROWTYPE_ADD || vw_CurrencyMC_list.RowType == EW_ROWTYPE_EDIT) {
+			<script type="text/javascript">
+			fvw_CurrencyMClist.UpdateOpts(@vw_CurrencyMC_list.RowIndex);
+			</script>
+		}
+	} @* End if *@
+	} @* End if *@
+} @* End While *@
+} @* End Code *@
+@if (vw_CurrencyMC_list.CurrentAction == "gridadd" || vw_CurrencyMC_list.CurrentAction == "gridedit") {
+	vw_CurrencyMC_list.RowIndex = "$rowindex$";
+	vw_CurrencyMC_list.LoadDefaultValues();
+
+	// Set row properties
+	vw_CurrencyMC_list.ResetAttrs();
+	vw_CurrencyMC_list.RowAttrs.Add("data-rowindex", Convert.ToString(vw_CurrencyMC_list.RowIndex));
+	vw_CurrencyMC_list.RowAttrs.Add("id", "r0_vw_CurrencyMC");
+	vw_CurrencyMC_list.RowAttrs.Add("data-rowtype", Convert.ToString(EW_ROWTYPE_ADD));
+	vw_CurrencyMC_list.RowAttrs.AppendClass("ewTemplate");
+	vw_CurrencyMC_list.RowType = EW_ROWTYPE_ADD;
+
+	// Render row
+	vw_CurrencyMC_list.RenderRow();
+
+	// Render list options
+	vw_CurrencyMC_list.RenderListOptions();
+	vw_CurrencyMC_list.StartRowCnt = 0;
+	<tr @Html.Raw(vw_CurrencyMC_list.RowAttributes)>
+@{
+
+	// Render list options (body, left)
+	vw_CurrencyMC_list.ListOptions.Render("body", "left", vw_CurrencyMC_list.RowIndex);
+}
+	@if (vw_CurrencyMC.CurrencyCode.Visible) { // CurrencyCode.Visible (begin)
+		<td data-name="CurrencyCode">
+<span id="el$rowindex$_vw_CurrencyMC_CurrencyCode" class="form-group vw_CurrencyMC_CurrencyCode">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_CurrencyCode" name="x@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" id="x@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" size="30" maxlength="20" placeholder="@vw_CurrencyMC.CurrencyCode.PlaceHolder" value="@vw_CurrencyMC.CurrencyCode.EditValue" @Html.Raw(vw_CurrencyMC.CurrencyCode.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_CurrencyCode" name="o@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" id="o@(vw_CurrencyMC_list.RowIndex)_CurrencyCode" value="@vw_CurrencyMC.CurrencyCode.OldValue">
+</td>
+	} @* CurrencyCode.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyRate.Visible) { // MCBuyRate.Visible (begin)
+		<td data-name="MCBuyRate">
+<span id="el$rowindex$_vw_CurrencyMC_MCBuyRate" class="form-group vw_CurrencyMC_MCBuyRate">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyRate" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" size="20" placeholder="@vw_CurrencyMC.MCBuyRate.PlaceHolder" value="@vw_CurrencyMC.MCBuyRate.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyRate.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyRate" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRate" value="@vw_CurrencyMC.MCBuyRate.OldValue">
+</td>
+	} @* MCBuyRate.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyRateType.Visible) { // MCBuyRateType.Visible (begin)
+		<td data-name="MCBuyRateType">
+<span id="el$rowindex$_vw_CurrencyMC_MCBuyRateType" class="form-group vw_CurrencyMC_MCBuyRateType">
+<div id="tp_x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" class="ewTemplate"><input type="radio" data-table="vw_CurrencyMC" data-field="x_MCBuyRateType" data-value-separator="@vw_CurrencyMC.MCBuyRateType.DisplayValueSeparatorAttribute" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" value="{value}"@Html.Raw(vw_CurrencyMC.MCBuyRateType.EditAttributes)></div>
+<div id="dsl_x@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@vw_CurrencyMC.MCBuyRateType.RadioButtonListHtml(false, "x" + vw_CurrencyMC_list.RowIndex + "_MCBuyRateType")
+</div></div>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyRateType" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyRateType" value="@vw_CurrencyMC.MCBuyRateType.OldValue">
+</td>
+	} @* MCBuyRateType.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyMinBid.Visible) { // MCBuyMinBid.Visible (begin)
+		<td data-name="MCBuyMinBid">
+<span id="el$rowindex$_vw_CurrencyMC_MCBuyMinBid" class="form-group vw_CurrencyMC_MCBuyMinBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyMinBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" size="30" placeholder="@vw_CurrencyMC.MCBuyMinBid.PlaceHolder" value="@vw_CurrencyMC.MCBuyMinBid.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyMinBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyMinBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMinBid" value="@vw_CurrencyMC.MCBuyMinBid.OldValue">
+</td>
+	} @* MCBuyMinBid.Visible (end) *@
+	@if (vw_CurrencyMC.MCBuyMaxBid.Visible) { // MCBuyMaxBid.Visible (begin)
+		<td data-name="MCBuyMaxBid">
+<span id="el$rowindex$_vw_CurrencyMC_MCBuyMaxBid" class="form-group vw_CurrencyMC_MCBuyMaxBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCBuyMaxBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" size="30" placeholder="@vw_CurrencyMC.MCBuyMaxBid.PlaceHolder" value="@vw_CurrencyMC.MCBuyMaxBid.EditValue" @Html.Raw(vw_CurrencyMC.MCBuyMaxBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCBuyMaxBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCBuyMaxBid" value="@vw_CurrencyMC.MCBuyMaxBid.OldValue">
+</td>
+	} @* MCBuyMaxBid.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellRate.Visible) { // MCSellRate.Visible (begin)
+		<td data-name="MCSellRate">
+<span id="el$rowindex$_vw_CurrencyMC_MCSellRate" class="form-group vw_CurrencyMC_MCSellRate">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellRate" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellRate" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellRate" size="20" placeholder="@vw_CurrencyMC.MCSellRate.PlaceHolder" value="@vw_CurrencyMC.MCSellRate.EditValue" @Html.Raw(vw_CurrencyMC.MCSellRate.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellRate" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellRate" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellRate" value="@vw_CurrencyMC.MCSellRate.OldValue">
+</td>
+	} @* MCSellRate.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellRateType.Visible) { // MCSellRateType.Visible (begin)
+		<td data-name="MCSellRateType">
+<span id="el$rowindex$_vw_CurrencyMC_MCSellRateType" class="form-group vw_CurrencyMC_MCSellRateType">
+<div id="tp_x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" class="ewTemplate"><input type="radio" data-table="vw_CurrencyMC" data-field="x_MCSellRateType" data-value-separator="@vw_CurrencyMC.MCSellRateType.DisplayValueSeparatorAttribute" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" value="{value}"@Html.Raw(vw_CurrencyMC.MCSellRateType.EditAttributes)></div>
+<div id="dsl_x@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@vw_CurrencyMC.MCSellRateType.RadioButtonListHtml(false, "x" + vw_CurrencyMC_list.RowIndex + "_MCSellRateType")
+</div></div>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellRateType" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellRateType" value="@vw_CurrencyMC.MCSellRateType.OldValue">
+</td>
+	} @* MCSellRateType.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellMinBid.Visible) { // MCSellMinBid.Visible (begin)
+		<td data-name="MCSellMinBid">
+<span id="el$rowindex$_vw_CurrencyMC_MCSellMinBid" class="form-group vw_CurrencyMC_MCSellMinBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellMinBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" size="30" placeholder="@vw_CurrencyMC.MCSellMinBid.PlaceHolder" value="@vw_CurrencyMC.MCSellMinBid.EditValue" @Html.Raw(vw_CurrencyMC.MCSellMinBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellMinBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellMinBid" value="@vw_CurrencyMC.MCSellMinBid.OldValue">
+</td>
+	} @* MCSellMinBid.Visible (end) *@
+	@if (vw_CurrencyMC.MCSellMaxBid.Visible) { // MCSellMaxBid.Visible (begin)
+		<td data-name="MCSellMaxBid">
+<span id="el$rowindex$_vw_CurrencyMC_MCSellMaxBid" class="form-group vw_CurrencyMC_MCSellMaxBid">
+<input type="text" data-table="vw_CurrencyMC" data-field="x_MCSellMaxBid" name="x@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" id="x@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" size="30" placeholder="@vw_CurrencyMC.MCSellMaxBid.PlaceHolder" value="@vw_CurrencyMC.MCSellMaxBid.EditValue" @Html.Raw(vw_CurrencyMC.MCSellMaxBid.EditAttributes)>
+</span>
+<input type="hidden" data-table="vw_CurrencyMC" data-field="x_MCSellMaxBid" name="o@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" id="o@(vw_CurrencyMC_list.RowIndex)_MCSellMaxBid" value="@vw_CurrencyMC.MCSellMaxBid.OldValue">
+</td>
+	} @* MCSellMaxBid.Visible (end) *@
+@{
+
+	// Render list options (body, right)
+	vw_CurrencyMC_list.ListOptions.Render("body", "right", vw_CurrencyMC_list.RowCnt);
+}
+<script type="text/javascript">
+fvw_CurrencyMClist.UpdateOpts(@vw_CurrencyMC_list.RowIndex);
+</script>
+	</tr>
+}
+</tbody>
+</table>
+} @* End If TotalRecs > 0 *@
+@if (vw_CurrencyMC_list.CurrentAction == "gridadd") {
+<input type="hidden" name="a_list" id="a_list" value="gridinsert">
+<input type="hidden" name="@vw_CurrencyMC_list.FormKeyCountName" id="@vw_CurrencyMC_list.FormKeyCountName" value="@vw_CurrencyMC_list.KeyCount">
+@Html.Raw(vw_CurrencyMC_list.MultiSelectKey)
+}
+@if (vw_CurrencyMC_list.CurrentAction == "gridedit") {
+<input type="hidden" name="a_list" id="a_list" value="gridupdate">
+<input type="hidden" name="@vw_CurrencyMC_list.FormKeyCountName" id="@vw_CurrencyMC_list.FormKeyCountName" value="@vw_CurrencyMC_list.KeyCount">
+@Html.Raw(vw_CurrencyMC_list.MultiSelectKey)
+}
+@if (ew_Empty(vw_CurrencyMC_list.CurrentAction)) {
+<input type="hidden" name="a_list" id="a_list" value="">
+}
+</div>
+</form>
+@{ vw_CurrencyMC_list.CloseRecordset(); }
+		@if (ew_Empty(vw_CurrencyMC.Export)) {
+		<div class="panel-footer ewGridLowerPanel">
+		@if (vw_CurrencyMC_list.CurrentAction != "gridadd" && vw_CurrencyMC_list.CurrentAction != "gridedit") {
+			<form name="ewPagerForm" class="ewForm form-horizontal ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ vw_CurrencyMC_list.Pager = vw_CurrencyMC_list.Pager ?? new cNumericPager(vw_CurrencyMC_list.StartRec, vw_CurrencyMC_list.DisplayRecs, vw_CurrencyMC_list.TotalRecs, vw_CurrencyMC_list.RecRange, vw_CurrencyMC_list.AutoHidePager); }
+@if (vw_CurrencyMC_list.Pager.RecordCount > 0 && vw_CurrencyMC_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (vw_CurrencyMC_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (vw_CurrencyMC_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in vw_CurrencyMC_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(vw_CurrencyMC_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (vw_CurrencyMC_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (vw_CurrencyMC_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(vw_CurrencyMC_list.PageUrl)start=@vw_CurrencyMC_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(vw_CurrencyMC_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(vw_CurrencyMC_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(vw_CurrencyMC_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (vw_CurrencyMC_list.Pager.RecordCount > 0 && (!vw_CurrencyMC_list.AutoHidePageSizeSelector || vw_CurrencyMC_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(vw_CurrencyMC_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(vw_CurrencyMC_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(vw_CurrencyMC_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(vw_CurrencyMC_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+			</form>
+		}
+		<div class="ewListOtherOptions">
+		@{ vw_CurrencyMC_list.ForEachOtherOption(kvp => kvp.Value.Render("body", "bottom")); }
+		</div>
+		<div class="clearfix"></div>
+		</div>
+		}
+</div>
+}
+@if (vw_CurrencyMC_list.TotalRecs <= 0 && vw_CurrencyMC_list.CurrentAction == "") { // Show other options
+<div class="ewListOtherOptions">
+@{ vw_CurrencyMC_list.ForEachOtherOption(kvp => { kvp.Value.ButtonClass = ""; kvp.Value.Render("body", ""); }); }
+</div>
+<div class="clearfix"></div>
+}
+@if (ew_Empty(vw_CurrencyMC.Export)) {
+<script type="text/javascript">
+fvw_CurrencyMClistsrch.FilterList = @Html.Raw(vw_CurrencyMC_list.GetFilterList());
+fvw_CurrencyMClistsrch.Init();
+fvw_CurrencyMClist.Init();
+</script>
+}
+@vw_CurrencyMC_list.ShowPageFooter()
+@DebugMsg()
+@ElapsedTime(StartTime)
+@if (ew_Empty(vw_CurrencyMC.Export)) {
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+}
+@{ vw_CurrencyMC_list.Page_Terminate(); }

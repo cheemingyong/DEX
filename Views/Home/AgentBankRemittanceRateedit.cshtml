@@ -1,0 +1,281 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	AgentBankRemittanceRate_edit.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "edit";
+var CurrentForm = fAgentBankRemittanceRateedit = new ew_Form("fAgentBankRemittanceRateedit", "edit");
+
+// Validate form
+fAgentBankRemittanceRateedit.Validate = function() {
+	if (!this.ValidateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
+	if ($fobj.find("#a_confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.FormKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = $fobj.find("#a_list").val() == "gridinsert";
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		elm = this.GetElements("x" + infix + "_CreatedDate");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.CreatedDate.ReqErrMsg.Replace("%s", AgentBankRemittanceRate.CreatedDate.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_CreatedDate");
+		if (elm && !ew_CheckDateDef(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.CreatedDate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_CurrencyCode");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.CurrencyCode.ReqErrMsg.Replace("%s", AgentBankRemittanceRate.CurrencyCode.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_AgentId");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.AgentId.ReqErrMsg.Replace("%s", AgentBankRemittanceRate.AgentId.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Rate");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.Rate.ReqErrMsg.Replace("%s", AgentBankRemittanceRate.Rate.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Rate");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.Rate.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_Amount");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.Amount.ReqErrMsg.Replace("%s", AgentBankRemittanceRate.Amount.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_Amount");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBankRemittanceRate.Amount.FldErrMsg))");
+
+		// Fire Form_CustomValidate event
+		if (!this.Form_CustomValidate(fobj))
+			return false;
+	}
+
+	// Process detail forms
+	var dfs = $fobj.find("input[name='detailpage']").get();
+	for (var i = 0; i < dfs.length; i++) {
+		var df = dfs[i], val = df.value;
+		if (val && ewForms[val])
+			if (!ewForms[val].Validate())
+				return false;
+	}
+	return true;
+}
+
+// Form_CustomValidate event
+fAgentBankRemittanceRateedit.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fAgentBankRemittanceRateedit.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fAgentBankRemittanceRateedit.Lists["x_ContractType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fAgentBankRemittanceRateedit.Lists["x_ContractType"].Options = @Html.Raw(ew_ArrayToJson(AgentBankRemittanceRate.ContractType.Options()));
+fAgentBankRemittanceRateedit.Lists["x_CurrencyCode"] = {"LinkField":"x_CurrCode","Ajax":true,"AutoFill":true,"DisplayFields":["x_CurrCode","","",""],"ParentFields":[],"ChildFields":["x_AgentId"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"vw_AgentFCBal"};
+fAgentBankRemittanceRateedit.Lists["x_AgentId"] = {"LinkField":"x_AgentId","Ajax":true,"AutoFill":false,"DisplayFields":["x_AgentId","x_AgentName","x_Balance",""],"ParentFields":["x_CurrencyCode"],"ChildFields":[],"FilterFields":["x_CurrCode"],"Options":[],"Template":"","LinkTable":"vw_AgentFCBal"};
+
+// Form object for search
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+@if (!AgentBankRemittanceRate_edit.IsModal) {
+<div class="ewToolbar">
+@if (ew_Empty(AgentBankRemittanceRate.Export)) {
+<div style="display: inline-block">
+	@{ Breadcrumb?.Render(); }
+</div>
+}
+@if (ew_Empty(AgentBankRemittanceRate.Export)) {
+	@Language.SelectionForm()
+}
+	<div class="clearfix"></div>
+</div>
+}
+@AgentBankRemittanceRate_edit.ShowPageHeader()
+@{ AgentBankRemittanceRate_edit.ShowMessage(); }
+<form name="fAgentBankRemittanceRateedit" id="fAgentBankRemittanceRateedit" class="@AgentBankRemittanceRate_edit.FormClassName" action="@ew_AppPath(ew_CurrentPage())" method="post">
+@if (AgentBankRemittanceRate_edit.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@AgentBankRemittanceRate_edit.Token">
+}
+<input type="hidden" name="a_edit" id="a_edit" value="U">
+@if (AgentBankRemittanceRate_edit.IsModal) {
+<input type="hidden" name="modal" value="1">
+}
+<div>
+@if (AgentBankRemittanceRate.id.Visible) { // id.Visible (begin)
+	<div id="r_id" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_id" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.id.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.id.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_id">
+<span @Html.Raw(AgentBankRemittanceRate.id.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBankRemittanceRate.id.EditValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBankRemittanceRate" data-field="x_id" name="x_id" id="x_id" value="@AgentBankRemittanceRate.id.CurrentValue">
+@Html.Raw(AgentBankRemittanceRate.id.CustomMsg)</div></div>
+	</div>
+} @* id.Visible (end) *@
+@if (AgentBankRemittanceRate.ContractType.Visible) { // ContractType.Visible (begin)
+	<div id="r_ContractType" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_ContractType" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.ContractType.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.ContractType.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_ContractType">
+<div id="tp_x_ContractType" class="ewTemplate"><input type="radio" data-table="AgentBankRemittanceRate" data-field="x_ContractType" data-value-separator="@AgentBankRemittanceRate.ContractType.DisplayValueSeparatorAttribute" name="x_ContractType" id="x_ContractType" value="{value}"@Html.Raw(AgentBankRemittanceRate.ContractType.EditAttributes)></div>
+<div id="dsl_x_ContractType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@AgentBankRemittanceRate.ContractType.RadioButtonListHtml(false, "x_ContractType")
+</div></div>
+</span>
+@Html.Raw(AgentBankRemittanceRate.ContractType.CustomMsg)</div></div>
+	</div>
+} @* ContractType.Visible (end) *@
+@if (AgentBankRemittanceRate.CreatedDate.Visible) { // CreatedDate.Visible (begin)
+	<div id="r_CreatedDate" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_CreatedDate" for="x_CreatedDate" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.CreatedDate.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.CreatedDate.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_CreatedDate">
+<input type="text" data-table="AgentBankRemittanceRate" data-field="x_CreatedDate" name="x_CreatedDate" id="x_CreatedDate" placeholder="@AgentBankRemittanceRate.CreatedDate.PlaceHolder" value="@AgentBankRemittanceRate.CreatedDate.EditValue" @Html.Raw(AgentBankRemittanceRate.CreatedDate.EditAttributes)>
+@if (!AgentBankRemittanceRate.CreatedDate.ReadOnly && !AgentBankRemittanceRate.CreatedDate.Disabled && !AgentBankRemittanceRate.CreatedDate.EditAttrs.ContainsKey("readonly") && !AgentBankRemittanceRate.CreatedDate.EditAttrs.ContainsKey("disabled")) {
+<script type="text/javascript">
+ew_CreateCalendar("fAgentBankRemittanceRateedit", "x_CreatedDate", 0);
+</script>
+}
+</span>
+@Html.Raw(AgentBankRemittanceRate.CreatedDate.CustomMsg)</div></div>
+	</div>
+} @* CreatedDate.Visible (end) *@
+@if (AgentBankRemittanceRate.CurrencyCode.Visible) { // CurrencyCode.Visible (begin)
+	<div id="r_CurrencyCode" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_CurrencyCode" for="x_CurrencyCode" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.CurrencyCode.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.CurrencyCode.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_CurrencyCode">
+<span>@{ AgentBankRemittanceRate.CurrencyCode.EditAttrs.Prepend("onchange", "ew_UpdateOpt.call(this);"); }</span>
+<select data-table="AgentBankRemittanceRate" data-field="x_CurrencyCode" data-value-separator="@AgentBankRemittanceRate.CurrencyCode.DisplayValueSeparatorAttribute"  id="x_CurrencyCode" name="x_CurrencyCode" @Html.Raw(AgentBankRemittanceRate.CurrencyCode.EditAttributes)>
+@AgentBankRemittanceRate.CurrencyCode.SelectOptionListHtml("x_CurrencyCode")
+</select>
+<input type="hidden" name="s_x_CurrencyCode" id="s_x_CurrencyCode" value="@AgentBankRemittanceRate.CurrencyCode.LookupFilterQuery()">
+<input type="hidden" name="ln_x_CurrencyCode" id="ln_x_CurrencyCode" value="x_AgentId">
+</span>
+@Html.Raw(AgentBankRemittanceRate.CurrencyCode.CustomMsg)</div></div>
+	</div>
+} @* CurrencyCode.Visible (end) *@
+@if (AgentBankRemittanceRate.AgentId.Visible) { // AgentId.Visible (begin)
+	<div id="r_AgentId" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_AgentId" for="x_AgentId" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.AgentId.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.AgentId.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_AgentId">
+<div class="ewDropdownList has-feedback">
+	<span onclick="" class="form-control dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+		@Html.Raw(AgentBankRemittanceRate.AgentId.ViewValue)
+	</span>
+	<span class="glyphicon glyphicon-remove form-control-feedback ewDropdownListClear"></span>
+	<span class="form-control-feedback"><span class="caret"></span></span>
+	<div id="dsl_x_AgentId" data-repeatcolumn="1" class="dropdown-menu">
+		<div class="ewItems" style="position: relative; overflow-x: hidden;">
+@AgentBankRemittanceRate.AgentId.RadioButtonListHtml(true, "x_AgentId")
+		</div>
+	</div>
+	<div id="tp_x_AgentId" class="ewTemplate"><input type="radio" data-table="AgentBankRemittanceRate" data-field="x_AgentId" data-value-separator="@AgentBankRemittanceRate.AgentId.DisplayValueSeparatorAttribute" name="x_AgentId" id="x_AgentId" value="{value}"@Html.Raw(AgentBankRemittanceRate.AgentId.EditAttributes)></div>
+</div>
+<input type="hidden" name="s_x_AgentId" id="s_x_AgentId" value="@AgentBankRemittanceRate.AgentId.LookupFilterQuery()">
+</span>
+@Html.Raw(AgentBankRemittanceRate.AgentId.CustomMsg)</div></div>
+	</div>
+} @* AgentId.Visible (end) *@
+@if (AgentBankRemittanceRate.Rate.Visible) { // Rate.Visible (begin)
+	<div id="r_Rate" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_Rate" for="x_Rate" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.Rate.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.Rate.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_Rate">
+<input type="text" data-table="AgentBankRemittanceRate" data-field="x_Rate" name="x_Rate" id="x_Rate" size="30" placeholder="@AgentBankRemittanceRate.Rate.PlaceHolder" value="@AgentBankRemittanceRate.Rate.EditValue" @Html.Raw(AgentBankRemittanceRate.Rate.EditAttributes)>
+</span>
+@Html.Raw(AgentBankRemittanceRate.Rate.CustomMsg)</div></div>
+	</div>
+} @* Rate.Visible (end) *@
+@if (AgentBankRemittanceRate.Amount.Visible) { // Amount.Visible (begin)
+	<div id="r_Amount" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_Amount" for="x_Amount" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.Amount.FldCaption)@Html.Raw(Language.Phrase("FieldRequiredIndicator"))</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.Amount.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_Amount">
+<input type="text" data-table="AgentBankRemittanceRate" data-field="x_Amount" name="x_Amount" id="x_Amount" size="30" placeholder="@AgentBankRemittanceRate.Amount.PlaceHolder" value="@AgentBankRemittanceRate.Amount.EditValue" @Html.Raw(AgentBankRemittanceRate.Amount.EditAttributes)>
+</span>
+@Html.Raw(AgentBankRemittanceRate.Amount.CustomMsg)</div></div>
+	</div>
+} @* Amount.Visible (end) *@
+@if (AgentBankRemittanceRate.Balance.Visible) { // Balance.Visible (begin)
+	<div id="r_Balance" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_Balance" for="x_Balance" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.Balance.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.Balance.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_Balance">
+<span @Html.Raw(AgentBankRemittanceRate.Balance.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBankRemittanceRate.Balance.EditValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBankRemittanceRate" data-field="x_Balance" name="x_Balance" id="x_Balance" value="@AgentBankRemittanceRate.Balance.CurrentValue">
+@Html.Raw(AgentBankRemittanceRate.Balance.CustomMsg)</div></div>
+	</div>
+} @* Balance.Visible (end) *@
+@if (AgentBankRemittanceRate.CreatedBy.Visible) { // CreatedBy.Visible (begin)
+	<div id="r_CreatedBy" class="form-group">
+		<label id="elh_AgentBankRemittanceRate_CreatedBy" for="x_CreatedBy" class="col-sm-2 control-label ewLabel">@Html.Raw(AgentBankRemittanceRate.CreatedBy.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(AgentBankRemittanceRate.CreatedBy.CellAttributes)>
+<span id="el_AgentBankRemittanceRate_CreatedBy">
+<span @Html.Raw(AgentBankRemittanceRate.CreatedBy.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBankRemittanceRate.CreatedBy.EditValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBankRemittanceRate" data-field="x_CreatedBy" name="x_CreatedBy" id="x_CreatedBy" value="@AgentBankRemittanceRate.CreatedBy.CurrentValue">
+@Html.Raw(AgentBankRemittanceRate.CreatedBy.CustomMsg)</div></div>
+	</div>
+} @* CreatedBy.Visible (end) *@
+</div>
+@{ AgentBankRemittanceRate_edit.CloseRecordset(); }
+@if (!AgentBankRemittanceRate_edit.IsModal) {
+@:<div class="form-group">
+	@:<div class="col-sm-offset-2 col-sm-10">
+<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit">@Html.Raw(Language.Phrase("SaveBtn"))</button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="@ew_AppPath(AgentBankRemittanceRate_edit.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+	@:</div>
+@:</div>
+}
+</form>
+<script type="text/javascript">
+fAgentBankRemittanceRateedit.Init();
+</script>
+@AgentBankRemittanceRate_edit.ShowPageFooter()
+@DebugMsg()
+@ElapsedTime(StartTime)
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+@{ AgentBankRemittanceRate_edit.Page_Terminate(); }

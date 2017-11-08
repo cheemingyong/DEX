@@ -1,0 +1,360 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	CurrencyRule_add.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "add";
+var CurrentForm = fCurrencyRuleadd = new ew_Form("fCurrencyRuleadd", "add");
+
+// Validate form
+fCurrencyRuleadd.Validate = function() {
+	if (!this.ValidateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
+	if ($fobj.find("#a_confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.FormKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = $fobj.find("#a_list").val() == "gridinsert";
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		elm = this.GetElements("x" + infix + "_SingleTransactionBuyAmount");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(CurrencyRule.SingleTransactionBuyAmount.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_PeriodStart");
+		if (elm && !ew_CheckEuroDate(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(CurrencyRule.PeriodStart.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_PeriodEnd");
+		if (elm && !ew_CheckEuroDate(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(CurrencyRule.PeriodEnd.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_PeriodBuyAmount");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(CurrencyRule.PeriodBuyAmount.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_NoOfTransactions");
+		if (elm && !ew_CheckInteger(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(CurrencyRule.NoOfTransactions.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_FeeCost");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(CurrencyRule.FeeCost.FldErrMsg))");
+		elm = this.GetElements("x" + infix + "_CreatedDate");
+		if (elm && !ew_CheckEuroDate(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(CurrencyRule.CreatedDate.FldErrMsg))");
+
+		// Fire Form_CustomValidate event
+		if (!this.Form_CustomValidate(fobj))
+			return false;
+	}
+
+	// Process detail forms
+	var dfs = $fobj.find("input[name='detailpage']").get();
+	for (var i = 0; i < dfs.length; i++) {
+		var df = dfs[i], val = df.value;
+		if (val && ewForms[val])
+			if (!ewForms[val].Validate())
+				return false;
+	}
+	return true;
+}
+
+// Form_CustomValidate event
+fCurrencyRuleadd.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fCurrencyRuleadd.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fCurrencyRuleadd.Lists["x_RuleType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuleadd.Lists["x_RuleType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.RuleType.Options()));
+fCurrencyRuleadd.Lists["x_AgentId"] = {"LinkField":"x_AgentId","Ajax":true,"AutoFill":false,"DisplayFields":["x_AgentName","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Agent"};
+fCurrencyRuleadd.Lists["x_CurrencyCode"] = {"LinkField":"x_CurrencyCode","Ajax":true,"AutoFill":false,"DisplayFields":["x_CurrencyCode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Currency"};
+fCurrencyRuleadd.Lists["x_TransactionType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuleadd.Lists["x_TransactionType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionType.Options()));
+fCurrencyRuleadd.Lists["x_TransactionTypeCondition"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuleadd.Lists["x_TransactionTypeCondition"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionTypeCondition.Options()));
+fCurrencyRuleadd.Lists["x_TransactionPeriodType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuleadd.Lists["x_TransactionPeriodType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionPeriodType.Options()));
+fCurrencyRuleadd.Lists["x_TransactionPeriodCondition"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRuleadd.Lists["x_TransactionPeriodCondition"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionPeriodCondition.Options()));
+
+// Form object for search
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+@if (!CurrencyRule_add.IsModal) {
+<div class="ewToolbar">
+@if (ew_Empty(CurrencyRule.Export)) {
+<div style="display: inline-block">
+	@{ Breadcrumb?.Render(); }
+</div>
+}
+@if (ew_Empty(CurrencyRule.Export)) {
+	@Language.SelectionForm()
+}
+	<div class="clearfix"></div>
+</div>
+}
+@CurrencyRule_add.ShowPageHeader()
+@{ CurrencyRule_add.ShowMessage(); }
+<form name="fCurrencyRuleadd" id="fCurrencyRuleadd" class="@CurrencyRule_add.FormClassName" action="@ew_AppPath(ew_CurrentPage())" method="post">
+<br>
+@if (CurrencyRule_add.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@CurrencyRule_add.Token">
+}
+<input type="hidden" name="a_add" id="a_add" value="A">
+@if (CurrencyRule_add.IsModal) {
+<input type="hidden" name="modal" value="1">
+}
+<div>
+@if (CurrencyRule.RuleType.Visible) { // RuleType.Visible (begin)
+	<div id="r_RuleType" class="form-group">
+		<label id="elh_CurrencyRule_RuleType" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.RuleType.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.RuleType.CellAttributes)>
+<span id="el_CurrencyRule_RuleType">
+<div id="tp_x_RuleType" class="ewTemplate"><input type="radio" data-table="CurrencyRule" data-field="x_RuleType" data-value-separator="@CurrencyRule.RuleType.DisplayValueSeparatorAttribute" name="x_RuleType" id="x_RuleType" value="{value}"@Html.Raw(CurrencyRule.RuleType.EditAttributes)></div>
+<div id="dsl_x_RuleType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@CurrencyRule.RuleType.RadioButtonListHtml(false, "x_RuleType")
+</div></div>
+</span>
+@Html.Raw(CurrencyRule.RuleType.CustomMsg)</div></div>
+	</div>
+} @* RuleType.Visible (end) *@
+@if (CurrencyRule.AgentId.Visible) { // AgentId.Visible (begin)
+	<div id="r_AgentId" class="form-group">
+		<label id="elh_CurrencyRule_AgentId" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.AgentId.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.AgentId.CellAttributes)>
+<span id="el_CurrencyRule_AgentId">
+<span id="as_x_AgentId" style="white-space: nowrap; z-index: 8970">
+	<input type="text" name="sv_x_AgentId" id="sv_x_AgentId" value="@Html.Raw(CurrencyRule.AgentId.EditValue)" size="30" maxlength="20" placeholder="@CurrencyRule.AgentId.PlaceHolder" data-placeholder="@CurrencyRule.AgentId.PlaceHolder" @Html.Raw(CurrencyRule.AgentId.EditAttributes)>
+</span>
+<span>@{ CurrencyRule.AgentId.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="CurrencyRule" data-field="x_AgentId" data-multiple="0" data-lookup="1" data-value-separator="@CurrencyRule.AgentId.DisplayValueSeparatorAttribute"  name="x_AgentId" id="x_AgentId" value="@CurrencyRule.AgentId.CurrentValue" onchange="@CurrencyRule.AgentId.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x_AgentId" id="q_x_AgentId" value="@CurrencyRule.AgentId.LookupFilterQuery(true)">
+<script type="text/javascript">
+fCurrencyRuleadd.CreateAutoSuggest({"id":"x_AgentId","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(CurrencyRule.AgentId.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x_AgentId',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x_AgentId" id="s_x_AgentId" value="@CurrencyRule.AgentId.LookupFilterQuery(false)">
+</span>
+@Html.Raw(CurrencyRule.AgentId.CustomMsg)</div></div>
+	</div>
+} @* AgentId.Visible (end) *@
+@if (CurrencyRule.CurrencyCode.Visible) { // CurrencyCode.Visible (begin)
+	<div id="r_CurrencyCode" class="form-group">
+		<label id="elh_CurrencyRule_CurrencyCode" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.CurrencyCode.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.CurrencyCode.CellAttributes)>
+<span id="el_CurrencyRule_CurrencyCode">
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_CurrencyCode">@(CurrencyRule.CurrencyCode.ViewValue == "" ? Language.Phrase("PleaseSelect") : CurrencyRule.CurrencyCode.ViewValue)</span>
+</span>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s", ew_RemoveHtml(CurrencyRule.CurrencyCode.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x_CurrencyCode',m:1,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="CurrencyRule" data-field="x_CurrencyCode" data-multiple="1" data-lookup="1" data-value-separator="@CurrencyRule.CurrencyCode.DisplayValueSeparatorAttribute" name="x_CurrencyCode" id="x_CurrencyCode" value="@CurrencyRule.CurrencyCode.CurrentValue"@Html.Raw(CurrencyRule.CurrencyCode.EditAttributes)>
+<input type="hidden" name="s_x_CurrencyCode" id="s_x_CurrencyCode" value="@CurrencyRule.CurrencyCode.LookupFilterQuery()">
+</span>
+@Html.Raw(CurrencyRule.CurrencyCode.CustomMsg)</div></div>
+	</div>
+} @* CurrencyCode.Visible (end) *@
+@if (CurrencyRule.TransactionType.Visible) { // TransactionType.Visible (begin)
+	<div id="r_TransactionType" class="form-group">
+		<label id="elh_CurrencyRule_TransactionType" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.TransactionType.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.TransactionType.CellAttributes)>
+<span id="el_CurrencyRule_TransactionType">
+<div id="tp_x_TransactionType" class="ewTemplate"><input type="radio" data-table="CurrencyRule" data-field="x_TransactionType" data-value-separator="@CurrencyRule.TransactionType.DisplayValueSeparatorAttribute" name="x_TransactionType" id="x_TransactionType" value="{value}"@Html.Raw(CurrencyRule.TransactionType.EditAttributes)></div>
+<div id="dsl_x_TransactionType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@CurrencyRule.TransactionType.RadioButtonListHtml(false, "x_TransactionType")
+</div></div>
+</span>
+@Html.Raw(CurrencyRule.TransactionType.CustomMsg)</div></div>
+	</div>
+} @* TransactionType.Visible (end) *@
+@if (CurrencyRule.TransactionTypeCondition.Visible) { // TransactionTypeCondition.Visible (begin)
+	<div id="r_TransactionTypeCondition" class="form-group">
+		<label id="elh_CurrencyRule_TransactionTypeCondition" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.TransactionTypeCondition.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.TransactionTypeCondition.CellAttributes)>
+<span id="el_CurrencyRule_TransactionTypeCondition">
+<div id="tp_x_TransactionTypeCondition" class="ewTemplate"><input type="radio" data-table="CurrencyRule" data-field="x_TransactionTypeCondition" data-value-separator="@CurrencyRule.TransactionTypeCondition.DisplayValueSeparatorAttribute" name="x_TransactionTypeCondition" id="x_TransactionTypeCondition" value="{value}"@Html.Raw(CurrencyRule.TransactionTypeCondition.EditAttributes)></div>
+<div id="dsl_x_TransactionTypeCondition" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@CurrencyRule.TransactionTypeCondition.RadioButtonListHtml(false, "x_TransactionTypeCondition")
+</div></div>
+</span>
+@Html.Raw(CurrencyRule.TransactionTypeCondition.CustomMsg)</div></div>
+	</div>
+} @* TransactionTypeCondition.Visible (end) *@
+@if (CurrencyRule.SingleTransactionBuyAmount.Visible) { // SingleTransactionBuyAmount.Visible (begin)
+	<div id="r_SingleTransactionBuyAmount" class="form-group">
+		<label id="elh_CurrencyRule_SingleTransactionBuyAmount" for="x_SingleTransactionBuyAmount" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.SingleTransactionBuyAmount.CellAttributes)>
+<span id="el_CurrencyRule_SingleTransactionBuyAmount">
+<input type="text" data-table="CurrencyRule" data-field="x_SingleTransactionBuyAmount" name="x_SingleTransactionBuyAmount" id="x_SingleTransactionBuyAmount" size="30" placeholder="@CurrencyRule.SingleTransactionBuyAmount.PlaceHolder" value="@CurrencyRule.SingleTransactionBuyAmount.EditValue" @Html.Raw(CurrencyRule.SingleTransactionBuyAmount.EditAttributes)>
+</span>
+@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.CustomMsg)</div></div>
+	</div>
+} @* SingleTransactionBuyAmount.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodType.Visible) { // TransactionPeriodType.Visible (begin)
+	<div id="r_TransactionPeriodType" class="form-group">
+		<label id="elh_CurrencyRule_TransactionPeriodType" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.TransactionPeriodType.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.TransactionPeriodType.CellAttributes)>
+<span id="el_CurrencyRule_TransactionPeriodType">
+<div id="tp_x_TransactionPeriodType" class="ewTemplate"><input type="radio" data-table="CurrencyRule" data-field="x_TransactionPeriodType" data-value-separator="@CurrencyRule.TransactionPeriodType.DisplayValueSeparatorAttribute" name="x_TransactionPeriodType" id="x_TransactionPeriodType" value="{value}"@Html.Raw(CurrencyRule.TransactionPeriodType.EditAttributes)></div>
+<div id="dsl_x_TransactionPeriodType" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@CurrencyRule.TransactionPeriodType.RadioButtonListHtml(false, "x_TransactionPeriodType")
+</div></div>
+</span>
+@Html.Raw(CurrencyRule.TransactionPeriodType.CustomMsg)</div></div>
+	</div>
+} @* TransactionPeriodType.Visible (end) *@
+@if (CurrencyRule.PeriodStart.Visible) { // PeriodStart.Visible (begin)
+	<div id="r_PeriodStart" class="form-group">
+		<label id="elh_CurrencyRule_PeriodStart" for="x_PeriodStart" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.PeriodStart.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.PeriodStart.CellAttributes)>
+<span id="el_CurrencyRule_PeriodStart">
+<input type="text" data-table="CurrencyRule" data-field="x_PeriodStart" data-format="7" name="x_PeriodStart" id="x_PeriodStart" placeholder="@CurrencyRule.PeriodStart.PlaceHolder" value="@CurrencyRule.PeriodStart.EditValue" @Html.Raw(CurrencyRule.PeriodStart.EditAttributes)>
+@if (!CurrencyRule.PeriodStart.ReadOnly && !CurrencyRule.PeriodStart.Disabled && !CurrencyRule.PeriodStart.EditAttrs.ContainsKey("readonly") && !CurrencyRule.PeriodStart.EditAttrs.ContainsKey("disabled")) {
+<script type="text/javascript">
+ew_CreateCalendar("fCurrencyRuleadd", "x_PeriodStart", 7);
+</script>
+}
+</span>
+@Html.Raw(CurrencyRule.PeriodStart.CustomMsg)</div></div>
+	</div>
+} @* PeriodStart.Visible (end) *@
+@if (CurrencyRule.PeriodEnd.Visible) { // PeriodEnd.Visible (begin)
+	<div id="r_PeriodEnd" class="form-group">
+		<label id="elh_CurrencyRule_PeriodEnd" for="x_PeriodEnd" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.PeriodEnd.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.PeriodEnd.CellAttributes)>
+<span id="el_CurrencyRule_PeriodEnd">
+<input type="text" data-table="CurrencyRule" data-field="x_PeriodEnd" data-format="7" name="x_PeriodEnd" id="x_PeriodEnd" placeholder="@CurrencyRule.PeriodEnd.PlaceHolder" value="@CurrencyRule.PeriodEnd.EditValue" @Html.Raw(CurrencyRule.PeriodEnd.EditAttributes)>
+@if (!CurrencyRule.PeriodEnd.ReadOnly && !CurrencyRule.PeriodEnd.Disabled && !CurrencyRule.PeriodEnd.EditAttrs.ContainsKey("readonly") && !CurrencyRule.PeriodEnd.EditAttrs.ContainsKey("disabled")) {
+<script type="text/javascript">
+ew_CreateCalendar("fCurrencyRuleadd", "x_PeriodEnd", 7);
+</script>
+}
+</span>
+@Html.Raw(CurrencyRule.PeriodEnd.CustomMsg)</div></div>
+	</div>
+} @* PeriodEnd.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodCondition.Visible) { // TransactionPeriodCondition.Visible (begin)
+	<div id="r_TransactionPeriodCondition" class="form-group">
+		<label id="elh_CurrencyRule_TransactionPeriodCondition" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.TransactionPeriodCondition.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.TransactionPeriodCondition.CellAttributes)>
+<span id="el_CurrencyRule_TransactionPeriodCondition">
+<div id="tp_x_TransactionPeriodCondition" class="ewTemplate"><input type="radio" data-table="CurrencyRule" data-field="x_TransactionPeriodCondition" data-value-separator="@CurrencyRule.TransactionPeriodCondition.DisplayValueSeparatorAttribute" name="x_TransactionPeriodCondition" id="x_TransactionPeriodCondition" value="{value}"@Html.Raw(CurrencyRule.TransactionPeriodCondition.EditAttributes)></div>
+<div id="dsl_x_TransactionPeriodCondition" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+@CurrencyRule.TransactionPeriodCondition.RadioButtonListHtml(false, "x_TransactionPeriodCondition")
+</div></div>
+</span>
+@Html.Raw(CurrencyRule.TransactionPeriodCondition.CustomMsg)</div></div>
+	</div>
+} @* TransactionPeriodCondition.Visible (end) *@
+@if (CurrencyRule.PeriodBuyAmount.Visible) { // PeriodBuyAmount.Visible (begin)
+	<div id="r_PeriodBuyAmount" class="form-group">
+		<label id="elh_CurrencyRule_PeriodBuyAmount" for="x_PeriodBuyAmount" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.PeriodBuyAmount.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.PeriodBuyAmount.CellAttributes)>
+<span id="el_CurrencyRule_PeriodBuyAmount">
+<input type="text" data-table="CurrencyRule" data-field="x_PeriodBuyAmount" name="x_PeriodBuyAmount" id="x_PeriodBuyAmount" size="30" placeholder="@CurrencyRule.PeriodBuyAmount.PlaceHolder" value="@CurrencyRule.PeriodBuyAmount.EditValue" @Html.Raw(CurrencyRule.PeriodBuyAmount.EditAttributes)>
+</span>
+@Html.Raw(CurrencyRule.PeriodBuyAmount.CustomMsg)</div></div>
+	</div>
+} @* PeriodBuyAmount.Visible (end) *@
+@if (CurrencyRule.NoOfTransactions.Visible) { // NoOfTransactions.Visible (begin)
+	<div id="r_NoOfTransactions" class="form-group">
+		<label id="elh_CurrencyRule_NoOfTransactions" for="x_NoOfTransactions" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.NoOfTransactions.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.NoOfTransactions.CellAttributes)>
+<span id="el_CurrencyRule_NoOfTransactions">
+<input type="text" data-table="CurrencyRule" data-field="x_NoOfTransactions" name="x_NoOfTransactions" id="x_NoOfTransactions" size="30" placeholder="@CurrencyRule.NoOfTransactions.PlaceHolder" value="@CurrencyRule.NoOfTransactions.EditValue" @Html.Raw(CurrencyRule.NoOfTransactions.EditAttributes)>
+</span>
+@Html.Raw(CurrencyRule.NoOfTransactions.CustomMsg)</div></div>
+	</div>
+} @* NoOfTransactions.Visible (end) *@
+@if (CurrencyRule.FeeCost.Visible) { // FeeCost.Visible (begin)
+	<div id="r_FeeCost" class="form-group">
+		<label id="elh_CurrencyRule_FeeCost" for="x_FeeCost" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.FeeCost.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.FeeCost.CellAttributes)>
+<span id="el_CurrencyRule_FeeCost">
+<input type="text" data-table="CurrencyRule" data-field="x_FeeCost" name="x_FeeCost" id="x_FeeCost" size="30" placeholder="@CurrencyRule.FeeCost.PlaceHolder" value="@CurrencyRule.FeeCost.EditValue" @Html.Raw(CurrencyRule.FeeCost.EditAttributes)>
+</span>
+@Html.Raw(CurrencyRule.FeeCost.CustomMsg)</div></div>
+	</div>
+} @* FeeCost.Visible (end) *@
+@if (CurrencyRule.CreatedDate.Visible) { // CreatedDate.Visible (begin)
+	<div id="r_CreatedDate" class="form-group">
+		<label id="elh_CurrencyRule_CreatedDate" for="x_CreatedDate" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.CreatedDate.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.CreatedDate.CellAttributes)>
+<span id="el_CurrencyRule_CreatedDate">
+<input type="text" data-table="CurrencyRule" data-field="x_CreatedDate" data-format="7" name="x_CreatedDate" id="x_CreatedDate" placeholder="@CurrencyRule.CreatedDate.PlaceHolder" value="@CurrencyRule.CreatedDate.EditValue" @Html.Raw(CurrencyRule.CreatedDate.EditAttributes)>
+@if (!CurrencyRule.CreatedDate.ReadOnly && !CurrencyRule.CreatedDate.Disabled && !CurrencyRule.CreatedDate.EditAttrs.ContainsKey("readonly") && !CurrencyRule.CreatedDate.EditAttrs.ContainsKey("disabled")) {
+<script type="text/javascript">
+ew_CreateCalendar("fCurrencyRuleadd", "x_CreatedDate", 7);
+</script>
+}
+</span>
+@Html.Raw(CurrencyRule.CreatedDate.CustomMsg)</div></div>
+	</div>
+} @* CreatedDate.Visible (end) *@
+@if (CurrencyRule.CreatedBy.Visible) { // CreatedBy.Visible (begin)
+	<div id="r_CreatedBy" class="form-group">
+		<label id="elh_CurrencyRule_CreatedBy" for="x_CreatedBy" class="col-sm-2 control-label ewLabel">@Html.Raw(CurrencyRule.CreatedBy.FldCaption)</label>
+		<div class="col-sm-10"><div @Html.Raw(CurrencyRule.CreatedBy.CellAttributes)>
+<span id="el_CurrencyRule_CreatedBy">
+<input type="text" data-table="CurrencyRule" data-field="x_CreatedBy" name="x_CreatedBy" id="x_CreatedBy" size="30" maxlength="20" placeholder="@CurrencyRule.CreatedBy.PlaceHolder" value="@CurrencyRule.CreatedBy.EditValue" @Html.Raw(CurrencyRule.CreatedBy.EditAttributes)>
+</span>
+@Html.Raw(CurrencyRule.CreatedBy.CustomMsg)</div></div>
+	</div>
+} @* CreatedBy.Visible (end) *@
+</div>
+@{ CurrencyRule_add.CloseRecordset(); }
+@if (!CurrencyRule_add.IsModal) {
+<div class="form-group">
+	<div class="col-sm-offset-2 col-sm-10">
+<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit">@Html.Raw(Language.Phrase("AddBtn"))</button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="@ew_AppPath(CurrencyRule_add.ReturnUrl)"> @Html.Raw(Language.Phrase("CancelBtn"))</button>
+	</div>
+</div>
+}
+</form>
+<script type="text/javascript">
+fCurrencyRuleadd.Init();
+</script>
+@CurrencyRule_add.ShowPageFooter()
+@DebugMsg()
+@ElapsedTime(StartTime)
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+@{ CurrencyRule_add.Page_Terminate(); }

@@ -1,0 +1,738 @@
+@{
+
+	// View
+	ew_View = this;
+
+	// Page init
+	AgentBank_grid.Page_Init();
+
+	// Page main
+	AgentBank_grid.Page_Main();
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	AgentBank_grid.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+@if (ew_Empty(AgentBank.Export)) {
+<script type="text/javascript">
+
+// Form object
+var fAgentBankgrid = new ew_Form("fAgentBankgrid", "grid");
+fAgentBankgrid.FormKeyCountName = "@AgentBank_grid.FormKeyCountName";
+
+// Validate form
+fAgentBankgrid.Validate = function() {
+	if (!this.ValidateRequired)
+		return true; // Ignore validation
+	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
+	if ($fobj.find("#a_confirm").val() == "F")
+		return true;
+	var elm, felm, uelm, addcnt = 0;
+	var $k = $fobj.find("#" + this.FormKeyCountName); // Get key_count
+	var rowcnt = ($k[0]) ? parseInt($k.val(), 10) : 1;
+	var startcnt = (rowcnt == 0) ? 0 : 1; // Check rowcnt == 0 => Inline-Add
+	var gridinsert = $fobj.find("#a_list").val() == "gridinsert";
+	for (var i = startcnt; i <= rowcnt; i++) {
+		var infix = ($k[0]) ? String(i) : "";
+		$fobj.data("rowindex", infix);
+		var checkrow = (gridinsert) ? !this.EmptyRow(infix) : true;
+		if (checkrow) {
+			addcnt++;
+		elm = this.GetElements("x" + infix + "_currencycode");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBank.currencycode.ReqErrMsg.Replace("%s", AgentBank.currencycode.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_agentid");
+		if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBank.agentid.ReqErrMsg.Replace("%s", AgentBank.agentid.FldCaption)))");
+		elm = this.GetElements("x" + infix + "_lastavgcost");
+		if (elm && !ew_CheckNumber(elm.value))
+			return this.OnError(elm, "@Html.Raw(ew_JsEncode2(AgentBank.lastavgcost.FldErrMsg))");
+
+		// Fire Form_CustomValidate event
+		if (!this.Form_CustomValidate(fobj))
+			return false;
+		} // End Grid Add checking
+	}
+	return true;
+}
+
+// Check empty row
+fAgentBankgrid.EmptyRow = function(infix) {
+	var fobj = this.Form;
+	if (ew_ValueChanged(fobj, infix, "currencycode", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "agentid", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "BankId", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "lastavgcost", false)) return false;
+	return true;
+}
+
+// Form_CustomValidate event
+fAgentBankgrid.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fAgentBankgrid.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fAgentBankgrid.Lists["x_currencycode"] = {"LinkField":"x_CurrencyCode","Ajax":true,"AutoFill":false,"DisplayFields":["x_CurrencyCode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Currency"};
+fAgentBankgrid.Lists["x_agentid"] = {"LinkField":"x_AgentId","Ajax":true,"AutoFill":false,"DisplayFields":["x_AgentId","x_AgentName","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Agent"};
+
+// Form object for search
+</script>
+}
+@{
+	if (AgentBank_grid.CurrentAction == "gridadd") {
+		if (AgentBank_grid.CurrentMode == "copy") { // Load recordset
+			AgentBank_grid.TotalRecs = AgentBank_grid.SelectRecordCount();
+			AgentBank_grid.Recordset = AgentBank_grid.LoadRecordset(AgentBank_grid.StartRec - 1, AgentBank_grid.DisplayRecs);
+			AgentBank_grid.StartRec = 1;
+			AgentBank_grid.DisplayRecs = AgentBank_grid.TotalRecs;
+		} else {
+			AgentBank_grid.CurrentFilter = "0=1";
+			AgentBank_grid.StartRec = 1;
+			AgentBank_grid.DisplayRecs = AgentBank_grid.GridAddRowCount;
+		}
+		AgentBank_grid.TotalRecs = AgentBank_grid.DisplayRecs;
+		AgentBank_grid.StopRec = AgentBank_grid.DisplayRecs;
+	} else {
+		if (AgentBank_grid.TotalRecs <= 0) {
+			AgentBank_grid.TotalRecs = AgentBank_grid.SelectRecordCount();
+		}
+		AgentBank_grid.StartRec = 1;
+		AgentBank_grid.DisplayRecs = AgentBank_grid.TotalRecs; // Display all records
+		AgentBank_grid.Recordset = AgentBank_grid.LoadRecordset(AgentBank_grid.StartRec - 1, AgentBank_grid.DisplayRecs);
+
+		// Set no record found message
+		if (AgentBank_grid.CurrentAction == "" && AgentBank_grid.TotalRecs == 0) {
+			if (AgentBank_grid.SearchWhere == "0=101") {
+				AgentBank_grid.WarningMessage = Language.Phrase("EnterSearchCriteria");
+			} else {
+				AgentBank_grid.WarningMessage = Language.Phrase("NoRecord");
+			}
+		}
+	}
+	AgentBank_grid.RenderOtherOptions();
+}
+@AgentBank_grid.ShowPageHeader()
+@{ AgentBank_grid.ShowMessage(); }
+@if (AgentBank_grid.TotalRecs > 0 || AgentBank_grid.CurrentAction != "") {
+<div class="panel panel-default ewGrid AgentBank">
+<div id="fAgentBankgrid" class="ewForm form-inline">
+@if (AgentBank_grid.ShowOtherOptions) {
+	<div class="panel-heading ewGridUpperPanel">
+	@{ AgentBank_grid.ForEachOtherOption(kvp => kvp.Value.Render("body")); }
+	</div>
+	<div class="clearfix"></div>
+}
+<div id="gmp_AgentBank" class="@((ew_IsResponsiveLayout()) ? "table-responsive ewGridMiddlePanel" : "ewGridMiddlePanel")">
+<table id="tbl_AgentBankgrid" class="table ewTable">
+@Html.Raw(AgentBank_grid.TableCustomInnerHtml)
+<thead><!-- Table header -->
+	<tr class="ewTableHeader">
+@{
+
+	// Header row
+	AgentBank_grid.RowType = EW_ROWTYPE_HEADER;
+
+	// Render list options
+	AgentBank_grid.RenderListOptions();
+
+	// Render list options (header, left)
+	AgentBank_grid.ListOptions.Render("header", "left");
+}
+@if (AgentBank.id.Visible) { // id.Visible (begin)
+	if (AgentBank_grid.SortUrl(AgentBank.id) == "") {
+		<th data-name="id"><div id="elh_AgentBank_id" class="AgentBank_id"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.id.FldCaption)</div></div></th>
+	} else {
+		<th data-name="id"><div><div id="elh_AgentBank_id" class="AgentBank_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.id.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.id.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.id.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* id.Visible (end) *@
+@if (AgentBank.currencycode.Visible) { // currencycode.Visible (begin)
+	if (AgentBank_grid.SortUrl(AgentBank.currencycode) == "") {
+		<th data-name="currencycode"><div id="elh_AgentBank_currencycode" class="AgentBank_currencycode"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.currencycode.FldCaption)</div></div></th>
+	} else {
+		<th data-name="currencycode"><div><div id="elh_AgentBank_currencycode" class="AgentBank_currencycode">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.currencycode.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.currencycode.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.currencycode.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* currencycode.Visible (end) *@
+@if (AgentBank.agentid.Visible) { // agentid.Visible (begin)
+	if (AgentBank_grid.SortUrl(AgentBank.agentid) == "") {
+		<th data-name="agentid"><div id="elh_AgentBank_agentid" class="AgentBank_agentid"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.agentid.FldCaption)</div></div></th>
+	} else {
+		<th data-name="agentid"><div><div id="elh_AgentBank_agentid" class="AgentBank_agentid">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.agentid.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.agentid.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.agentid.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* agentid.Visible (end) *@
+@if (AgentBank.BankId.Visible) { // BankId.Visible (begin)
+	if (AgentBank_grid.SortUrl(AgentBank.BankId) == "") {
+		<th data-name="BankId"><div id="elh_AgentBank_BankId" class="AgentBank_BankId"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.BankId.FldCaption)</div></div></th>
+	} else {
+		<th data-name="BankId"><div><div id="elh_AgentBank_BankId" class="AgentBank_BankId">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.BankId.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.BankId.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.BankId.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* BankId.Visible (end) *@
+@if (AgentBank.lastavgcost.Visible) { // lastavgcost.Visible (begin)
+	if (AgentBank_grid.SortUrl(AgentBank.lastavgcost) == "") {
+		<th data-name="lastavgcost"><div id="elh_AgentBank_lastavgcost" class="AgentBank_lastavgcost"><div class="ewTableHeaderCaption">@Html.Raw(AgentBank.lastavgcost.FldCaption)</div></div></th>
+	} else {
+		<th data-name="lastavgcost"><div><div id="elh_AgentBank_lastavgcost" class="AgentBank_lastavgcost">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(AgentBank.lastavgcost.FldCaption)</span><span class="ewTableHeaderSort">@if (AgentBank.lastavgcost.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (AgentBank.lastavgcost.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* lastavgcost.Visible (end) *@
+@{
+
+	// Render list options (header, right)
+	AgentBank_grid.ListOptions.Render("header", "right");
+}
+	</tr>
+</thead>
+<tbody>
+@{ // Begin Code
+AgentBank_grid.StartRec = 1;
+AgentBank_grid.StopRec = AgentBank_grid.TotalRecs; // Show all records
+
+// Restore number of post back records
+if (ObjForm != null) {
+	ObjForm.Index = -1;
+	if (ObjForm.HasValue(AgentBank_grid.FormKeyCountName) && (AgentBank_grid.CurrentAction == "gridadd" || AgentBank_grid.CurrentAction == "gridedit" || AgentBank_grid.CurrentAction == "F")) {
+		AgentBank_grid.KeyCount = ew_ConvertToInt(ObjForm.GetValue(AgentBank_grid.FormKeyCountName));
+		AgentBank_grid.StopRec = AgentBank_grid.StartRec + AgentBank_grid.KeyCount - 1;
+	}
+}
+if (AgentBank_grid.Recordset != null && AgentBank_grid.Recordset.HasRows) {
+	if (!AgentBank_grid.Connection.SelectOffset) { // DN
+		for (var i = 1; i <= AgentBank_grid.StartRec - 1; i++) { // Move to first record
+			if (AgentBank_grid.Recordset.Read()) {
+				AgentBank_grid.RecCnt++;
+			}
+		}
+	} else {
+		AgentBank_grid.RecCnt = AgentBank_grid.StartRec - 1;
+	}
+} else if (!AgentBank_grid.AllowAddDeleteRow && AgentBank_grid.StopRec == 0) {
+	AgentBank_grid.StopRec = AgentBank_grid.GridAddRowCount;
+}
+
+// Initialize aggregate
+AgentBank_grid.RowType = EW_ROWTYPE_AGGREGATEINIT;
+AgentBank_grid.ResetAttrs();
+AgentBank_grid.RenderRow();
+if (AgentBank_grid.CurrentAction == "gridadd") {
+	AgentBank_grid.RowIndex = 0;
+}
+if (AgentBank_grid.CurrentAction == "gridedit") {
+	AgentBank_grid.RowIndex = 0;
+}
+
+// Output data rows
+bool Eof = (AgentBank_grid.Recordset == null); // DN
+while (AgentBank_grid.RecCnt < AgentBank_grid.StopRec) { // Begin While
+	if ((AgentBank_grid.CurrentAction != "gridadd" || AgentBank_grid.CurrentMode == "copy") && !Eof) { // DN
+		Eof = !AgentBank_grid.Recordset.Read();
+	}
+	AgentBank_grid.RecCnt++;
+	if (AgentBank_grid.RecCnt >= AgentBank_grid.StartRec) {
+		AgentBank_grid.RowCnt++;
+		if (AgentBank_grid.CurrentAction == "gridadd" || AgentBank_grid.CurrentAction == "gridedit" || AgentBank_grid.CurrentAction == "F") {
+			AgentBank_grid.RowIndex = ew_ConvertToInt(AgentBank_grid.RowIndex) + 1;
+			ObjForm.Index = ew_ConvertToInt(AgentBank_grid.RowIndex);
+			if (ObjForm.HasValue(AgentBank_grid.FormActionName)) {
+				AgentBank_grid.RowAction = ObjForm.GetValue(AgentBank_grid.FormActionName);
+			} else if (AgentBank_grid.CurrentAction == "gridadd") {
+				AgentBank_grid.RowAction = "insert";
+			} else {
+				AgentBank_grid.RowAction = "";
+			}
+		}
+
+		// Set up key count
+		AgentBank_grid.KeyCount = ew_ConvertToInt(AgentBank_grid.RowIndex);
+
+		// Init row class and style
+		AgentBank_grid.ResetAttrs();
+		AgentBank_grid.CssClass = "";
+		if (AgentBank_grid.CurrentAction == "gridadd") {
+			if (AgentBank_grid.CurrentMode == "copy") {
+				AgentBank_grid.LoadRowValues(AgentBank_grid.Recordset); // Load row values
+				AgentBank_grid.SetRecordKey(ref AgentBank_grid.RowOldKey, AgentBank_grid.Recordset); // Set old record key
+			} else {
+				AgentBank_grid.LoadDefaultValues(); // Load default values
+				AgentBank_grid.RowOldKey = ""; // Clear old key value
+			}
+		} else {
+			AgentBank_grid.LoadRowValues(AgentBank_grid.Recordset); // Load row values
+		}
+		AgentBank_grid.RowType = EW_ROWTYPE_VIEW; // Render view
+		if (AgentBank_grid.CurrentAction == "gridadd") { // Grid add
+			AgentBank_grid.RowType = EW_ROWTYPE_ADD; // Render add
+		}
+		if (AgentBank_grid.CurrentAction == "gridadd" && AgentBank_grid.EventCancelled && !ObjForm.HasValue("k_blankrow")) { // Insert failed
+			AgentBank_grid.RestoreCurrentRowFormValues(AgentBank_grid.RowIndex); // Restore form values
+		}
+		if (AgentBank_grid.CurrentAction == "gridedit") { // Grid edit
+			if (AgentBank_grid.EventCancelled) {
+				AgentBank_grid.RestoreCurrentRowFormValues(AgentBank_grid.RowIndex); // Restore form values
+			}
+			if (AgentBank_grid.RowAction == "insert") {
+				AgentBank_grid.RowType = EW_ROWTYPE_ADD; // Render add
+			} else {
+				AgentBank_grid.RowType = EW_ROWTYPE_EDIT; // Render edit
+			}
+		}
+		if (AgentBank_grid.CurrentAction == "gridedit" && (AgentBank_grid.RowType == EW_ROWTYPE_EDIT || AgentBank_grid.RowType == EW_ROWTYPE_ADD) && AgentBank_grid.EventCancelled) { // Update failed
+			AgentBank_grid.RestoreCurrentRowFormValues(AgentBank_grid.RowIndex); // Restore form values
+		}
+		if (AgentBank_grid.RowType == EW_ROWTYPE_EDIT) { // Edit row
+			AgentBank_grid.EditRowCnt++;
+		}
+		if (AgentBank_grid.CurrentAction == "F") { // Confirm row
+			AgentBank_grid.RestoreCurrentRowFormValues(AgentBank_grid.RowIndex); // Restore form values
+		}
+
+		// Set up row id / data-rowindex
+		AgentBank_grid.RowAttrs.Add("data-rowindex", Convert.ToString(AgentBank_grid.RowCnt));
+		AgentBank_grid.RowAttrs.Add("id", "r" + Convert.ToString(AgentBank_grid.RowCnt) + "_AgentBank");
+		AgentBank_grid.RowAttrs.Add("data-rowtype", Convert.ToString(AgentBank_grid.RowType));
+
+		// Render row
+		AgentBank_grid.RenderRow();
+
+		// Render list options
+		AgentBank_grid.RenderListOptions();
+
+		// Skip delete row / empty row for confirm page
+		if (AgentBank_grid.RowAction != "delete" && AgentBank_grid.RowAction != "insertdelete" && !(AgentBank_grid.RowAction == "insert" && AgentBank_grid.CurrentAction == "F" && AgentBank_grid.EmptyRow())) {
+	<tr @Html.Raw(AgentBank_grid.RowAttributes)>
+	@{
+
+		// Render list options (body, left)
+		AgentBank_grid.ListOptions.Render("body", "left", AgentBank_grid.RowCnt);
+	}
+	@if (AgentBank.id.Visible) { // id.Visible (begin)
+		<td data-name="id"@Html.Raw(AgentBank.id.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* id (begin) *@
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="o@(AgentBank_grid.RowIndex)_id" id="o@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.OldValue">
+			 @* id (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* id (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_id" class="form-group AgentBank_id">
+<span @Html.Raw(AgentBank.id.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.id.EditValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="x@(AgentBank_grid.RowIndex)_id" id="x@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.CurrentValue">
+			 @* id (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* id (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_id" class="AgentBank_id">
+<span @Html.Raw(AgentBank.id.ViewAttributes)>
+@Html.Raw(AgentBank.id.ListViewValue)</span>
+</span>
+			@if (AgentBank.CurrentAction != "F") {
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="x@(AgentBank_grid.RowIndex)_id" id="x@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="o@(AgentBank_grid.RowIndex)_id" id="o@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.OldValue">
+			} else {
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_id" id="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_id" id="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.OldValue">
+			}
+			 @* id (end) *@
+		} @* View (end) *@
+<a id="@(AgentBank_grid.PageObjName + "_row_" + Convert.ToString(AgentBank_grid.RowCnt))"></a></td>
+	} @* id.Visible (end) *@
+	@if (AgentBank.currencycode.Visible) { // currencycode.Visible (begin)
+		<td data-name="currencycode"@Html.Raw(AgentBank.currencycode.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* currencycode (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_currencycode" class="form-group AgentBank_currencycode">
+<select data-table="AgentBank" data-field="x_currencycode" data-value-separator="@AgentBank.currencycode.DisplayValueSeparatorAttribute"  id="x@(AgentBank_grid.RowIndex)_currencycode" name="x@(AgentBank_grid.RowIndex)_currencycode" @Html.Raw(AgentBank.currencycode.EditAttributes)>
+@AgentBank.currencycode.SelectOptionListHtml("x@(AgentBank_grid.RowIndex)_currencycode")
+</select>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_currencycode" id="s_x@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.LookupFilterQuery()">
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="o@(AgentBank_grid.RowIndex)_currencycode" id="o@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.OldValue">
+			 @* currencycode (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* currencycode (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_currencycode" class="form-group AgentBank_currencycode">
+<select data-table="AgentBank" data-field="x_currencycode" data-value-separator="@AgentBank.currencycode.DisplayValueSeparatorAttribute"  id="x@(AgentBank_grid.RowIndex)_currencycode" name="x@(AgentBank_grid.RowIndex)_currencycode" @Html.Raw(AgentBank.currencycode.EditAttributes)>
+@AgentBank.currencycode.SelectOptionListHtml("x@(AgentBank_grid.RowIndex)_currencycode")
+</select>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_currencycode" id="s_x@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.LookupFilterQuery()">
+</span>
+			 @* currencycode (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* currencycode (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_currencycode" class="AgentBank_currencycode">
+<span @Html.Raw(AgentBank.currencycode.ViewAttributes)>
+@Html.Raw(AgentBank.currencycode.ListViewValue)</span>
+</span>
+			@if (AgentBank.CurrentAction != "F") {
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="x@(AgentBank_grid.RowIndex)_currencycode" id="x@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="o@(AgentBank_grid.RowIndex)_currencycode" id="o@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.OldValue">
+			} else {
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_currencycode" id="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_currencycode" id="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.OldValue">
+			}
+			 @* currencycode (end) *@
+		} @* View (end) *@
+</td>
+	} @* currencycode.Visible (end) *@
+	@if (AgentBank.agentid.Visible) { // agentid.Visible (begin)
+		<td data-name="agentid"@Html.Raw(AgentBank.agentid.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* agentid (begin) *@
+@if (ew_NotEmpty(AgentBank.agentid.SessionValue)) {
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.agentid.ViewValue)</p></span>
+</span>
+<input type="hidden" id="x@(AgentBank_grid.RowIndex)_agentid" name="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue">
+} else {
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span id="as_x@(AgentBank_grid.RowIndex)_agentid" style="white-space: nowrap; z-index:  @Html.Raw(9000 - AgentBank_grid.RowCnt * 10)">
+	<input type="text" name="sv_x@(AgentBank_grid.RowIndex)_agentid" id="sv_x@(AgentBank_grid.RowIndex)_agentid" value="@Html.Raw(AgentBank.agentid.EditValue)" size="30" placeholder="@AgentBank.agentid.PlaceHolder" data-placeholder="@AgentBank.agentid.PlaceHolder" @Html.Raw(AgentBank.agentid.EditAttributes)>
+</span>
+<span>@{ AgentBank.agentid.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" data-multiple="0" data-lookup="1" data-value-separator="@AgentBank.agentid.DisplayValueSeparatorAttribute"  name="x@(AgentBank_grid.RowIndex)_agentid" id="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue" onchange="@AgentBank.agentid.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x@(AgentBank_grid.RowIndex)_agentid" id="q_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(true)">
+<script type="text/javascript">
+fAgentBankgrid.CreateAutoSuggest({"id":"x@(AgentBank_grid.RowIndex)_agentid","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(AgentBank.agentid.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x@(AgentBank_grid.RowIndex)_agentid',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_agentid" id="s_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(false)">
+<button type="button" title="@(ew_HtmlTitle(Language.Phrase("AddLink")) + " " + AgentBank.agentid.FldCaption)" onclick="ew_AddOptDialogShow({lnk:this,el:'x@(AgentBank_grid.RowIndex)_agentid',url:'@ew_AppPath("Agentaddopt")'});" class="ewAddOptBtn btn btn-default btn-sm" id="aol_x@(AgentBank_grid.RowIndex)_agentid"><span class="glyphicon glyphicon-plus ewIcon"></span><span class="hide">@Html.Raw(Language.Phrase("AddLink"))&nbsp;@Html.Raw(AgentBank.agentid.FldCaption)</span></button>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_agentid" id="s_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery()">
+</span>
+}
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="o@(AgentBank_grid.RowIndex)_agentid" id="o@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.OldValue">
+			 @* agentid (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* agentid (begin) *@
+@if (ew_NotEmpty(AgentBank.agentid.SessionValue)) {
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.agentid.ViewValue)</p></span>
+</span>
+<input type="hidden" id="x@(AgentBank_grid.RowIndex)_agentid" name="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue">
+} else {
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span id="as_x@(AgentBank_grid.RowIndex)_agentid" style="white-space: nowrap; z-index:  @Html.Raw(9000 - AgentBank_grid.RowCnt * 10)">
+	<input type="text" name="sv_x@(AgentBank_grid.RowIndex)_agentid" id="sv_x@(AgentBank_grid.RowIndex)_agentid" value="@Html.Raw(AgentBank.agentid.EditValue)" size="30" placeholder="@AgentBank.agentid.PlaceHolder" data-placeholder="@AgentBank.agentid.PlaceHolder" @Html.Raw(AgentBank.agentid.EditAttributes)>
+</span>
+<span>@{ AgentBank.agentid.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" data-multiple="0" data-lookup="1" data-value-separator="@AgentBank.agentid.DisplayValueSeparatorAttribute"  name="x@(AgentBank_grid.RowIndex)_agentid" id="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue" onchange="@AgentBank.agentid.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x@(AgentBank_grid.RowIndex)_agentid" id="q_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(true)">
+<script type="text/javascript">
+fAgentBankgrid.CreateAutoSuggest({"id":"x@(AgentBank_grid.RowIndex)_agentid","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(AgentBank.agentid.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x@(AgentBank_grid.RowIndex)_agentid',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_agentid" id="s_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(false)">
+<button type="button" title="@(ew_HtmlTitle(Language.Phrase("AddLink")) + " " + AgentBank.agentid.FldCaption)" onclick="ew_AddOptDialogShow({lnk:this,el:'x@(AgentBank_grid.RowIndex)_agentid',url:'@ew_AppPath("Agentaddopt")'});" class="ewAddOptBtn btn btn-default btn-sm" id="aol_x@(AgentBank_grid.RowIndex)_agentid"><span class="glyphicon glyphicon-plus ewIcon"></span><span class="hide">@Html.Raw(Language.Phrase("AddLink"))&nbsp;@Html.Raw(AgentBank.agentid.FldCaption)</span></button>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_agentid" id="s_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery()">
+</span>
+}
+			 @* agentid (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* agentid (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_agentid" class="AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+@Html.Raw(AgentBank.agentid.ListViewValue)</span>
+</span>
+			@if (AgentBank.CurrentAction != "F") {
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="x@(AgentBank_grid.RowIndex)_agentid" id="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="o@(AgentBank_grid.RowIndex)_agentid" id="o@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.OldValue">
+			} else {
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_agentid" id="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_agentid" id="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.OldValue">
+			}
+			 @* agentid (end) *@
+		} @* View (end) *@
+</td>
+	} @* agentid.Visible (end) *@
+	@if (AgentBank.BankId.Visible) { // BankId.Visible (begin)
+		<td data-name="BankId"@Html.Raw(AgentBank.BankId.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* BankId (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_BankId" class="form-group AgentBank_BankId">
+<input type="text" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_grid.RowIndex)_BankId" id="x@(AgentBank_grid.RowIndex)_BankId" size="30" maxlength="200" placeholder="@AgentBank.BankId.PlaceHolder" value="@AgentBank.BankId.EditValue" @Html.Raw(AgentBank.BankId.EditAttributes)>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="o@(AgentBank_grid.RowIndex)_BankId" id="o@(AgentBank_grid.RowIndex)_BankId" value="@AgentBank.BankId.OldValue">
+			 @* BankId (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* BankId (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_BankId" class="form-group AgentBank_BankId">
+<input type="text" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_grid.RowIndex)_BankId" id="x@(AgentBank_grid.RowIndex)_BankId" size="30" maxlength="200" placeholder="@AgentBank.BankId.PlaceHolder" value="@AgentBank.BankId.EditValue" @Html.Raw(AgentBank.BankId.EditAttributes)>
+</span>
+			 @* BankId (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* BankId (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_BankId" class="AgentBank_BankId">
+<span @Html.Raw(AgentBank.BankId.ViewAttributes)>
+@Html.Raw(AgentBank.BankId.ListViewValue)</span>
+</span>
+			@if (AgentBank.CurrentAction != "F") {
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_grid.RowIndex)_BankId" id="x@(AgentBank_grid.RowIndex)_BankId" value="@AgentBank.BankId.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="o@(AgentBank_grid.RowIndex)_BankId" id="o@(AgentBank_grid.RowIndex)_BankId" value="@AgentBank.BankId.OldValue">
+			} else {
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_BankId" id="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_BankId" value="@AgentBank.BankId.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_BankId" id="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_BankId" value="@AgentBank.BankId.OldValue">
+			}
+			 @* BankId (end) *@
+		} @* View (end) *@
+</td>
+	} @* BankId.Visible (end) *@
+	@if (AgentBank.lastavgcost.Visible) { // lastavgcost.Visible (begin)
+		<td data-name="lastavgcost"@Html.Raw(AgentBank.lastavgcost.CellAttributes)>
+		@if (AgentBank.RowType == EW_ROWTYPE_ADD) { // Add (begin)
+			 @* lastavgcost (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_lastavgcost" class="form-group AgentBank_lastavgcost">
+<input type="text" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_grid.RowIndex)_lastavgcost" id="x@(AgentBank_grid.RowIndex)_lastavgcost" size="30" placeholder="@AgentBank.lastavgcost.PlaceHolder" value="@AgentBank.lastavgcost.EditValue" @Html.Raw(AgentBank.lastavgcost.EditAttributes)>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="o@(AgentBank_grid.RowIndex)_lastavgcost" id="o@(AgentBank_grid.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.OldValue">
+			 @* lastavgcost (end) *@
+		} @* Add (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_EDIT) { // Edit (begin)
+			 @* lastavgcost (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_lastavgcost" class="form-group AgentBank_lastavgcost">
+<input type="text" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_grid.RowIndex)_lastavgcost" id="x@(AgentBank_grid.RowIndex)_lastavgcost" size="30" placeholder="@AgentBank.lastavgcost.PlaceHolder" value="@AgentBank.lastavgcost.EditValue" @Html.Raw(AgentBank.lastavgcost.EditAttributes)>
+</span>
+			 @* lastavgcost (end) *@
+		} @* Edit (end) *@
+		@if (AgentBank.RowType == EW_ROWTYPE_VIEW) { // View (begin)
+			 @* lastavgcost (begin) *@
+<span id="el@(AgentBank_grid.RowCnt)_AgentBank_lastavgcost" class="AgentBank_lastavgcost">
+<span @Html.Raw(AgentBank.lastavgcost.ViewAttributes)>
+@Html.Raw(AgentBank.lastavgcost.ListViewValue)</span>
+</span>
+			@if (AgentBank.CurrentAction != "F") {
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_grid.RowIndex)_lastavgcost" id="x@(AgentBank_grid.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="o@(AgentBank_grid.RowIndex)_lastavgcost" id="o@(AgentBank_grid.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.OldValue">
+			} else {
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_lastavgcost" id="fAgentBankgrid$x@(AgentBank_grid.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.FormValue">
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_lastavgcost" id="fAgentBankgrid$o@(AgentBank_grid.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.OldValue">
+			}
+			 @* lastavgcost (end) *@
+		} @* View (end) *@
+</td>
+	} @* lastavgcost.Visible (end) *@
+	@{
+
+		// Render list options (body, right)
+		AgentBank_grid.ListOptions.Render("body", "right", AgentBank_grid.RowCnt);
+	}
+	</tr>
+		if (AgentBank_grid.RowType == EW_ROWTYPE_ADD || AgentBank_grid.RowType == EW_ROWTYPE_EDIT) {
+			<script type="text/javascript">
+			fAgentBankgrid.UpdateOpts(@AgentBank_grid.RowIndex);
+			</script>
+		}
+	} @* End if *@
+	} @* End if *@
+} @* End While *@
+} @* End Code *@
+@if (AgentBank_grid.CurrentMode == "add" || AgentBank_grid.CurrentMode == "copy" || AgentBank_grid.CurrentMode == "edit") {
+	AgentBank_grid.RowIndex = "$rowindex$";
+	AgentBank_grid.LoadDefaultValues();
+
+	// Set row properties
+	AgentBank_grid.ResetAttrs();
+	AgentBank_grid.RowAttrs.Add("data-rowindex", Convert.ToString(AgentBank_grid.RowIndex));
+	AgentBank_grid.RowAttrs.Add("id", "r0_AgentBank");
+	AgentBank_grid.RowAttrs.Add("data-rowtype", Convert.ToString(EW_ROWTYPE_ADD));
+	AgentBank_grid.RowAttrs.AppendClass("ewTemplate");
+	AgentBank_grid.RowType = EW_ROWTYPE_ADD;
+
+	// Render row
+	AgentBank_grid.RenderRow();
+
+	// Render list options
+	AgentBank_grid.RenderListOptions();
+	AgentBank_grid.StartRowCnt = 0;
+	<tr @Html.Raw(AgentBank_grid.RowAttributes)>
+@{
+
+	// Render list options (body, left)
+	AgentBank_grid.ListOptions.Render("body", "left", AgentBank_grid.RowIndex);
+}
+	@if (AgentBank.id.Visible) { // id.Visible (begin)
+		<td data-name="id">
+@if (AgentBank.CurrentAction != "F") { // id (begin)
+} else { // id (confirm)
+<span id="el$rowindex$_AgentBank_id" class="form-group AgentBank_id">
+<span @Html.Raw(AgentBank.id.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.id.ViewValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="x@(AgentBank_grid.RowIndex)_id" id="x@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.FormValue">
+} @* id (end) *@
+<input type="hidden" data-table="AgentBank" data-field="x_id" name="o@(AgentBank_grid.RowIndex)_id" id="o@(AgentBank_grid.RowIndex)_id" value="@AgentBank.id.OldValue">
+</td>
+	} @* id.Visible (end) *@
+	@if (AgentBank.currencycode.Visible) { // currencycode.Visible (begin)
+		<td data-name="currencycode">
+@if (AgentBank.CurrentAction != "F") { // currencycode (begin)
+<span id="el$rowindex$_AgentBank_currencycode" class="form-group AgentBank_currencycode">
+<select data-table="AgentBank" data-field="x_currencycode" data-value-separator="@AgentBank.currencycode.DisplayValueSeparatorAttribute"  id="x@(AgentBank_grid.RowIndex)_currencycode" name="x@(AgentBank_grid.RowIndex)_currencycode" @Html.Raw(AgentBank.currencycode.EditAttributes)>
+@AgentBank.currencycode.SelectOptionListHtml("x@(AgentBank_grid.RowIndex)_currencycode")
+</select>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_currencycode" id="s_x@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.LookupFilterQuery()">
+</span>
+} else { // currencycode (confirm)
+<span id="el$rowindex$_AgentBank_currencycode" class="form-group AgentBank_currencycode">
+<span @Html.Raw(AgentBank.currencycode.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.currencycode.ViewValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="x@(AgentBank_grid.RowIndex)_currencycode" id="x@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.FormValue">
+} @* currencycode (end) *@
+<input type="hidden" data-table="AgentBank" data-field="x_currencycode" name="o@(AgentBank_grid.RowIndex)_currencycode" id="o@(AgentBank_grid.RowIndex)_currencycode" value="@AgentBank.currencycode.OldValue">
+</td>
+	} @* currencycode.Visible (end) *@
+	@if (AgentBank.agentid.Visible) { // agentid.Visible (begin)
+		<td data-name="agentid">
+@if (AgentBank.CurrentAction != "F") { // agentid (begin)
+@if (ew_NotEmpty(AgentBank.agentid.SessionValue)) {
+<span id="el$rowindex$_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.agentid.ViewValue)</p></span>
+</span>
+<input type="hidden" id="x@(AgentBank_grid.RowIndex)_agentid" name="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue">
+} else {
+<span id="el$rowindex$_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span id="as_x@(AgentBank_grid.RowIndex)_agentid" style="white-space: nowrap; z-index:  @Html.Raw(9000 - AgentBank_grid.RowCnt * 10)">
+	<input type="text" name="sv_x@(AgentBank_grid.RowIndex)_agentid" id="sv_x@(AgentBank_grid.RowIndex)_agentid" value="@Html.Raw(AgentBank.agentid.EditValue)" size="30" placeholder="@AgentBank.agentid.PlaceHolder" data-placeholder="@AgentBank.agentid.PlaceHolder" @Html.Raw(AgentBank.agentid.EditAttributes)>
+</span>
+<span>@{ AgentBank.agentid.EditAttrs.Prepend("onchange", ""); }</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" data-multiple="0" data-lookup="1" data-value-separator="@AgentBank.agentid.DisplayValueSeparatorAttribute"  name="x@(AgentBank_grid.RowIndex)_agentid" id="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.CurrentValue" onchange="@AgentBank.agentid.EditAttrs.Extract("onchange")">
+<input type="hidden" name="q_x@(AgentBank_grid.RowIndex)_agentid" id="q_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(true)">
+<script type="text/javascript">
+fAgentBankgrid.CreateAutoSuggest({"id":"x@(AgentBank_grid.RowIndex)_agentid","forceSelect":false});
+</script>
+<button type="button" title="@ew_HtmlEncode(Language.Phrase("LookupLink", true).Replace("%s",ew_RemoveHtml(AgentBank.agentid.FldCaption)))" onclick="ew_ModalLookupShow({lnk:this,el:'x@(AgentBank_grid.RowIndex)_agentid',m:0,n:10,srch:true});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_agentid" id="s_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery(false)">
+<button type="button" title="@(ew_HtmlTitle(Language.Phrase("AddLink")) + " " + AgentBank.agentid.FldCaption)" onclick="ew_AddOptDialogShow({lnk:this,el:'x@(AgentBank_grid.RowIndex)_agentid',url:'@ew_AppPath("Agentaddopt")'});" class="ewAddOptBtn btn btn-default btn-sm" id="aol_x@(AgentBank_grid.RowIndex)_agentid"><span class="glyphicon glyphicon-plus ewIcon"></span><span class="hide">@Html.Raw(Language.Phrase("AddLink"))&nbsp;@Html.Raw(AgentBank.agentid.FldCaption)</span></button>
+<input type="hidden" name="s_x@(AgentBank_grid.RowIndex)_agentid" id="s_x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.LookupFilterQuery()">
+</span>
+}
+} else { // agentid (confirm)
+<span id="el$rowindex$_AgentBank_agentid" class="form-group AgentBank_agentid">
+<span @Html.Raw(AgentBank.agentid.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.agentid.ViewValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="x@(AgentBank_grid.RowIndex)_agentid" id="x@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.FormValue">
+} @* agentid (end) *@
+<input type="hidden" data-table="AgentBank" data-field="x_agentid" name="o@(AgentBank_grid.RowIndex)_agentid" id="o@(AgentBank_grid.RowIndex)_agentid" value="@AgentBank.agentid.OldValue">
+</td>
+	} @* agentid.Visible (end) *@
+	@if (AgentBank.BankId.Visible) { // BankId.Visible (begin)
+		<td data-name="BankId">
+@if (AgentBank.CurrentAction != "F") { // BankId (begin)
+<span id="el$rowindex$_AgentBank_BankId" class="form-group AgentBank_BankId">
+<input type="text" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_grid.RowIndex)_BankId" id="x@(AgentBank_grid.RowIndex)_BankId" size="30" maxlength="200" placeholder="@AgentBank.BankId.PlaceHolder" value="@AgentBank.BankId.EditValue" @Html.Raw(AgentBank.BankId.EditAttributes)>
+</span>
+} else { // BankId (confirm)
+<span id="el$rowindex$_AgentBank_BankId" class="form-group AgentBank_BankId">
+<span @Html.Raw(AgentBank.BankId.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.BankId.ViewValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="x@(AgentBank_grid.RowIndex)_BankId" id="x@(AgentBank_grid.RowIndex)_BankId" value="@AgentBank.BankId.FormValue">
+} @* BankId (end) *@
+<input type="hidden" data-table="AgentBank" data-field="x_BankId" name="o@(AgentBank_grid.RowIndex)_BankId" id="o@(AgentBank_grid.RowIndex)_BankId" value="@AgentBank.BankId.OldValue">
+</td>
+	} @* BankId.Visible (end) *@
+	@if (AgentBank.lastavgcost.Visible) { // lastavgcost.Visible (begin)
+		<td data-name="lastavgcost">
+@if (AgentBank.CurrentAction != "F") { // lastavgcost (begin)
+<span id="el$rowindex$_AgentBank_lastavgcost" class="form-group AgentBank_lastavgcost">
+<input type="text" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_grid.RowIndex)_lastavgcost" id="x@(AgentBank_grid.RowIndex)_lastavgcost" size="30" placeholder="@AgentBank.lastavgcost.PlaceHolder" value="@AgentBank.lastavgcost.EditValue" @Html.Raw(AgentBank.lastavgcost.EditAttributes)>
+</span>
+} else { // lastavgcost (confirm)
+<span id="el$rowindex$_AgentBank_lastavgcost" class="form-group AgentBank_lastavgcost">
+<span @Html.Raw(AgentBank.lastavgcost.ViewAttributes)>
+<p class="form-control-static">@Html.Raw(AgentBank.lastavgcost.ViewValue)</p></span>
+</span>
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="x@(AgentBank_grid.RowIndex)_lastavgcost" id="x@(AgentBank_grid.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.FormValue">
+} @* lastavgcost (end) *@
+<input type="hidden" data-table="AgentBank" data-field="x_lastavgcost" name="o@(AgentBank_grid.RowIndex)_lastavgcost" id="o@(AgentBank_grid.RowIndex)_lastavgcost" value="@AgentBank.lastavgcost.OldValue">
+</td>
+	} @* lastavgcost.Visible (end) *@
+@{
+
+	// Render list options (body, right)
+	AgentBank_grid.ListOptions.Render("body", "right", AgentBank_grid.RowCnt);
+}
+<script type="text/javascript">
+fAgentBankgrid.UpdateOpts(@AgentBank_grid.RowIndex);
+</script>
+	</tr>
+}
+</tbody>
+</table>
+@if (AgentBank_grid.CurrentMode == "add" || AgentBank_grid.CurrentMode == "copy") {
+<input type="hidden" name="a_list" id="a_list" value="gridinsert">
+<input type="hidden" name="@AgentBank_grid.FormKeyCountName" id="@AgentBank_grid.FormKeyCountName" value="@AgentBank_grid.KeyCount">
+@Html.Raw(AgentBank_grid.MultiSelectKey)
+}
+@if (AgentBank_grid.CurrentMode == "edit") {
+<input type="hidden" name="a_list" id="a_list" value="gridupdate">
+<input type="hidden" name="@AgentBank_grid.FormKeyCountName" id="@AgentBank_grid.FormKeyCountName" value="@AgentBank_grid.KeyCount">
+@Html.Raw(AgentBank_grid.MultiSelectKey)
+}
+@if (ew_Empty(AgentBank_grid.CurrentMode)) {
+<input type="hidden" name="a_list" id="a_list" value="">
+}
+<input type="hidden" name="detailpage" value="fAgentBankgrid">
+</div>
+@{ AgentBank_grid.CloseRecordset(); }
+@if (AgentBank_grid.ShowOtherOptions) {
+	<div class="panel-footer ewGridLowerPanel">
+	@{ AgentBank_grid.ForEachOtherOption(kvp => kvp.Value.Render("body", "bottom")); }
+	</div>
+	<div class="clearfix"></div>
+}
+</div>
+</div>
+}
+@if (AgentBank_grid.TotalRecs <= 0 && AgentBank_grid.CurrentAction == "") { // Show other options
+<div class="ewListOtherOptions">
+@{ AgentBank_grid.ForEachOtherOption(kvp => { kvp.Value.ButtonClass = ""; kvp.Value.Render("body", ""); }); }
+</div>
+<div class="clearfix"></div>
+}
+@if (ew_Empty(AgentBank.Export)) {
+<script type="text/javascript">
+fAgentBankgrid.Init();
+</script>
+}
+@AgentBank_grid.ShowPageFooter()
+@{ AgentBank_grid.Page_Terminate(); }

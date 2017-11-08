@@ -1,0 +1,28 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+<h3 class="text-danger">@Html.Raw(Language.Phrase("Error"))</h3>
+<div class="alert alert-danger ewError">@Html.Raw(_error.FailureMessage)</div>
+@{ _error.ClearFailureMessage(); }
+@DebugMsg()
+@{ _error.Page_Terminate(); }

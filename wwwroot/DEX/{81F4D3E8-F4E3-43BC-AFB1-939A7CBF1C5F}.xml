@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<configuration date="2017/07/30" author="e.World Technology Ltd.">
+  <project id="{81F4D3E8-F4E3-43BC-AFB1-939A7CBF1C5F}" file="C:\Users\Owner\Documents\ASPNETMaker\Projects\DEX - CurrencyRates.agx" name="DEX" product="ASPNETMaker" version="14.0" datetime="2017/07/30 00:02:30" languagefolder="wwwroot/lang" userlevel="-2,&quot;Anonymous&quot;,0;">
+    <table id="ACCTPOST" name="ACCTPOST" caption="ACCTPOST" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Agent" name="Agent" caption="Agent" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="AgentBank" name="AgentBank" caption="Agent Bank" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="AgentBankRemittanceRate" name="AgentBankRemittanceRate" caption="Agent Bank Remittance Rate" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="BankstmLog" name="BankstmLog" caption="Bankstm Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="BannedList" name="BannedList" caption="Banned List" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="BannedList_BK" name="BannedList_BK" caption="Banned List BK" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="BannedList_BK2" name="BannedList_BK2" caption="Banned List BK2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="BannedList1" name="BannedList1" caption="Banned List 1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Beneficiary" name="Beneficiary" caption="Beneficiary" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="BeneinfoDEtail" name="BeneinfoDEtail" caption="Beneinfo DEtail" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="BeneInfoHeader" name="BeneInfoHeader" caption="Bene Info Header" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Branch" name="Branch" caption="Branch" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Company" name="Company" caption="Company" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="CompLicHis" name="CompLicHis" caption="Comp Lic His" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="core_Counter" name="core_Counter" caption="core Counter" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="core_TranMode" name="core_TranMode" caption="core Tran Mode" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Currency" name="Currency" caption="Currency" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="CurrencyMaster" name="CurrencyMaster" caption="Currency Master" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="CurrencyRule" name="CurrencyRule" caption="Currency Rule" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="custBizType" name="custBizType" caption="cust Biz Type" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="custClass" name="custClass" caption="cust Class" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Custcontact" name="Custcontact" caption="Custcontact" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Customer" name="Customer" caption="Customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DB_FLUXStaff_CustName_WENDY0" name="DB_FLUXStaff_CustName_WENDY0" caption="DB FLUXStaff Cust Name WENDY0" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DB_FLUXStaff_CustName_WENDY1" name="DB_FLUXStaff_CustName_WENDY1" caption="DB FLUXStaff Cust Name WENDY1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DB_FLUXStaff_CustName_WENDY2" name="DB_FLUXStaff_CustName_WENDY2" caption="DB FLUXStaff Cust Name WENDY2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DB_MCSearTool" name="DB_MCSearTool" caption="DB MCSear Tool" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DB_MCSearTool_Hist" name="DB_MCSearTool_Hist" caption="DB MCSear Tool Hist" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DB_TTSearchTool_All0" name="DB_TTSearchTool_All0" caption="DB TTSearch Tool All 0" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DB_TTSearchTool_All0_Hist" name="DB_TTSearchTool_All0_Hist" caption="DB TTSearch Tool All 0 Hist" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="db_TTSearchTool_All4" name="db_TTSearchTool_All4" caption="db TTSearch Tool All 4" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="db_TTSearchTool_All4_Hist" name="db_TTSearchTool_All4_Hist" caption="db TTSearch Tool All 4 Hist" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="dbs_stm" name="dbs_stm" caption="dbs stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="dbs_stm1" name="dbs_stm1" caption="dbs stm 1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="deleteReason" name="deleteReason" caption="delete Reason" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="DftMenu" name="DftMenu" caption="Dft Menu" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="ExchRate" name="ExchRate" caption="Exch Rate" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="hsbc_stm" name="hsbc_stm" caption="hsbc stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="hsbcfc" name="hsbcfc" caption="hsbcfc" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="IMPORTFMOPERATION" name="IMPORTFMOPERATION" caption="IMPORTFMOPERATION" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCAcct" name="MCAcct" caption="MCAcct" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCCustBal" name="MCCustBal" caption="MCCust Bal" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCdbs_stm" name="MCdbs_stm" caption="MCdbs stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCdeleteReason" name="MCdeleteReason" caption="MCdelete Reason" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCFCBal" name="MCFCBal" caption="MCFCBal" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCFCBal_Audit" name="MCFCBal_Audit" caption="MCFCBal Audit" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCFCBal_Grp" name="MCFCBal_Grp" caption="MCFCBal Grp" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCFCBal_Grp_Hist" name="MCFCBal_Grp_Hist" caption="MCFCBal Grp Hist" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCGL" name="MCGL" caption="MCGL" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MChsbc_stm" name="MChsbc_stm" caption="MChsbc stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCocbc_stm" name="MCocbc_stm" caption="MCocbc stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCuob_stm" name="MCuob_stm" caption="MCuob stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MCuobCA1_stm" name="MCuobCA1_stm" caption="MCuob CA1 stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="_Message" name="Message" caption="Message" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="MTLog" name="MTLog" caption="MTLog" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="ocbc_stm" name="ocbc_stm" caption="ocbc stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="ocbcfc" name="ocbcfc" caption="ocbcfc" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="PostalCode" name="PostalCode" caption="Postal Code" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="PostDaily" name="PostDaily" caption="Post Daily" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Province" name="Province" caption="Province" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Purpose" name="Purpose" caption="Purpose" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="QueueCompanyCorporateShareholder" name="QueueCompanyCorporateShareholder" caption="Queue Company Corporate Shareholder" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="QueueCompanyDirector" name="QueueCompanyDirector" caption="Queue Company Director" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="QueueCompanyIndividualShareholder" name="QueueCompanyIndividualShareholder" caption="Queue Company Individual Shareholder" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="QueueCustomer" name="QueueCustomer" caption="Queue Customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Quotation" name="Quotation" caption="Quotation" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="RateMonitor" name="RateMonitor" caption="Rate Monitor" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="RECEIVEMONEY" name="RECEIVEMONEY" caption="RECEIVEMONEY" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="RunningNo" name="RunningNo" caption="Running No" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="ScanInfo" name="ScanInfo" caption="Scan Info" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="scb_stm" name="scb_stm" caption="scb stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="seb_stm" name="seb_stm" caption="seb stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="SEBDEBITAC" name="SEBDEBITAC" caption="SEBDEBITAC" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="SEBFC" name="SEBFC" caption="SEBFC" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Service" name="Service" caption="Service" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="SPENDMONEY" name="SPENDMONEY" caption="SPENDMONEY" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Table1" name="Table1" caption="Table 1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tbl_MissingRept" name="tbl_MissingRept" caption="tbl Missing Rept" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tbl_referbylog" name="tbl_referbylog" caption="tbl referbylog" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tbl_unfillCust" name="tbl_unfillCust" caption="tbl unfill Cust" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblAction" name="tblAction" caption="tbl Action" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblBank" name="tblBank" caption="tbl Bank" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblBankList" name="tblBankList" caption="tbl Bank List" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblBizNature" name="tblBizNature" caption="tbl Biz Nature" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblCheckerModiLog" name="tblCheckerModiLog" caption="tbl Checker Modi Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblDBAdjust" name="tblDBAdjust" caption="tbl DBAdjust" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblDealer" name="tblDealer" caption="tbl Dealer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblHoliday" name="tblHoliday" caption="tbl Holiday" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblLanguageCode" name="tblLanguageCode" caption="tbl Language Code" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblMCType" name="tblMCType" caption="tbl MCType" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblModule" name="tblModule" caption="tbl Module" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblNation" name="tblNation" caption="tbl Nation" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblPEP" name="tblPEP" caption="tbl PEP" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblRecDateLog" name="tblRecDateLog" caption="tbl Rec Date Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblStdCountry" name="tblStdCountry" caption="tbl Std Country" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblSuspiciousLog" name="tblSuspiciousLog" caption="tbl Suspicious Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tblTTRemark" name="tblTTRemark" caption="tbl TTRemark" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TempA" name="TempA" caption="Temp A" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tempavgcost" name="tempavgcost" caption="tempavgcost" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tmpOutStanding" name="tmpOutStanding" caption="tmp Out Standing" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TransBookDetail" name="TransBookDetail" caption="Trans Book Detail" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TransBookHeader" name="TransBookHeader" caption="Trans Book Header" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TransDetail" name="TransDetail" caption="Trans Detail" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TransHeader" name="TransHeader" caption="Trans Header" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTAcct" name="TTAcct" caption="TTAcct" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTAprove" name="TTAprove" caption="TTAprove" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTBookDetail" name="TTBookDetail" caption="TTBook Detail" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTBookHeader" name="TTBookHeader" caption="TTBook Header" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTBooksubDetail" name="TTBooksubDetail" caption="TTBooksub Detail" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTCustBal" name="TTCustBal" caption="TTCust Bal" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTCustPurpose" name="TTCustPurpose" caption="TTCust Purpose" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTDetail" name="TTDetail" caption="TTDetail" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTFCBal" name="TTFCBal" caption="TTFCBal" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTFCBal_Audit" name="TTFCBal_Audit" caption="TTFCBal Audit" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTFCBal_Grp" name="TTFCBal_Grp" caption="TTFCBal Grp" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTGL" name="TTGL" caption="TTGL" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTHeader" name="TTHeader" caption="TTHeader" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTSettlement" name="TTSettlement" caption="TTSettlement" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="TTsubDetail" name="TTsubDetail" caption="TTsub Detail" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="unblock_beneficiary" name="unblock_beneficiary" caption="unblock beneficiary" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="unblock_customer" name="unblock_customer" caption="unblock customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="uob_stm" name="uob_stm" caption="uob stm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="UserAccess" name="UserAccess" caption="User Access" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="UserAuth" name="UserAuth" caption="User Auth" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="UserGroup" name="UserGroup" caption="User Group" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="UserLog" name="UserLog" caption="User Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="UserMenu" name="UserMenu" caption="User Menu" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="UserPermission" name="UserPermission" caption="User Permission" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Users" name="Users" caption="Users" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="voidBannedList" name="voidBannedList" caption="void Banned List" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="_112F062F09" name="11/06/09" caption="11/ 06/ 09" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Manual_TTMas" name="Manual_TTMas" caption="Manual TTMas" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="nvw_expCustomer" name="nvw_expCustomer" caption="nvw exp Customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Nvw_TTSearchTool_All0" name="Nvw_TTSearchTool_All0" caption="Nvw TTSearch Tool All 0" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="nvw_TTsearchtool_All0_2" name="nvw_TTsearchtool_All0_2" caption="nvw TTsearchtool All 0 2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VIEW1" name="VIEW1" caption="VIEW1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VIEW2" name="VIEW2" caption="VIEW2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VOIDvw_TTfindBranchInfo" name="VOIDvw_TTfindBranchInfo" caption="VOIDvw TTfind Branch Info" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_agent" name="vw_agent" caption="vw agent" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_AgentFCBal" name="vw_AgentFCBal" caption="vw Agent FCBal" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_AutoGen" name="vw_AutoGen" caption="vw Auto Gen" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_AVALCustFCBAl" name="vw_AVALCustFCBAl" caption="vw AVALCust FCBAl" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_AVALFCBAL" name="vw_AVALFCBAL" caption="vw AVALFCBAL" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_BandListLog" name="vw_BandListLog" caption="vw Band List Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_Bankcheck" name="vw_Bankcheck" caption="vw Bankcheck" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_bankstm" name="vw_bankstm" caption="vw bankstm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_bookLedgerbyno" name="vw_bookLedgerbyno" caption="vw book Ledgerbyno" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_BTREcord" name="vw_BTREcord" caption="vw BTREcord" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_CheckAvgCost" name="vw_CheckAvgCost" caption="vw Check Avg Cost" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_company" name="vw_company" caption="vw company" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_Country_CustomerIndividual" name="vw_Country_CustomerIndividual" caption="vw Country Customer Individual" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_CustTotal" name="vw_CustTotal" caption="vw Cust Total" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_DailyAudit" name="vw_DailyAudit" caption="vw Daily Audit" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_DailyCurrBook" name="vw_DailyCurrBook" caption="vw Daily Curr Book" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_Dailycurrcode" name="vw_Dailycurrcode" caption="vw Dailycurrcode" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_DailycurrcodeByDate" name="vw_DailycurrcodeByDate" caption="vw Dailycurrcode By Date" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_DAILYOUTSTANDING" name="VW_DAILYOUTSTANDING" caption="VW DAILYOUTSTANDING" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_DailySettle" name="vw_DailySettle" caption="vw Daily Settle" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_DEtailOut" name="vw_DEtailOut" caption="vw DEtail Out" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_detailout1" name="vw_detailout1" caption="vw detailout 1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_ExchRateAudit" name="vw_ExchRateAudit" caption="vw Exch Rate Audit" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_FCBALByGrp" name="vw_FCBALByGrp" caption="vw FCBALBy Grp" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_FCCheck" name="vw_FCCheck" caption="vw FCCheck" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_fcMOVE1" name="VW_fcMOVE1" caption="VW fc MOVE1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_fINDMT5K" name="VW_fINDMT5K" caption="VW f INDMT5K" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_fINDMT5K1" name="VW_fINDMT5K1" caption="VW f INDMT5K1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_FindTTrec" name="vw_FindTTrec" caption="vw Find TTrec" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_HSBCCheck" name="vw_HSBCCheck" caption="vw HSBCCheck" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_HSBCFC" name="VW_HSBCFC" caption="VW HSBCFC" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_Jimmy_Check_Dupl_Cost" name="vw_Jimmy_Check_Dupl_Cost" caption="vw Jimmy Check Dupl Cost" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_JTT1" name="vw_JTT1" caption="vw JTT1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_JTT2" name="vw_JTT2" caption="vw JTT2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_Ledgerbyno" name="vw_Ledgerbyno" caption="vw Ledgerbyno" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCBankcheck" name="vw_MCBankcheck" caption="vw MCBankcheck" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCBankstm" name="vw_MCBankstm" caption="vw MCBankstm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCBOOKDailycurrcode" name="vw_MCBOOKDailycurrcode" caption="vw MCBOOKDailycurrcode" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCBookPartyByDate" name="vw_MCBookPartyByDate" caption="vw MCBook Party By Date" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCBuyRateCalc1" name="vw_MCBuyRateCalc1" caption="vw MCBuy Rate Calc 1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCBuyRateCalc2" name="vw_MCBuyRateCalc2" caption="vw MCBuy Rate Calc 2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCcalAvgcost" name="vw_MCcalAvgcost" caption="vw MCcal Avgcost" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCcalavgcost_final" name="vw_MCcalavgcost_final" caption="vw MCcalavgcost final" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCCunionCustomer" name="vw_MCCunionCustomer" caption="vw MCCunion Customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCCustReport" name="vw_MCCustReport" caption="vw MCCust Report" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCDailyCloseAvgCost" name="vw_MCDailyCloseAvgCost" caption="vw MCDaily Close Avg Cost" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCDailycurrcode" name="vw_MCDailycurrcode" caption="vw MCDailycurrcode" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCDailycurrcodeByDate" name="vw_MCDailycurrcodeByDate" caption="vw MCDailycurrcode By Date" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCdel" name="vw_MCdel" caption="vw MCdel" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCdelete" name="vw_MCdelete" caption="vw MCdelete" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCexportAcct" name="vw_MCexportAcct" caption="vw MCexport Acct" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCFCBALByGrp" name="vw_MCFCBALByGrp" caption="vw MCFCBALBy Grp" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCfindBranchInfo" name="vw_MCfindBranchInfo" caption="vw MCfind Branch Info" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCMASSTM" name="vw_MCMASSTM" caption="vw MCMASSTM" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCParty" name="vw_MCParty" caption="vw MCParty" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCpartyall" name="vw_MCpartyall" caption="vw MCpartyall" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCPartyByDate" name="vw_MCPartyByDate" caption="vw MCParty By Date" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCprofit" name="vw_MCprofit" caption="vw MCprofit" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCSearTool" name="vw_MCSearTool" caption="vw MCSear Tool" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCSearTool_2" name="vw_MCSearTool_2" caption="vw MCSear Tool 2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCSearTool_old" name="vw_MCSearTool_old" caption="vw MCSear Tool old" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCStkMovement" name="vw_MCStkMovement" caption="vw MCStk Movement" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCstkStatus" name="vw_MCstkStatus" caption="vw MCstk Status" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_MCTranAll_Ben" name="VW_MCTranAll_Ben" caption="VW MCTran All Ben" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_MCunionCustomer" name="vw_MCunionCustomer" caption="vw MCunion Customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_ModiREcDateLog" name="vw_ModiREcDateLog" caption="vw Modi REc Date Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_Nationality_CustomerIndividual" name="vw_Nationality_CustomerIndividual" caption="vw Nationality Customer Individual" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_OCBCCheck" name="vw_OCBCCheck" caption="vw OCBCCheck" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_OCBCFC" name="VW_OCBCFC" caption="VW OCBCFC" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_POstDaily" name="vw_POstDaily" caption="vw POst Daily" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_PreBuyTTComm" name="vw_PreBuyTTComm" caption="vw Pre Buy TTComm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_PreTTComm" name="vw_PreTTComm" caption="vw Pre TTComm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_RawBan" name="vw_RawBan" caption="vw Raw Ban" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_RdailyExchAudit" name="vw_RdailyExchAudit" caption="vw Rdaily Exch Audit" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_RPTBankRECon" name="vw_RPTBankRECon" caption="vw RPTBank RECon" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_RPTDailySettle" name="vw_RPTDailySettle" caption="vw RPTDaily Settle" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="VW_SEBFC" name="VW_SEBFC" caption="VW SEBFC" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_starPrint" name="vw_starPrint" caption="vw star Print" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_testsp" name="vw_testsp" caption="vw testsp" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TranCustomer" name="vw_TranCustomer" caption="vw Tran Customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTallinone" name="vw_TTallinone" caption="vw TTallinone" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTavalACCT" name="vw_TTavalACCT" caption="vw TTaval ACCT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTBookdelete" name="vw_TTBookdelete" caption="vw TTBookdelete" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTBookParty" name="vw_TTBookParty" caption="vw TTBook Party" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTBookTRan" name="vw_TTBookTRan" caption="vw TTBook TRan" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTBuyRateCalc1" name="vw_TTBuyRateCalc1" caption="vw TTBuy Rate Calc 1" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTBuyRateCalc2" name="vw_TTBuyRateCalc2" caption="vw TTBuy Rate Calc 2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTcalAvgcost" name="vw_TTcalAvgcost" caption="vw TTcal Avgcost" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_ttcalavgcost_final" name="vw_ttcalavgcost_final" caption="vw ttcalavgcost final" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTcheckBene" name="vw_TTcheckBene" caption="vw TTcheck Bene" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTcheckBene_old" name="vw_TTcheckBene_old" caption="vw TTcheck Bene old" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTComm" name="vw_TTComm" caption="vw TTComm" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTComm4SEartoll" name="vw_TTComm4SEartoll" caption="vw TTComm 4SEartoll" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTCustReport" name="vw_TTCustReport" caption="vw TTCust Report" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTCustReport2" name="vw_TTCustReport2" caption="vw TTCust Report 2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTDailyCloseAvgCost" name="vw_TTDailyCloseAvgCost" caption="vw TTDaily Close Avg Cost" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTdelete" name="vw_TTdelete" caption="vw TTdelete" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTexportacct" name="vw_TTexportacct" caption="vw TTexportacct" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTFCBalGrpBy" name="vw_TTFCBalGrpBy" caption="vw TTFCBal Grp By" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTFCmovement" name="vw_TTFCmovement" caption="vw TTFCmovement" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTfindBranchInfo" name="vw_TTfindBranchInfo" caption="vw TTfind Branch Info" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTforMAS" name="vw_TTforMAS" caption="vw TTfor MAS" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTforMAS_old" name="vw_TTforMAS_old" caption="vw TTfor MAS old" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTMASSTM" name="vw_TTMASSTM" caption="vw TTMASSTM" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTMASSTM4thrucode" name="vw_TTMASSTM4thrucode" caption="vw TTMASSTM4thrucode" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTParty" name="vw_TTParty" caption="vw TTParty" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTPartybyDate" name="vw_TTPartybyDate" caption="vw TTPartyby Date" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTprofit" name="vw_TTprofit" caption="vw TTprofit" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSearchTool_All" name="vw_TTSearchTool_All" caption="vw TTSearch Tool All" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSearchTool_All0" name="vw_TTSearchTool_All0" caption="vw TTSearch Tool All 0" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSearchTool_All2" name="vw_TTSearchTool_All2" caption="vw TTSearch Tool All 2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSearchTool_All3" name="vw_TTSearchTool_All3" caption="vw TTSearch Tool All 3" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSearchTool_All4" name="vw_TTSearchTool_All4" caption="vw TTSearch Tool All 4" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTsearchtool_All4_2" name="vw_TTsearchtool_All4_2" caption="vw TTsearchtool All 4 2" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSEARTOOL" name="vw_TTSEARTOOL" caption="vw TTSEARTOOL" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSEARTOOL4alltype" name="vw_TTSEARTOOL4alltype" caption="vw TTSEARTOOL4alltype" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTSEARTOOLPROFIT" name="vw_TTSEARTOOLPROFIT" caption="vw TTSEARTOOLPROFIT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTstkStatus" name="vw_TTstkStatus" caption="vw TTstk Status" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTTran" name="vw_TTTran" caption="vw TTTran" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_TTTran_old" name="vw_TTTran_old" caption="vw TTTran old" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_unionContact" name="vw_unionContact" caption="vw union Contact" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_unionCustomer" name="vw_unionCustomer" caption="vw union Customer" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_unionMCFC" name="vw_unionMCFC" caption="vw union MCFC" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_unionTTFC" name="vw_unionTTFC" caption="vw union TTFC" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vwCheckerMOdiLog" name="vwCheckerMOdiLog" caption="vw Checker MOdi Log" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="YS_TT" name="YS_TT" caption="YS TT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="CustomerCurrencyRule" name="CustomerCurrencyRule" caption="Customer Currency Rule" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_CurrencyRemittance" name="vw_CurrencyRemittance" caption="vw Currency Remittance" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="Bank" name="Bank" caption="Bank" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vw_AgentBank" name="vw_AgentBank" caption="vw Agent Bank" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+  </project>
+</configuration>

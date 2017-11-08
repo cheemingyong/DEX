@@ -1,0 +1,262 @@
+@{
+
+	// Responsive layout
+	if (ew_IsResponsiveLayout()) {
+		gsHeaderRowClass = "hidden-xs ewHeaderRow";
+		gsMenuColumnClass = "hidden-xs ewMenuColumn";
+		gsSiteTitleClass = "hidden-xs ewSiteTitle";
+	} else {
+		gsHeaderRowClass = "ewHeaderRow";
+		gsMenuColumnClass = "ewMenuColumn";
+		gsSiteTitleClass = "ewSiteTitle";
+	}
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>@Language.ProjectPhrase("BodyTitle")</title>
+	<meta charset="utf-8">
+@{
+	<link rel="stylesheet" type="text/css" href="~/bootstrap/css/@ew_CssFile("bootstrap.css")">
+	<!-- Optional theme -->
+	<link rel="stylesheet" type="text/css" href="~/bootstrap/css/@ew_CssFile("bootstrap-theme.css")">
+}
+@{
+	<link rel="stylesheet" type="text/css" href="~/css/jquery.fileupload.css">
+	<link rel="stylesheet" type="text/css" href="~/css/jquery.fileupload-ui.css">
+	<link rel="stylesheet" type="text/css" href="~/colorbox/colorbox.css">
+}
+@{
+	if (ew_IsResponsiveLayout()) {
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	}
+	<link rel="stylesheet" type="text/css" href="~/css/DEX.css">
+	if (gsCustomExport == "pdf" && ew_NotEmpty(EW_PDF_STYLESHEET_FILENAME)) {
+	<link rel="stylesheet" type="text/css" href="~/@EW_PDF_STYLESHEET_FILENAME">
+	}
+	<script type="text/javascript" src="~/js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="~/js/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="~/js/jquery.storageapi.min.js"></script>
+	<script type="text/javascript" src="~/js/pStrength.jquery.js"></script>
+	<script type="text/javascript" src="~/js/pGenerator.jquery.js"></script>
+}
+@{
+	<script type="text/javascript" src="~/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="~/js/typeahead.bundle.min.js"></script>
+	<script type="text/javascript" src="~/js/load-image.all.min.js"></script>
+	<script type="text/javascript" src="~/js/jqueryfileupload.min.js"></script>
+	<script type="text/javascript" src="~/colorbox/jquery.colorbox-min.js"></script>
+	<script type="text/javascript" src="~/js/mobile-detect.min.js"></script>
+	<script type="text/javascript" src="~/js/moment.min.js"></script>
+	<link href="~/calendar/calendar.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="~/calendar/calendar.min.js"></script>
+	<script type="text/javascript" src="~/calendar/calendar-setup.js"></script>
+	<script type="text/javascript" src="~/js/ewcalendar.js"></script>
+	<script type="text/javascript">
+	var EW_LANGUAGE_ID = "@gsLanguage";
+	var EW_DATE_SEPARATOR = "@EW_DATE_SEPARATOR";
+ 	var EW_TIME_SEPARATOR = "@EW_TIME_SEPARATOR";
+	var EW_DATE_FORMAT = "@EW_DATE_FORMAT"; // Default date format
+
+	// Default date format
+	var EW_DATE_FORMAT_ID = "@EW_DATE_FORMAT_ID"; // Default date format ID
+	var EW_DECIMAL_POINT = "@EW_DECIMAL_POINT";
+	var EW_THOUSANDS_SEP = "@EW_THOUSANDS_SEP";
+	var EW_MIN_PASSWORD_STRENGTH = 60;
+	var EW_GENERATE_PASSWORD_LENGTH = 16;
+	var EW_GENERATE_PASSWORD_UPPERCASE = true;
+	var EW_GENERATE_PASSWORD_LOWERCASE = true;
+	var EW_GENERATE_PASSWORD_NUMBER = true;
+	var EW_GENERATE_PASSWORD_SPECIALCHARS = false;
+	var EW_SESSION_TIMEOUT = @((EW_SESSION_TIMEOUT > 0) ? ew_SessionTimeoutTime() : 0); // Session timeout time (seconds)
+	var EW_SESSION_TIMEOUT_COUNTDOWN = @EW_SESSION_TIMEOUT_COUNTDOWN; // Count down time to session timeout (seconds)
+	var EW_SESSION_KEEP_ALIVE_INTERVAL = @EW_SESSION_KEEP_ALIVE_INTERVAL; // Keep alive interval (seconds)
+	var EW_SESSION_URL = "@ew_AppPath("ewsession")"; // Session URL
+	var EW_IS_LOGGEDIN = @((IsLoggedIn()) ? "true" : "false"); // Is logged in
+	var EW_IS_SYS_ADMIN = @((IsSysAdmin()) ? "true" : "false"); // Is sys admin
+	var EW_CURRENT_USER_NAME = "@ew_JsEncode2(CurrentUserName())"; // Current user name
+	var EW_IS_AUTOLOGIN = @(IsAutoLogin() ? "true" : "false"); // Is logged in with option "Auto login until I logout explicitly"
+	var EW_TIMEOUT_URL = "@ew_AppPath("Index")"; // Timeout URL
+	var EW_LOOKUP_FILE_NAME = "@ew_AppPath("ewlookup")"; // Lookup file name
+	var EW_LOOKUP_FILTER_VALUE_SEPARATOR = "@EW_LOOKUP_FILTER_VALUE_SEPARATOR"; // Lookup filter value separator
+	var EW_MODAL_LOOKUP_FILE_NAME = "@ew_AppPath("ewmodallookup")"; // Modal lookup file name
+	var EW_AUTO_SUGGEST_MAX_ENTRIES = @EW_AUTO_SUGGEST_MAX_ENTRIES; // Auto-Suggest max entries
+	var EW_DISABLE_BUTTON_ON_SUBMIT = true;
+	var EW_PATH_BASE = "@ew_AppPath()"; // Path base
+	var EW_IMAGE_FOLDER = "@ew_AppPath("images/")"; // Image folder
+	var EW_UPLOAD_URL = "@ew_AppPath(EW_UPLOAD_URL)"; // Upload URL
+	var EW_UPLOAD_THUMBNAIL_WIDTH = @EW_UPLOAD_THUMBNAIL_WIDTH; // Upload thumbnail width
+	var EW_UPLOAD_THUMBNAIL_HEIGHT = @EW_UPLOAD_THUMBNAIL_HEIGHT; // Upload thumbnail height
+	var EW_MULTIPLE_UPLOAD_SEPARATOR = "@EW_MULTIPLE_UPLOAD_SEPARATOR"; // Upload multiple separator
+	var EW_USE_JAVASCRIPT_MESSAGE = false;
+	var EW_MOBILE_DETECT = new MobileDetect(window.navigator.userAgent);
+	var EW_IS_MOBILE = !!EW_MOBILE_DETECT.mobile();
+	var EW_PROJECT_STYLESHEET_FILENAME = "@ew_AppPath(EW_PROJECT_STYLESHEET_FILENAME)"; // Project stylesheet
+	var EW_PDF_STYLESHEET_FILENAME = "@ew_AppPath(EW_PDF_STYLESHEET_FILENAME)"; // PDF stylesheet
+	var EW_TOKEN = "@gsToken";
+	var EW_CSS_FLIP = @((EW_CSS_FLIP) ? "true" : "false");
+	var EW_USE_COLORBOX = @((EW_USE_COLORBOX) ? "true" : "false");
+	var EW_CONFIRM_CANCEL = true;
+	var EW_SEARCH_FILTER_OPTION = "@EW_SEARCH_FILTER_OPTION";
+	</script>
+}
+@{
+	<script type="text/javascript" src="~/js/jsrender.min.js"></script>
+	<script type="text/javascript" src="~/js/ewx.js"></script>
+	<script type="text/javascript" src="~/js/jquery.ewjtable.js"></script>
+}
+@{
+	<script type="text/javascript">
+	var ewVar = @Html.Raw(ew_ArrayToJson(EW_CLIENT_VAR));
+	@Html.Raw(Language.ToJSON())
+	</script>
+	<script type="text/javascript" src="~/js/userfn.js"></script>
+	<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+	</script>
+}
+	@Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+<meta name="generator" content="ASP.NET Maker v2017.0.3">
+</head>
+@if (EW_RTL_LANGUAGES.Contains(gsLanguage, StringComparer.OrdinalIgnoreCase)) {
+@:<body dir="rtl">
+} else {
+@:<body>
+}
+@if (true) {
+	if (!gbSkipHeaderFooter) {
+		<div class="ewLayout">
+			<!-- header (begin) --><!-- ** Note: Only licensed users are allowed to change the logo *** -->
+			<div id="ewHeaderRow" class="@gsHeaderRowClass"><img src="~/images/aspnetmkrlogo2017.png" alt=""></div>
+			@if (ew_IsResponsiveLayout()) {
+				<nav id="ewMobileMenu" role="navigation" class="navbar navbar-default visible-xs hidden-print">
+					<div class="container-fluid"><!-- Brand and toggle get grouped for better mobile display -->
+						<div class="navbar-header">
+							<button data-target="#ewMenu" data-toggle="collapse" class="navbar-toggle" type="button">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand" href="@(ew_NotEmpty(EW_MENUBAR_BRAND_HYPERLINK) ? EW_MENUBAR_BRAND_HYPERLINK : "#")">@(ew_NotEmpty(EW_MENUBAR_BRAND) ? EW_MENUBAR_BRAND : Language.ProjectPhrase("BodyTitle"))</a>
+						</div>
+						<div id="ewMenu" class="collapse navbar-collapse" style="height: auto;"><!-- Begin Main Menu -->
+						@await Html.PartialAsync("ewmobilemenu")
+						</div><!-- /.navbar-collapse -->
+					</div><!-- /.container-fluid -->
+				</nav>
+			}
+		<!-- header (end) -->
+		<!-- content (begin) -->
+		<div id="ewContentTable" class="ewContentTable">
+			<div id="ewContentRow">
+				<div id="ewMenuColumn" class="@gsMenuColumnClass">
+					<!-- left column (begin) -->
+					<div class="ewMenu">
+					@await Html.PartialAsync("ewmenu")
+					</div>
+					<!-- left column (end) -->
+				</div>
+				<div id="ewContentColumn" class="ewContentColumn">
+				<!-- right column (begin) -->
+					<h4 class="@gsSiteTitleClass">@Html.Raw(Language.ProjectPhrase("BodyTitle"))</h4>
+					@RenderBody()
+				<!-- right column (end) -->
+		    	</div>
+			</div>
+		</div>
+		<!-- content (end) -->
+		<!-- footer (begin) --><!-- ** Note: Only licensed users are allowed to remove or change the following copyright statement. *** -->
+		<div id="ewFooterRow" class="ewFooterRow">
+			<div class="ewFooterText">@Html.Raw(Language.ProjectPhrase("FooterText"))</div>
+			<!-- Place other links, for example, disclaimer, here -->
+		</div>
+		<!-- footer (end) -->
+	</div>
+	} else { // gbSkipHeaderFooter
+		@RenderBody()
+	}
+} else {
+	@RenderBody()
+}
+@if (true) {
+<!-- modal dialog -->
+<div id="ewModalDialog" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"></div><div class="modal-footer"></div></div></div></div>
+<!-- modal lookup dialog -->
+<div id="ewModalLookupDialog" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"></div><div class="modal-footer"></div></div></div></div>
+<!-- message box -->
+<div id="ewMsgBox" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div><div class="modal-footer"><button type="button" class="btn btn-primary ewButton" data-dismiss="modal">@Html.Raw(Language.Phrase("MessageOK"))</button></div></div></div></div>
+<!-- prompt -->
+<div id="ewPrompt" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div><div class="modal-footer"><button type="button" class="btn btn-primary ewButton">@Html.Raw(Language.Phrase("MessageOK"))</button><button type="button" class="btn btn-default ewButton" data-dismiss="modal">@Html.Raw(Language.Phrase("CancelBtn"))</button></div></div></div></div>
+<!-- session timer -->
+<div id="ewTimer" class="modal" role="dialog" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div><div class="modal-footer"><button type="button" class="btn btn-primary ewButton" data-dismiss="modal">@Html.Raw(Language.Phrase("MessageOK"))</button></div></div></div></div>
+<!-- tooltip -->
+<div id="ewTooltip"></div>
+}
+@if (true) {
+<script type="text/javascript">
+jQuery.get(EW_PATH_BASE + "js/userevt.js");
+</script>
+<script type="text/javascript">
+var currencyrates;
+if(window.location.pathname.indexOf("/vw_CurrencyRemittancelist")>=0) {
+	setInterval(function () {
+		$.ajax({
+		  url:"/api/getCurrRates?",
+		  type:"POST",
+		  contentType:"application/json; charset=utf-8",
+		  dataType:"json",
+			statusCode: {
+				404: function () { alert("404"); },
+				500: function () { alert("500"); }
+			},
+			success: function(data){
+				currencyrates = data;
+				$('#tbl_vw_CurrencyRemittancelist').find('td[data-name=CurrencyCode]').each(function(){
+					$(this).find('.vw_CurrencyRemittance_CurrencyCode').find('span').each(function(){
+						try{
+
+							//alert('OANDA:'+$(this).html().trim()+'SGD');
+							if (currencyrates['OANDA:'+$(this).html().trim()+'SGD'] != null){
+								$(this).next().closest('p').remove();
+								$(this).after('<p>'+currencyrates['OANDA:'+$(this).html().trim()+'SGD']+'</p>');
+							}
+						} catch(err) {}
+					});
+				});
+			}
+		});
+	}, 3000);
+}
+if(window.location.pathname.indexOf("/vw_CurrencyMClist")>=0) {
+	setInterval(function () {
+		$.ajax({
+		  url:"/api/getCurrRates?",
+		  type:"POST",
+		  contentType:"application/json; charset=utf-8",
+		  dataType:"json",
+			statusCode: {
+				404: function () { alert("404"); },
+				500: function () { alert("500"); }
+			},
+			success: function(data){tbl_vw_CurrencyMClist
+				currencyrates = data;
+				$('#tbl_vw_CurrencyMClist').find('td[data-name=CurrencyCode]').each(function(){
+					$(this).find('.vw_CurrencyMClist_CurrencyCode').find('span').each(function(){
+						try{
+							if (currencyrates['OANDA:'+$(this).html().trim()+'SGD'] != null){
+								$(this).next().closest('p').remove();
+								$(this).after('<p>'+currencyrates['OANDA:'+$(this).html().trim()+'SGD']+'</p>');
+							}
+						} catch(err) {}
+					});
+				});
+			}
+		});
+	}, 3000);
+}
+</script>
+}
+</body>
+</html>

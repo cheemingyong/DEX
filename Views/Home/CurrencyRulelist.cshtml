@@ -1,0 +1,616 @@
+@{
+
+	// Layout
+	Layout = "_Layout";
+
+	// View
+	ew_View = this;
+
+	// Global Page Rendering event
+	Page_Rendering();
+
+	// Page Render event
+	CurrencyRule_list.Page_Render();
+
+	// Local variables (Temp data)
+	bool emptywrk;
+	string wrkonchange;
+	List<OrderedDictionary> rswrk;
+	List<OrderedDictionary> alwrk;
+	bool selwrk;
+	string[] arwrk;
+	OrderedDictionary odwrk;
+	string sSqlWrk;
+	string sFilterWrk;
+	string sWhereWrk;
+}
+@if (ew_Empty(CurrencyRule.Export)) {
+<script type="text/javascript">
+
+// Form object
+var CurrentPageID = EW_PAGE_ID = "list";
+var CurrentForm = fCurrencyRulelist = new ew_Form("fCurrencyRulelist", "list");
+fCurrencyRulelist.FormKeyCountName = "@CurrencyRule_list.FormKeyCountName";
+
+// Form_CustomValidate event
+fCurrencyRulelist.Form_CustomValidate = 
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid.
+ 	return true;
+ }
+
+// Use JavaScript validation or not remove PROJ.ProgramLanguage
+fCurrencyRulelist.ValidateRequired = @((EW_CLIENT_VALIDATE) ? "true" : "false");
+
+// Dynamic selection lists
+fCurrencyRulelist.Lists["x_RuleType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRulelist.Lists["x_RuleType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.RuleType.Options()));
+fCurrencyRulelist.Lists["x_AgentId"] = {"LinkField":"x_AgentId","Ajax":true,"AutoFill":false,"DisplayFields":["x_AgentName","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Agent"};
+fCurrencyRulelist.Lists["x_CurrencyCode"] = {"LinkField":"x_CurrencyCode","Ajax":true,"AutoFill":false,"DisplayFields":["x_CurrencyCode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"Currency"};
+fCurrencyRulelist.Lists["x_TransactionType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRulelist.Lists["x_TransactionType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionType.Options()));
+fCurrencyRulelist.Lists["x_TransactionTypeCondition"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRulelist.Lists["x_TransactionTypeCondition"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionTypeCondition.Options()));
+fCurrencyRulelist.Lists["x_TransactionPeriodType"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRulelist.Lists["x_TransactionPeriodType"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionPeriodType.Options()));
+fCurrencyRulelist.Lists["x_TransactionPeriodCondition"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fCurrencyRulelist.Lists["x_TransactionPeriodCondition"].Options = @Html.Raw(ew_ArrayToJson(CurrencyRule.TransactionPeriodCondition.Options()));
+
+// Form object for search
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+}
+@if (ew_Empty(CurrencyRule.Export)) {
+<div class="ewToolbar">
+@if (ew_Empty(CurrencyRule.Export)) {
+<div style="display: inline-block">
+	@{ Breadcrumb?.Render(); }
+</div>
+}
+@if (CurrencyRule_list.TotalRecs > 0 && CurrencyRule_list.ExportOptions.Visible) {
+	CurrencyRule_list.ExportOptions.Render("body");
+}
+@if (ew_Empty(CurrencyRule.Export)) {
+	@Language.SelectionForm()
+}
+<div class="clearfix"></div>
+</div>
+}
+@{
+		if (CurrencyRule_list.TotalRecs <= 0) {
+			CurrencyRule_list.TotalRecs = CurrencyRule_list.SelectRecordCount();
+		}
+		CurrencyRule_list.StartRec = 1;
+		if (CurrencyRule_list.DisplayRecs <= 0 || ew_NotEmpty(CurrencyRule_list.Export) && CurrencyRule_list.ExportAll) { // Display all records
+			CurrencyRule_list.DisplayRecs = CurrencyRule_list.TotalRecs;
+		}
+		if (!(ew_NotEmpty(CurrencyRule_list.Export) && CurrencyRule_list.ExportAll)) {
+			CurrencyRule_list.SetUpStartRec(); // Set up start record position
+		}
+		CurrencyRule_list.Recordset = CurrencyRule_list.LoadRecordset(CurrencyRule_list.StartRec - 1, CurrencyRule_list.DisplayRecs);
+
+		// Set no record found message
+		if (CurrencyRule_list.CurrentAction == "" && CurrencyRule_list.TotalRecs == 0) {
+			if (CurrencyRule_list.SearchWhere == "0=101") {
+				CurrencyRule_list.WarningMessage = Language.Phrase("EnterSearchCriteria");
+			} else {
+				CurrencyRule_list.WarningMessage = Language.Phrase("NoRecord");
+			}
+		}
+	CurrencyRule_list.RenderOtherOptions();
+}
+@CurrencyRule_list.ShowPageHeader()
+@{ CurrencyRule_list.ShowMessage(); }
+@if (CurrencyRule_list.TotalRecs > 0 || CurrencyRule_list.CurrentAction != "") {
+<div class="panel panel-default ewGrid CurrencyRule">
+@if (ew_Empty(CurrencyRule.Export)) {
+<div class="panel-heading ewGridUpperPanel">
+@if (CurrencyRule_list.CurrentAction != "gridadd" && CurrencyRule_list.CurrentAction != "gridedit") {
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ CurrencyRule_list.Pager = CurrencyRule_list.Pager ?? new cNumericPager(CurrencyRule_list.StartRec, CurrencyRule_list.DisplayRecs, CurrencyRule_list.TotalRecs, CurrencyRule_list.RecRange, CurrencyRule_list.AutoHidePager); }
+@if (CurrencyRule_list.Pager.RecordCount > 0 && CurrencyRule_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (CurrencyRule_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (CurrencyRule_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in CurrencyRule_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(CurrencyRule_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (CurrencyRule_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (CurrencyRule_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(CurrencyRule_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(CurrencyRule_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(CurrencyRule_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (CurrencyRule_list.Pager.RecordCount > 0 && (!CurrencyRule_list.AutoHidePageSizeSelector || CurrencyRule_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(CurrencyRule_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(CurrencyRule_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(CurrencyRule_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(CurrencyRule_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+</form>
+}
+	<div class="ewListOtherOptions">
+	@{ CurrencyRule_list.ForEachOtherOption(kvp => kvp.Value.Render("body")); }
+	</div>
+	<div class="clearfix"></div>
+</div>
+}
+<form name="fCurrencyRulelist" id="fCurrencyRulelist" class="form-inline ewForm ewListForm" action="@ew_AppPath(ew_CurrentPage())" method="post">
+@if (CurrencyRule_list.CheckToken) {
+<input type="hidden" name="@EW_TOKEN_NAME" value="@CurrencyRule_list.Token">
+}
+<div id="gmp_CurrencyRule" class="@((ew_IsResponsiveLayout()) ? "table-responsive ewGridMiddlePanel" : "ewGridMiddlePanel")">
+@if (CurrencyRule_list.TotalRecs > 0) { // Begin If TotalRecs > 0
+<table id="tbl_CurrencyRulelist" class="table ewTable">
+@Html.Raw(CurrencyRule_list.TableCustomInnerHtml)
+<thead><!-- Table header -->
+	<tr class="ewTableHeader">
+@{
+
+	// Header row
+	CurrencyRule_list.RowType = EW_ROWTYPE_HEADER;
+
+	// Render list options
+	CurrencyRule_list.RenderListOptions();
+
+	// Render list options (header, left)
+	CurrencyRule_list.ListOptions.Render("header", "left");
+}
+@if (CurrencyRule.id.Visible) { // id.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.id) == "") {
+		<th data-name="id"><div id="elh_CurrencyRule_id" class="CurrencyRule_id"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.id.FldCaption)</div></div></th>
+	} else {
+		<th data-name="id"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.id))',1);"><div id="elh_CurrencyRule_id" class="CurrencyRule_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.id.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.id.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.id.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* id.Visible (end) *@
+@if (CurrencyRule.RuleType.Visible) { // RuleType.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.RuleType) == "") {
+		<th data-name="RuleType"><div id="elh_CurrencyRule_RuleType" class="CurrencyRule_RuleType"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.RuleType.FldCaption)</div></div></th>
+	} else {
+		<th data-name="RuleType"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.RuleType))',1);"><div id="elh_CurrencyRule_RuleType" class="CurrencyRule_RuleType">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.RuleType.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.RuleType.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.RuleType.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* RuleType.Visible (end) *@
+@if (CurrencyRule.AgentId.Visible) { // AgentId.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.AgentId) == "") {
+		<th data-name="AgentId"><div id="elh_CurrencyRule_AgentId" class="CurrencyRule_AgentId"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.AgentId.FldCaption)</div></div></th>
+	} else {
+		<th data-name="AgentId"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.AgentId))',1);"><div id="elh_CurrencyRule_AgentId" class="CurrencyRule_AgentId">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.AgentId.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.AgentId.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.AgentId.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* AgentId.Visible (end) *@
+@if (CurrencyRule.CurrencyCode.Visible) { // CurrencyCode.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.CurrencyCode) == "") {
+		<th data-name="CurrencyCode"><div id="elh_CurrencyRule_CurrencyCode" class="CurrencyRule_CurrencyCode"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.CurrencyCode.FldCaption)</div></div></th>
+	} else {
+		<th data-name="CurrencyCode"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.CurrencyCode))',1);"><div id="elh_CurrencyRule_CurrencyCode" class="CurrencyRule_CurrencyCode">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.CurrencyCode.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.CurrencyCode.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.CurrencyCode.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* CurrencyCode.Visible (end) *@
+@if (CurrencyRule.TransactionType.Visible) { // TransactionType.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.TransactionType) == "") {
+		<th data-name="TransactionType"><div id="elh_CurrencyRule_TransactionType" class="CurrencyRule_TransactionType"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionType.FldCaption)</div></div></th>
+	} else {
+		<th data-name="TransactionType"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.TransactionType))',1);"><div id="elh_CurrencyRule_TransactionType" class="CurrencyRule_TransactionType">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionType.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.TransactionType.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.TransactionType.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* TransactionType.Visible (end) *@
+@if (CurrencyRule.TransactionTypeCondition.Visible) { // TransactionTypeCondition.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.TransactionTypeCondition) == "") {
+		<th data-name="TransactionTypeCondition"><div id="elh_CurrencyRule_TransactionTypeCondition" class="CurrencyRule_TransactionTypeCondition"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionTypeCondition.FldCaption)</div></div></th>
+	} else {
+		<th data-name="TransactionTypeCondition"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.TransactionTypeCondition))',1);"><div id="elh_CurrencyRule_TransactionTypeCondition" class="CurrencyRule_TransactionTypeCondition">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionTypeCondition.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.TransactionTypeCondition.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.TransactionTypeCondition.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* TransactionTypeCondition.Visible (end) *@
+@if (CurrencyRule.SingleTransactionBuyAmount.Visible) { // SingleTransactionBuyAmount.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.SingleTransactionBuyAmount) == "") {
+		<th data-name="SingleTransactionBuyAmount"><div id="elh_CurrencyRule_SingleTransactionBuyAmount" class="CurrencyRule_SingleTransactionBuyAmount"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.FldCaption)</div></div></th>
+	} else {
+		<th data-name="SingleTransactionBuyAmount"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.SingleTransactionBuyAmount))',1);"><div id="elh_CurrencyRule_SingleTransactionBuyAmount" class="CurrencyRule_SingleTransactionBuyAmount">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.SingleTransactionBuyAmount.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.SingleTransactionBuyAmount.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* SingleTransactionBuyAmount.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodType.Visible) { // TransactionPeriodType.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.TransactionPeriodType) == "") {
+		<th data-name="TransactionPeriodType"><div id="elh_CurrencyRule_TransactionPeriodType" class="CurrencyRule_TransactionPeriodType"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionPeriodType.FldCaption)</div></div></th>
+	} else {
+		<th data-name="TransactionPeriodType"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.TransactionPeriodType))',1);"><div id="elh_CurrencyRule_TransactionPeriodType" class="CurrencyRule_TransactionPeriodType">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionPeriodType.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.TransactionPeriodType.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.TransactionPeriodType.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* TransactionPeriodType.Visible (end) *@
+@if (CurrencyRule.PeriodStart.Visible) { // PeriodStart.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.PeriodStart) == "") {
+		<th data-name="PeriodStart"><div id="elh_CurrencyRule_PeriodStart" class="CurrencyRule_PeriodStart"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.PeriodStart.FldCaption)</div></div></th>
+	} else {
+		<th data-name="PeriodStart"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.PeriodStart))',1);"><div id="elh_CurrencyRule_PeriodStart" class="CurrencyRule_PeriodStart">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.PeriodStart.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.PeriodStart.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.PeriodStart.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* PeriodStart.Visible (end) *@
+@if (CurrencyRule.PeriodEnd.Visible) { // PeriodEnd.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.PeriodEnd) == "") {
+		<th data-name="PeriodEnd"><div id="elh_CurrencyRule_PeriodEnd" class="CurrencyRule_PeriodEnd"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.PeriodEnd.FldCaption)</div></div></th>
+	} else {
+		<th data-name="PeriodEnd"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.PeriodEnd))',1);"><div id="elh_CurrencyRule_PeriodEnd" class="CurrencyRule_PeriodEnd">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.PeriodEnd.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.PeriodEnd.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.PeriodEnd.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* PeriodEnd.Visible (end) *@
+@if (CurrencyRule.TransactionPeriodCondition.Visible) { // TransactionPeriodCondition.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.TransactionPeriodCondition) == "") {
+		<th data-name="TransactionPeriodCondition"><div id="elh_CurrencyRule_TransactionPeriodCondition" class="CurrencyRule_TransactionPeriodCondition"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionPeriodCondition.FldCaption)</div></div></th>
+	} else {
+		<th data-name="TransactionPeriodCondition"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.TransactionPeriodCondition))',1);"><div id="elh_CurrencyRule_TransactionPeriodCondition" class="CurrencyRule_TransactionPeriodCondition">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.TransactionPeriodCondition.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.TransactionPeriodCondition.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.TransactionPeriodCondition.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* TransactionPeriodCondition.Visible (end) *@
+@if (CurrencyRule.PeriodBuyAmount.Visible) { // PeriodBuyAmount.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.PeriodBuyAmount) == "") {
+		<th data-name="PeriodBuyAmount"><div id="elh_CurrencyRule_PeriodBuyAmount" class="CurrencyRule_PeriodBuyAmount"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.PeriodBuyAmount.FldCaption)</div></div></th>
+	} else {
+		<th data-name="PeriodBuyAmount"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.PeriodBuyAmount))',1);"><div id="elh_CurrencyRule_PeriodBuyAmount" class="CurrencyRule_PeriodBuyAmount">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.PeriodBuyAmount.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.PeriodBuyAmount.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.PeriodBuyAmount.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* PeriodBuyAmount.Visible (end) *@
+@if (CurrencyRule.NoOfTransactions.Visible) { // NoOfTransactions.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.NoOfTransactions) == "") {
+		<th data-name="NoOfTransactions"><div id="elh_CurrencyRule_NoOfTransactions" class="CurrencyRule_NoOfTransactions"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.NoOfTransactions.FldCaption)</div></div></th>
+	} else {
+		<th data-name="NoOfTransactions"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.NoOfTransactions))',1);"><div id="elh_CurrencyRule_NoOfTransactions" class="CurrencyRule_NoOfTransactions">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.NoOfTransactions.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.NoOfTransactions.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.NoOfTransactions.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* NoOfTransactions.Visible (end) *@
+@if (CurrencyRule.FeeCost.Visible) { // FeeCost.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.FeeCost) == "") {
+		<th data-name="FeeCost"><div id="elh_CurrencyRule_FeeCost" class="CurrencyRule_FeeCost"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.FeeCost.FldCaption)</div></div></th>
+	} else {
+		<th data-name="FeeCost"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.FeeCost))',1);"><div id="elh_CurrencyRule_FeeCost" class="CurrencyRule_FeeCost">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.FeeCost.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.FeeCost.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.FeeCost.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* FeeCost.Visible (end) *@
+@if (CurrencyRule.CreatedDate.Visible) { // CreatedDate.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.CreatedDate) == "") {
+		<th data-name="CreatedDate"><div id="elh_CurrencyRule_CreatedDate" class="CurrencyRule_CreatedDate"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.CreatedDate.FldCaption)</div></div></th>
+	} else {
+		<th data-name="CreatedDate"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.CreatedDate))',1);"><div id="elh_CurrencyRule_CreatedDate" class="CurrencyRule_CreatedDate">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.CreatedDate.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.CreatedDate.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.CreatedDate.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* CreatedDate.Visible (end) *@
+@if (CurrencyRule.CreatedBy.Visible) { // CreatedBy.Visible (begin)
+	if (CurrencyRule_list.SortUrl(CurrencyRule.CreatedBy) == "") {
+		<th data-name="CreatedBy"><div id="elh_CurrencyRule_CreatedBy" class="CurrencyRule_CreatedBy"><div class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.CreatedBy.FldCaption)</div></div></th>
+	} else {
+		<th data-name="CreatedBy"><div class="ewPointer" onclick="ew_Sort(event,'@Html.Raw(CurrencyRule.SortUrl(CurrencyRule.CreatedBy))',1);"><div id="elh_CurrencyRule_CreatedBy" class="CurrencyRule_CreatedBy">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption">@Html.Raw(CurrencyRule.CreatedBy.FldCaption)</span><span class="ewTableHeaderSort">@if (CurrencyRule.CreatedBy.Sort == "ASC") {<span class="caret ewSortUp"></span>} else if (CurrencyRule.CreatedBy.Sort == "DESC") {<span class="caret"></span>}</span></div>
+        </div></div></th>
+	}
+} @* CreatedBy.Visible (end) *@
+@{
+
+	// Render list options (header, right)
+	CurrencyRule_list.ListOptions.Render("header", "right");
+}
+	</tr>
+</thead>
+<tbody>
+@{ // Begin Code
+if (CurrencyRule_list.ExportAll && ew_NotEmpty(CurrencyRule_list.Export)) {
+	CurrencyRule_list.StopRec = CurrencyRule_list.TotalRecs;
+} else {
+
+	// Set the last record to display
+	if (CurrencyRule_list.TotalRecs > CurrencyRule_list.StartRec + CurrencyRule_list.DisplayRecs - 1) {
+		CurrencyRule_list.StopRec = CurrencyRule_list.StartRec + CurrencyRule_list.DisplayRecs - 1;
+	} else {
+		CurrencyRule_list.StopRec = CurrencyRule_list.TotalRecs;
+	}
+}
+if (CurrencyRule_list.Recordset != null && CurrencyRule_list.Recordset.HasRows) {
+	if (!CurrencyRule_list.Connection.SelectOffset) { // DN
+		for (var i = 1; i <= CurrencyRule_list.StartRec - 1; i++) { // Move to first record
+			if (CurrencyRule_list.Recordset.Read()) {
+				CurrencyRule_list.RecCnt++;
+			}
+		}
+	} else {
+		CurrencyRule_list.RecCnt = CurrencyRule_list.StartRec - 1;
+	}
+} else if (!CurrencyRule_list.AllowAddDeleteRow && CurrencyRule_list.StopRec == 0) {
+	CurrencyRule_list.StopRec = CurrencyRule_list.GridAddRowCount;
+}
+
+// Initialize aggregate
+CurrencyRule_list.RowType = EW_ROWTYPE_AGGREGATEINIT;
+CurrencyRule_list.ResetAttrs();
+CurrencyRule_list.RenderRow();
+
+// Output data rows
+bool Eof = (CurrencyRule_list.Recordset == null); // DN
+while (CurrencyRule_list.RecCnt < CurrencyRule_list.StopRec) { // Begin While
+	if (CurrencyRule_list.CurrentAction != "gridadd" && !Eof) { // DN
+		Eof = !CurrencyRule_list.Recordset.Read();
+	}
+	CurrencyRule_list.RecCnt++;
+	if (CurrencyRule_list.RecCnt >= CurrencyRule_list.StartRec) {
+		CurrencyRule_list.RowCnt++;
+
+		// Set up key count
+		CurrencyRule_list.KeyCount = ew_ConvertToInt(CurrencyRule_list.RowIndex);
+
+		// Init row class and style
+		CurrencyRule_list.ResetAttrs();
+		CurrencyRule_list.CssClass = "";
+		if (CurrencyRule_list.CurrentAction == "gridadd") {
+		} else {
+			CurrencyRule_list.LoadRowValues(CurrencyRule_list.Recordset); // Load row values
+		}
+		CurrencyRule_list.RowType = EW_ROWTYPE_VIEW; // Render view
+
+		// Set up row id / data-rowindex
+		CurrencyRule_list.RowAttrs.Add("data-rowindex", Convert.ToString(CurrencyRule_list.RowCnt));
+		CurrencyRule_list.RowAttrs.Add("id", "r" + Convert.ToString(CurrencyRule_list.RowCnt) + "_CurrencyRule");
+		CurrencyRule_list.RowAttrs.Add("data-rowtype", Convert.ToString(CurrencyRule_list.RowType));
+
+		// Render row
+		CurrencyRule_list.RenderRow();
+
+		// Render list options
+		CurrencyRule_list.RenderListOptions();
+	<tr @Html.Raw(CurrencyRule_list.RowAttributes)>
+	@{
+
+		// Render list options (body, left)
+		CurrencyRule_list.ListOptions.Render("body", "left", CurrencyRule_list.RowCnt);
+	}
+	@if (CurrencyRule.id.Visible) { // id.Visible (begin)
+		<td data-name="id"@Html.Raw(CurrencyRule.id.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_id" class="CurrencyRule_id">
+<span @Html.Raw(CurrencyRule.id.ViewAttributes)>
+@Html.Raw(CurrencyRule.id.ListViewValue)</span>
+</span>
+<a id="@(CurrencyRule_list.PageObjName + "_row_" + Convert.ToString(CurrencyRule_list.RowCnt))"></a></td>
+	} @* id.Visible (end) *@
+	@if (CurrencyRule.RuleType.Visible) { // RuleType.Visible (begin)
+		<td data-name="RuleType"@Html.Raw(CurrencyRule.RuleType.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_RuleType" class="CurrencyRule_RuleType">
+<span @Html.Raw(CurrencyRule.RuleType.ViewAttributes)>
+@Html.Raw(CurrencyRule.RuleType.ListViewValue)</span>
+</span>
+</td>
+	} @* RuleType.Visible (end) *@
+	@if (CurrencyRule.AgentId.Visible) { // AgentId.Visible (begin)
+		<td data-name="AgentId"@Html.Raw(CurrencyRule.AgentId.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_AgentId" class="CurrencyRule_AgentId">
+<span @Html.Raw(CurrencyRule.AgentId.ViewAttributes)>
+@Html.Raw(CurrencyRule.AgentId.ListViewValue)</span>
+</span>
+</td>
+	} @* AgentId.Visible (end) *@
+	@if (CurrencyRule.CurrencyCode.Visible) { // CurrencyCode.Visible (begin)
+		<td data-name="CurrencyCode"@Html.Raw(CurrencyRule.CurrencyCode.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_CurrencyCode" class="CurrencyRule_CurrencyCode">
+<span @Html.Raw(CurrencyRule.CurrencyCode.ViewAttributes)>
+@Html.Raw(CurrencyRule.CurrencyCode.ListViewValue)</span>
+</span>
+</td>
+	} @* CurrencyCode.Visible (end) *@
+	@if (CurrencyRule.TransactionType.Visible) { // TransactionType.Visible (begin)
+		<td data-name="TransactionType"@Html.Raw(CurrencyRule.TransactionType.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_TransactionType" class="CurrencyRule_TransactionType">
+<span @Html.Raw(CurrencyRule.TransactionType.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionType.ListViewValue)</span>
+</span>
+</td>
+	} @* TransactionType.Visible (end) *@
+	@if (CurrencyRule.TransactionTypeCondition.Visible) { // TransactionTypeCondition.Visible (begin)
+		<td data-name="TransactionTypeCondition"@Html.Raw(CurrencyRule.TransactionTypeCondition.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_TransactionTypeCondition" class="CurrencyRule_TransactionTypeCondition">
+<span @Html.Raw(CurrencyRule.TransactionTypeCondition.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionTypeCondition.ListViewValue)</span>
+</span>
+</td>
+	} @* TransactionTypeCondition.Visible (end) *@
+	@if (CurrencyRule.SingleTransactionBuyAmount.Visible) { // SingleTransactionBuyAmount.Visible (begin)
+		<td data-name="SingleTransactionBuyAmount"@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_SingleTransactionBuyAmount" class="CurrencyRule_SingleTransactionBuyAmount">
+<span @Html.Raw(CurrencyRule.SingleTransactionBuyAmount.ViewAttributes)>
+@Html.Raw(CurrencyRule.SingleTransactionBuyAmount.ListViewValue)</span>
+</span>
+</td>
+	} @* SingleTransactionBuyAmount.Visible (end) *@
+	@if (CurrencyRule.TransactionPeriodType.Visible) { // TransactionPeriodType.Visible (begin)
+		<td data-name="TransactionPeriodType"@Html.Raw(CurrencyRule.TransactionPeriodType.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_TransactionPeriodType" class="CurrencyRule_TransactionPeriodType">
+<span @Html.Raw(CurrencyRule.TransactionPeriodType.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionPeriodType.ListViewValue)</span>
+</span>
+</td>
+	} @* TransactionPeriodType.Visible (end) *@
+	@if (CurrencyRule.PeriodStart.Visible) { // PeriodStart.Visible (begin)
+		<td data-name="PeriodStart"@Html.Raw(CurrencyRule.PeriodStart.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_PeriodStart" class="CurrencyRule_PeriodStart">
+<span @Html.Raw(CurrencyRule.PeriodStart.ViewAttributes)>
+@Html.Raw(CurrencyRule.PeriodStart.ListViewValue)</span>
+</span>
+</td>
+	} @* PeriodStart.Visible (end) *@
+	@if (CurrencyRule.PeriodEnd.Visible) { // PeriodEnd.Visible (begin)
+		<td data-name="PeriodEnd"@Html.Raw(CurrencyRule.PeriodEnd.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_PeriodEnd" class="CurrencyRule_PeriodEnd">
+<span @Html.Raw(CurrencyRule.PeriodEnd.ViewAttributes)>
+@Html.Raw(CurrencyRule.PeriodEnd.ListViewValue)</span>
+</span>
+</td>
+	} @* PeriodEnd.Visible (end) *@
+	@if (CurrencyRule.TransactionPeriodCondition.Visible) { // TransactionPeriodCondition.Visible (begin)
+		<td data-name="TransactionPeriodCondition"@Html.Raw(CurrencyRule.TransactionPeriodCondition.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_TransactionPeriodCondition" class="CurrencyRule_TransactionPeriodCondition">
+<span @Html.Raw(CurrencyRule.TransactionPeriodCondition.ViewAttributes)>
+@Html.Raw(CurrencyRule.TransactionPeriodCondition.ListViewValue)</span>
+</span>
+</td>
+	} @* TransactionPeriodCondition.Visible (end) *@
+	@if (CurrencyRule.PeriodBuyAmount.Visible) { // PeriodBuyAmount.Visible (begin)
+		<td data-name="PeriodBuyAmount"@Html.Raw(CurrencyRule.PeriodBuyAmount.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_PeriodBuyAmount" class="CurrencyRule_PeriodBuyAmount">
+<span @Html.Raw(CurrencyRule.PeriodBuyAmount.ViewAttributes)>
+@Html.Raw(CurrencyRule.PeriodBuyAmount.ListViewValue)</span>
+</span>
+</td>
+	} @* PeriodBuyAmount.Visible (end) *@
+	@if (CurrencyRule.NoOfTransactions.Visible) { // NoOfTransactions.Visible (begin)
+		<td data-name="NoOfTransactions"@Html.Raw(CurrencyRule.NoOfTransactions.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_NoOfTransactions" class="CurrencyRule_NoOfTransactions">
+<span @Html.Raw(CurrencyRule.NoOfTransactions.ViewAttributes)>
+@Html.Raw(CurrencyRule.NoOfTransactions.ListViewValue)</span>
+</span>
+</td>
+	} @* NoOfTransactions.Visible (end) *@
+	@if (CurrencyRule.FeeCost.Visible) { // FeeCost.Visible (begin)
+		<td data-name="FeeCost"@Html.Raw(CurrencyRule.FeeCost.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_FeeCost" class="CurrencyRule_FeeCost">
+<span @Html.Raw(CurrencyRule.FeeCost.ViewAttributes)>
+@Html.Raw(CurrencyRule.FeeCost.ListViewValue)</span>
+</span>
+</td>
+	} @* FeeCost.Visible (end) *@
+	@if (CurrencyRule.CreatedDate.Visible) { // CreatedDate.Visible (begin)
+		<td data-name="CreatedDate"@Html.Raw(CurrencyRule.CreatedDate.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_CreatedDate" class="CurrencyRule_CreatedDate">
+<span @Html.Raw(CurrencyRule.CreatedDate.ViewAttributes)>
+@Html.Raw(CurrencyRule.CreatedDate.ListViewValue)</span>
+</span>
+</td>
+	} @* CreatedDate.Visible (end) *@
+	@if (CurrencyRule.CreatedBy.Visible) { // CreatedBy.Visible (begin)
+		<td data-name="CreatedBy"@Html.Raw(CurrencyRule.CreatedBy.CellAttributes)>
+<span id="el@(CurrencyRule_list.RowCnt)_CurrencyRule_CreatedBy" class="CurrencyRule_CreatedBy">
+<span @Html.Raw(CurrencyRule.CreatedBy.ViewAttributes)>
+@Html.Raw(CurrencyRule.CreatedBy.ListViewValue)</span>
+</span>
+</td>
+	} @* CreatedBy.Visible (end) *@
+	@{
+
+		// Render list options (body, right)
+		CurrencyRule_list.ListOptions.Render("body", "right", CurrencyRule_list.RowCnt);
+	}
+	</tr>
+	} @* End if *@
+} @* End While *@
+} @* End Code *@
+</tbody>
+</table>
+} @* End If TotalRecs > 0 *@
+@if (ew_Empty(CurrencyRule_list.CurrentAction)) {
+<input type="hidden" name="a_list" id="a_list" value="">
+}
+</div>
+</form>
+@{ CurrencyRule_list.CloseRecordset(); }
+		@if (ew_Empty(CurrencyRule.Export)) {
+		<div class="panel-footer ewGridLowerPanel">
+		@if (CurrencyRule_list.CurrentAction != "gridadd" && CurrencyRule_list.CurrentAction != "gridedit") {
+			<form name="ewPagerForm" class="ewForm form-horizontal ewPagerForm" action="@ew_AppPath(ew_CurrentPage())">
+@{ CurrencyRule_list.Pager = CurrencyRule_list.Pager ?? new cNumericPager(CurrencyRule_list.StartRec, CurrencyRule_list.DisplayRecs, CurrencyRule_list.TotalRecs, CurrencyRule_list.RecRange, CurrencyRule_list.AutoHidePager); }
+@if (CurrencyRule_list.Pager.RecordCount > 0 && CurrencyRule_list.Pager.Visible) {
+<div class="ewPager">
+<div class="ewNumericPage"><ul class="pagination">
+	@if (CurrencyRule_list.Pager.FirstButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.FirstButton.Start">@Html.Raw(Language.Phrase("PagerFirst"))</a></li>
+	}
+	@if (CurrencyRule_list.Pager.PrevButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.PrevButton.Start">@Html.Raw(Language.Phrase("PagerPrevious"))</a></li>
+	}
+	@foreach (var PagerItem in CurrencyRule_list.Pager.Items) {
+		<li class="@((!PagerItem.Enabled) ? "active" : null)"><a href="@((PagerItem.Enabled) ? (ew_AppPath(CurrencyRule_list.PageUrl) + "start=" + Convert.ToString(PagerItem.Start)) : "#")">@PagerItem.Text</a></li>
+	}
+	@if (CurrencyRule_list.Pager.NextButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.NextButton.Start">@Html.Raw(Language.Phrase("PagerNext"))</a></li>
+	}
+	@if (CurrencyRule_list.Pager.LastButton.Enabled) {
+	<li><a href="@ew_AppPath(CurrencyRule_list.PageUrl)start=@CurrencyRule_list.Pager.LastButton.Start">@Html.Raw(Language.Phrase("PagerLast"))</a></li>
+	}
+</ul></div>
+</div>
+	<div class="ewPager ewRec">
+		<span>@Html.Raw(Language.Phrase("Record"))&nbsp;@(CurrencyRule_list.Pager.FromIndex)&nbsp;@Html.Raw(Language.Phrase("To"))&nbsp;@(CurrencyRule_list.Pager.ToIndex)&nbsp;@Html.Raw(Language.Phrase("Of"))&nbsp;@(CurrencyRule_list.Pager.RecordCount)</span>
+	</div>
+}
+@if (CurrencyRule_list.Pager.RecordCount > 0 && (!CurrencyRule_list.AutoHidePageSizeSelector || CurrencyRule_list.Pager.Visible)) {
+<div class="ewPager">
+<select name="@EW_TABLE_REC_PER_PAGE" class="form-control input-sm ewTooltip" title="@Html.Raw(Language.Phrase("RecordsPerPage"))" onchange="this.form.submit();">
+<option value="10" selected="@(CurrencyRule_list.DisplayRecs == 10)">10</option>
+<option value="20" selected="@(CurrencyRule_list.DisplayRecs == 20)">20</option>
+<option value="50" selected="@(CurrencyRule_list.DisplayRecs == 50)">50</option>
+<option value="ALL" selected="@(CurrencyRule_list.RecordsPerPage == -1)">@Html.Raw(Language.Phrase("AllRecords"))</option>
+</select>
+</div>
+}
+			</form>
+		}
+		<div class="ewListOtherOptions">
+		@{ CurrencyRule_list.ForEachOtherOption(kvp => kvp.Value.Render("body", "bottom")); }
+		</div>
+		<div class="clearfix"></div>
+		</div>
+		}
+</div>
+}
+@if (CurrencyRule_list.TotalRecs <= 0 && CurrencyRule_list.CurrentAction == "") { // Show other options
+<div class="ewListOtherOptions">
+@{ CurrencyRule_list.ForEachOtherOption(kvp => { kvp.Value.ButtonClass = ""; kvp.Value.Render("body", ""); }); }
+</div>
+<div class="clearfix"></div>
+}
+@if (ew_Empty(CurrencyRule.Export)) {
+<script type="text/javascript">
+fCurrencyRulelist.Init();
+</script>
+}
+@CurrencyRule_list.ShowPageFooter()
+@DebugMsg()
+@ElapsedTime(StartTime)
+@if (ew_Empty(CurrencyRule.Export)) {
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+}
+@{ CurrencyRule_list.Page_Terminate(); }
